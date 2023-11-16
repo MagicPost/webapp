@@ -44,17 +44,19 @@ Commit message phải tuân theo cấu trúc sau:
 
 `Type` là một trong các loại sau:
 
-- `feat`: thêm tính năng mới
-- `fix`: sửa lỗi
-- `docs`: thay đổi tài liệu
-- `refactor`: thay đổi code nhưng không thêm tính năng mới và không sửa lỗi
-- `perf`: thay đổi code nhằm cải thiện hiệu năng
-- `chore`: thay đổi các công cụ hỗ trợ phát triển (build system, ci, ...)
-- `build`: thay đổi cấu hình build
-- `ci`: thay đổi cấu hình CI
-- `release`: thay đổi phiên bản
-- `test`: thêm hoặc sửa test
-- `revert`: hoàn tác commit trước đó
+| Commit Type | Title                    | Description                                                                                                 | Emoji |
+| ----------- | ------------------------ | ----------------------------------------------------------------------------------------------------------- | :---: |
+| `feat`      | Features                 | A new feature                                                                                               |  ✨   |
+| `fix`       | Bug Fixes                | A bug Fix                                                                                                   |  🐛   |
+| `docs`      | Documentation            | Documentation only changes                                                                                  |  📚   |
+| `style`     | Styles                   | Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)      |  💎   |
+| `refactor`  | Code Refactoring         | A code change that neither fixes a bug nor adds a feature                                                   |  📦   |
+| `perf`      | Performance Improvements | A code change that improves performance                                                                     |  🚀   |
+| `test`      | Tests                    | Adding missing tests or correcting existing tests                                                           |  🚨   |
+| `build`     | Builds                   | Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)         |  🛠   |
+| `ci`        | Continuous Integrations  | Changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs) |  ⚙️   |
+| `chore`     | Chores                   | Other changes that don't modify src or test files                                                           |  ♻️   |
+| `revert`    | Reverts                  | Reverts a previous commit                                                                                   |  🗑   |
 
 `Scopes` (không bắt buộc):
 
@@ -68,7 +70,7 @@ Commit message phải tuân theo cấu trúc sau:
 - Không viết in hoa.
 - Không dùng dấu chấm cuối câu.
 
-Chi tiết: [conventional commits](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#-commit-message-guidelines)
+Chi tiết: [conventional commits](https://www.conventionalcommits.org/en/v1.0.0-beta.4/), [commit types](https://github.com/pvdlg/conventional-commit-types/blob/master/README.md?plain=1)
 
 Mẫu:
 
