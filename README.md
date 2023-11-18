@@ -70,7 +70,7 @@ Commit message phải tuân theo cấu trúc sau:
 - Không viết in hoa.
 - Không dùng dấu chấm cuối câu.
 
-Chi tiết: [conventional commits](https://www.conventionalcommits.org/en/v1.0.0-beta.4/), [commit types](https://github.com/pvdlg/conventional-commit-types/blob/master/README.md?plain=1)
+Chi tiết: [conventional commits](https://www.conventionalcommits.org/en/v1.0.0-beta.4/), [commit types](https://github.com/pvdlg/conventional-commit-types/blob/master/README.md?plain=1), [example](https://nitayneeman.com/posts/understanding-semantic-commit-messages-using-git-and-angular/)
 
 Mẫu:
 
