@@ -11,6 +11,6 @@ export const emailError = {
 
 export const passwordError = {
   length: {
-    message: 'Mật khẩu phải gồm từ 8 đến 30 ký tự.',
+    message: 'Mật khẩu phải từ 8 đến 30 ký tự.',
   },
 };
