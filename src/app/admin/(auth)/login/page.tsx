@@ -1,4 +1,4 @@
-import Logo from '@/components/Logo';
+import Logo from '@/components/main/Logo';
 import LoginForm from '@/components/auth/LoginForm';
 import { Badge } from '@/components/ui/badge';
 
