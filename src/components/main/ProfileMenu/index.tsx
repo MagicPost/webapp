@@ -1,37 +1,35 @@
-'use client';
-
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import getAbbreviation from '@/lib/getAbbreviation';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { BiSolidChevronDown } from 'react-icons/bi';
+import { auth } from '@/lib/auth';
+import { getAbbreviation, getShortName, roleToText } from '@/lib/text';
+import { fakeAccounts } from '@/fake-accounts';
+import { Roles } from '@/constants';
 
-const mockProfileMenu = {
-  title: 'Lê Viết Đạt',
-  role: 'Admin',
-  list: [
-    {
-      name: 'Trang cá nhân',
-      href: '/profile',
-    },
-    {
-      name: 'Đăng xuất',
-      href: '/logout',
-    },
-  ],
-};
+const dropdownNavItems = [
+  {
+    name: 'Trang cá nhân',
+    href: '/profile',
+  },
+  {
+    name: 'Cài đặt',
+    href: '/settings',
+  },
+];
 
-export default function ProfileMenu() {
-  const pathname = usePathname();
+export default async function ProfileMenu() {
+  const res = await auth();
+  const user = fakeAccounts.find((item) => item.email === res?.user?.email);
+  if (!user) return null;
 
   return (
     <div className='flex flex-row items-center gap-2'>
       <Avatar>
-        <AvatarImage src='https://github.com/shadcn.png' />
-        <AvatarFallback>{getAbbreviation(mockProfileMenu.title)}</AvatarFallback>
+        <AvatarImage src={user?.image} />
+        <AvatarFallback>{getAbbreviation(user?.name)}</AvatarFallback>
       </Avatar>
 
-      <NavMenu {...mockProfileMenu} />
+      <NavMenu list={dropdownNavItems} title={user.name} role={user.role} />
     </div>
   );
 }
@@ -42,24 +40,26 @@ function NavMenu({
   list,
 }: {
   title: string;
-  role: string;
+  role: Roles;
   list?: {
     name: string;
     href?: string;
   }[];
 }) {
+  const displayedRole = roleToText(role);
+
   return (
     <div className='group/nav relative flex flex-col gap-4 '>
       <div className='flex flex-col'>
-        <div className={'flex w-32 flex-row items-center justify-start gap-1 font-semibold'}>
-          <span>{title}</span>
+        <div className={'flex w-36 flex-row items-center justify-start gap-1 font-semibold'}>
+          <p className='truncate'>{getShortName(title)}</p>
           {list && (
             <div className='transition-all group-hover/nav:-rotate-90'>
               <BiSolidChevronDown fontSize={'1.2rem'} />
             </div>
           )}
         </div>
-        <span className='text-sm text-gray-700'>{role}</span>
+        <span className='text-sm text-gray-700'>{displayedRole}</span>
       </div>
 
       <div className='absolute right-2 hidden pt-[calc(3rem+14px)] group-hover/nav:block'>

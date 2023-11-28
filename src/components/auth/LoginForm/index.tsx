@@ -2,28 +2,40 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { useState } from 'react';
+import { useToast } from '@/components/ui/use-toast';
 import * as z from 'zod';
 
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
-import { PointType } from './constants';
-import { PointSelector } from './PointSelector';
+import { BranchTypeSelector } from './BranchTypeSelector';
 import { emailError, passwordError } from './constants';
+import { Loader2 } from 'lucide-react';
+import { BranchTypes } from '@/constants';
+import CustomAlert from '@/components/main/CustomAlert';
+import { usePathname, useRouter } from 'next/navigation';
+import { AuthResponse, authenticate } from '@/lib/actions';
 
 const formSchema = z.object({
-  pointType: z.enum([PointType.COLLECTION, PointType.TRANSACTION]).optional(),
+  branchType: z.enum([BranchTypes.COLLECTION_POINT, BranchTypes.TRANSACTION_POINT]).optional(),
   email: z.string().email(emailError.invalid),
-  password: z.string().min(8, passwordError.length).max(30, passwordError.length),
+  password: z.string().min(8, passwordError.length).max(32, passwordError.length),
   remember: z.boolean(),
 });
 
 export default function LoginForm({ isAdmin = false }: { isAdmin?: boolean }) {
+  const [loading, setLoading] = useState(false);
+  const [apiError, setApiError] = useState<string | undefined>('');
+  const { toast } = useToast();
+  const router = useRouter();
+  const pathname = usePathname();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      pointType: !isAdmin ? PointType.COLLECTION : undefined,
+      branchType: !isAdmin ? BranchTypes.COLLECTION_POINT : undefined,
       email: '',
       password: '',
       remember: false,
@@ -31,10 +43,38 @@ export default function LoginForm({ isAdmin = false }: { isAdmin?: boolean }) {
     mode: 'onBlur',
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // TODO: handle submit
-    window.alert(JSON.stringify(values, null, 2));
-  }
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      setLoading(true);
+      const res: AuthResponse | undefined = await authenticate({
+        redirect: false,
+        isAdmin,
+        branchType: values.branchType,
+        email: values.email,
+        password: values.password,
+        remember: values.remember,
+      });
+      if (!res?.ok) throw res;
+      toast({
+        title: 'Đăng nhập thành công',
+        description: res.message,
+        variant: 'default',
+      });
+      setApiError(undefined);
+      setTimeout(() => {
+        router.push(`${pathname}/../`);
+      }, 800);
+    } catch (error: any) {
+      setApiError(error.message);
+      toast({
+        title: 'Đăng nhập thất bại',
+        description: error.message,
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Form {...form}>
@@ -42,16 +82,18 @@ export default function LoginForm({ isAdmin = false }: { isAdmin?: boolean }) {
         {!isAdmin && (
           <FormField
             control={form.control}
-            name={'pointType'}
+            name={'branchType'}
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <PointSelector {...field} />
+                  <BranchTypeSelector {...field} />
                 </FormControl>
               </FormItem>
             )}
           />
         )}
+
+        {apiError && <CustomAlert variant='destructive' description={apiError} />}
 
         <FormField
           control={form.control}
@@ -78,6 +120,7 @@ export default function LoginForm({ isAdmin = false }: { isAdmin?: boolean }) {
             </FormItem>
           )}
         />
+
         <div className='flex flex-row'>
           <FormField
             control={form.control}
@@ -103,8 +146,13 @@ export default function LoginForm({ isAdmin = false }: { isAdmin?: boolean }) {
           </Button>
         </div>
 
-        <Button type='submit' className='w-full'>
-          Đăng nhập
+        <Button
+          type='submit'
+          disabled={loading}
+          className='flex w-full flex-row items-center justify-center gap-2'
+        >
+          {loading && <Loader2 className='h-4 w-4 animate-spin' />}
+          {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
         </Button>
       </form>
     </Form>

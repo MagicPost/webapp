@@ -2,10 +2,12 @@ import { TNavigationGroup } from '@/components/main/Sidebar/NavigationGroup';
 import { BiSolidDashboard } from 'react-icons/bi';
 import { BsFillPeopleFill } from 'react-icons/bs';
 import { FaBuilding } from 'react-icons/fa';
+import { PiPackageFill } from 'react-icons/pi';
+import { RiMoneyDollarCircleFill } from 'react-icons/ri';
 
 export const adminSidebarNavigation: TNavigationGroup[] = [
   {
-    groupName: 'Chung',
+    groupName: 'Trang chủ',
     items: [
       {
         label: 'Bảng điều khiển',
@@ -33,7 +35,7 @@ export const adminSidebarNavigation: TNavigationGroup[] = [
 
 export const managerSidebarNavigation: TNavigationGroup[] = [
   {
-    groupName: '',
+    groupName: 'Trang chủ',
     items: [
       {
         label: 'Bảng điều khiển',
@@ -52,16 +54,56 @@ export const managerSidebarNavigation: TNavigationGroup[] = [
       },
     ],
   },
+  {
+    groupName: 'Tra cứu',
+    items: [
+      {
+        label: 'Cước phí',
+        icon: <RiMoneyDollarCircleFill />,
+        href: '/logistics/lookup/postage',
+      },
+      {
+        label: 'Chi nhánh',
+        icon: <FaBuilding />,
+        href: '/logistics/lookup/branches',
+      },
+    ],
+  },
 ];
 
 export const employeeSidebarNavigation: TNavigationGroup[] = [
   {
-    groupName: '',
+    groupName: 'Trang chủ',
     items: [
       {
         label: 'Bảng điều khiển',
         icon: <BiSolidDashboard />,
         href: '/logistics/dashboard',
+      },
+    ],
+  },
+  {
+    groupName: 'Quản lý',
+    items: [
+      {
+        label: 'Đơn hàng',
+        icon: <PiPackageFill />,
+        href: '/logistics/orders',
+      },
+    ],
+  },
+  {
+    groupName: 'Tra cứu',
+    items: [
+      {
+        label: 'Cước phí',
+        icon: <RiMoneyDollarCircleFill />,
+        href: '/logistics/lookup/postage',
+      },
+      {
+        label: 'Chi nhánh',
+        icon: <FaBuilding />,
+        href: '/logistics/lookup/branches',
       },
     ],
   },

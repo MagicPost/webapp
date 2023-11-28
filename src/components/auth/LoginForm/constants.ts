@@ -1,8 +1,3 @@
-export enum PointType {
-  COLLECTION = 'collection-point',
-  TRANSACTION = 'transaction-point',
-}
-
 export const emailError = {
   invalid: {
     message: 'Định dạng email không hợp lệ.',
@@ -11,6 +6,6 @@ export const emailError = {
 
 export const passwordError = {
   length: {
-    message: 'Mật khẩu phải từ 8 đến 30 ký tự.',
+    message: 'Mật khẩu phải từ 8 đến 32 ký tự.',
   },
 };

@@ -19,7 +19,7 @@ export type TNavigationItem = {
 export default function NavigationGroup({ groupName, items }: TNavigationGroup) {
   return (
     <div>
-      <p className='select-none text-xs uppercase'>{groupName}</p>
+      <p className='mb-1 select-none text-xs uppercase'>{groupName}</p>
 
       <div className='flex flex-col gap-1'>
         {items.map((item, index) => (
@@ -36,8 +36,9 @@ function NavigationItem({ label, icon, href = '#' }: TNavigationItem) {
   return (
     <Button
       variant={'ghost'}
-      className={cn('flex flex-row justify-start px-2', {
-        'bg-green-100': pathname === href,
+      className={cn('flex flex-row justify-start border-2 px-3', {
+        'border-transparent': pathname !== href,
+        'border-orange-300 bg-orange-100': pathname === href,
       })}
       asChild
     >

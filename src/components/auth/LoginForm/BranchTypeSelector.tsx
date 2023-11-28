@@ -1,8 +1,8 @@
 import { cn } from '@/lib/utils';
-import { PointType } from './constants';
 import React from 'react';
+import { BranchTypes } from '@/constants';
 
-export const PointSelector = React.forwardRef<any, any>(function PointSelector(
+export const BranchTypeSelector = React.forwardRef<any, any>(function BranchTypeSelector(
   { onChange, ...props },
   ref
 ) {
@@ -14,13 +14,13 @@ export const PointSelector = React.forwardRef<any, any>(function PointSelector(
       className='mb-8 flex flex-row justify-between gap-1'
     >
       <RadioItem
-        value={PointType.COLLECTION}
+        value={BranchTypes.COLLECTION_POINT}
         groupValue={props.value}
         label={'Tài khoản điểm tập kết'}
       />
 
       <RadioItem
-        value={PointType.TRANSACTION}
+        value={BranchTypes.TRANSACTION_POINT}
         groupValue={props.value}
         label={'Tài khoản điểm giao dịch'}
       />
@@ -40,17 +40,17 @@ function RadioItem({
   return (
     <div
       className={cn(
-        'flex flex-1 items-center justify-center rounded border-2 border-gray-500 px-2 py-2 text-sm font-semibold',
+        'flex flex-1 items-center justify-center rounded border-2 px-2 py-2 text-sm font-semibold',
         {
-          'border-amber-500 text-amber-600': groupValue === value,
-          'text-gray-500': groupValue !== value,
+          'border-blue-600 bg-blue-100 text-blue-700': groupValue === value,
+          'border-gray-400 text-gray-400': groupValue !== value,
         }
       )}
     >
       <input
         type='radio'
         id={value}
-        name='point'
+        name='branch'
         value={value}
         className='radio-group-item hidden'
         defaultChecked={groupValue === value}
