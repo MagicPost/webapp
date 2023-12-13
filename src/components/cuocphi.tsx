@@ -1,4 +1,6 @@
-export default function cuocphi() {
+import React from "react"
+
+export default function Cuocphi() {
     return (
         <div>
             <div className="absolute top-20 w-full mt-6 px-4 sm:px-10 flex items-center justify-center"
