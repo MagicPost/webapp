@@ -8,7 +8,6 @@ import { adminSidebarNavigation } from '@/data/sidebar-navigation';
 import { MdLogout } from 'react-icons/md';
 import Link from 'next/link';
 import { PiMagicWandFill } from 'react-icons/pi';
-import { Separator } from '@/components/ui/separator';
 
 export default function Sidebar() {
   return (
@@ -53,7 +52,7 @@ function BottomPart({ className = '' }) {
   return (
     <div className={cn('flex items-start justify-center', className)}>
       <Button variant={'ghost'} asChild>
-        <Link href='/auth/login' className='flex flex-row items-center justify-start gap-2'>
+        <Link href='/auth/logout' className='flex flex-row items-center justify-start gap-2'>
           <span className='text-xl'>
             <MdLogout />
           </span>

@@ -1,5 +1,9 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export type TNavigationGroup = {
   groupName: string;
@@ -27,8 +31,16 @@ export default function NavigationGroup({ groupName, items }: TNavigationGroup) 
 }
 
 function NavigationItem({ label, icon, href = '#' }: TNavigationItem) {
+  const pathname = usePathname();
+
   return (
-    <Button variant={'ghost'} className='flex flex-row justify-start px-2' asChild>
+    <Button
+      variant={'ghost'}
+      className={cn('flex flex-row justify-start px-2', {
+        'bg-green-100': pathname === href,
+      })}
+      asChild
+    >
       <Link href={href}>
         <span className='text-xl'>{icon}</span>
         <nav className='ml-2 text-base'>{label}</nav>
