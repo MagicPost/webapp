@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { BiSolidChevronDown } from 'react-icons/bi';
 import { auth } from '@/lib/auth';
 import { getAbbreviation, getShortName, roleToText } from '@/lib/text';
-import { fakeAccounts } from '@/fake-accounts';
 import { Roles } from '@/constants';
+import { getUserByEmail } from '@/actions/user';
 
 const dropdownNavItems = [
   {
@@ -19,17 +19,21 @@ const dropdownNavItems = [
 
 export default async function ProfileMenu() {
   const res = await auth();
-  const user = fakeAccounts.find((item) => item.email === res?.user?.email);
+  const user = await getUserByEmail(res?.user?.email);
   if (!user) return null;
 
   return (
     <div className='flex flex-row items-center gap-2'>
       <Avatar>
-        <AvatarImage src={user?.image} />
-        <AvatarFallback>{getAbbreviation(user?.name)}</AvatarFallback>
+        <AvatarImage src={user.avatar} />
+        <AvatarFallback>{getAbbreviation(user.firstName + ' ' + user.lastName)}</AvatarFallback>
       </Avatar>
 
-      <NavMenu list={dropdownNavItems} title={user.name} role={user.role} />
+      <NavMenu
+        list={dropdownNavItems}
+        title={user.firstName + ' ' + user.lastName}
+        role={user.role}
+      />
     </div>
   );
 }

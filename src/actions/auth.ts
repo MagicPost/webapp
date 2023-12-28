@@ -35,7 +35,6 @@ export async function authenticate(options: Record<string, any>) {
           } satisfies AuthResponse;
       }
     }
-    // throw error;
   }
 }
 

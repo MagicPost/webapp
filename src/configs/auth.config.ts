@@ -1,5 +1,6 @@
 import { Areas, Roles } from '@/constants';
-import { fakeAccounts } from '@/fake-accounts';
+import dbConnect from '@/db/dbConnect';
+import { AccountModel } from '@/db/models/';
 import type { NextAuthConfig } from 'next-auth';
 import { NextResponse } from 'next/server';
 
@@ -17,7 +18,7 @@ const availableRoutes: { [key: string]: any } = {
 
 export const authConfig = {
   callbacks: {
-    authorized({ auth, request: { nextUrl } }) {
+    async authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
       const area = nextUrl.pathname.split('/')[1] as Areas;
       const page = nextUrl.pathname.split('/')[2];
@@ -32,9 +33,11 @@ export const authConfig = {
       if (!isLoggedIn) return NextResponse.redirect(loginUrl);
 
       // If user is logged in, but not in the correct area, redirect to login page
-      const user = fakeAccounts.find(
-        (account) => account.email === auth?.user?.email && account.name === auth?.user?.name
-      );
+      // await dbConnect();
+      // const user = await AccountModel.findOne({});
+      const user = {
+        role: Roles.ADMIN,
+      };
       if (!user) return NextResponse.redirect(loginUrl);
 
       // If user is logged in, but not in the correct area, redirect to login page

@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { logout } from '@/lib/actions';
+import { logout } from '@/actions/auth';
 import { useState } from 'react';
 
 export default function LogoutDialog({ children }: { children: React.ReactNode }) {

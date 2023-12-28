@@ -16,7 +16,7 @@ import { Loader2 } from 'lucide-react';
 import { BranchTypes } from '@/constants';
 import CustomAlert from '@/components/main/CustomAlert';
 import { usePathname, useRouter } from 'next/navigation';
-import { AuthResponse, authenticate } from '@/lib/actions';
+import { AuthResponse, authenticate } from '@/actions/auth';
 
 const formSchema = z.object({
   branchType: z.enum([BranchTypes.COLLECTION_POINT, BranchTypes.TRANSACTION_POINT]).optional(),

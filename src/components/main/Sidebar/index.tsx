@@ -13,11 +13,12 @@ import LogoutDialog from '@/components/auth/LogoutDialog';
 import { MdLogout } from 'react-icons/md';
 import { Badge } from '@/components/ui/badge';
 import { auth } from '@/lib/auth';
-import { TAccount, fakeAccounts } from '@/fake-accounts';
+import { getUserByEmail } from '@/actions/user';
+import { ComposeUserDTO } from '@/dtos/user/compose-user-info.dto';
 
 export default async function Sidebar() {
   const res = await auth();
-  const user = fakeAccounts.find((item) => item.email === res?.user?.email);
+  const user = await getUserByEmail(res?.user?.email);
   if (!user) return null;
 
   return (
@@ -34,7 +35,7 @@ export default async function Sidebar() {
   );
 }
 
-function TopPart({ className = '', user }: { className?: string; user: TAccount }) {
+function TopPart({ className = '', user }: { className?: string; user: ComposeUserDTO }) {
   return (
     <div className={cn('', className)}>
       <div className='flex h-topbar flex-row items-center gap-2'>
@@ -49,13 +50,15 @@ function TopPart({ className = '', user }: { className?: string; user: TAccount 
         variant={'default'}
         className='flex w-full flex-row items-center justify-center rounded-full py-2'
       >
-        <p className='text-sm font-semibold'>{user.branchName ? user.branchName : 'Ban quản lý'}</p>
+        <p className='text-sm font-semibold'>
+          {user.role === Roles.ADMIN ? 'Ban quản lý' : user.branch?.type}
+        </p>
       </Badge>
     </div>
   );
 }
 
-function MiddlePart({ className = '', user }: { className?: string; user: TAccount }) {
+function MiddlePart({ className = '', user }: { className?: string; user: ComposeUserDTO }) {
   const sidebarNavigation = {
     [Roles.ADMIN]: adminSidebarNavigation,
     [Roles.MANAGER]: managerSidebarNavigation,
