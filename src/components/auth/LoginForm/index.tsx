@@ -18,6 +18,7 @@ import CustomAlert from '@/components/main/CustomAlert';
 import { usePathname, useRouter } from 'next/navigation';
 import { ActionResponse } from '@/actions/types';
 import { authenticate } from '@/actions/auth';
+import { Label } from '@/components/ui/label';
 
 const formSchema = z.object({
   branchType: z.enum([BranchTypes.COLLECTION_POINT, BranchTypes.TRANSACTION_POINT]).optional(),
@@ -77,7 +78,7 @@ export default function LoginForm({ isAdminArea = false }: { isAdminArea?: boole
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
+      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
         {!isAdminArea && (
           <FormField
             control={form.control}
@@ -99,6 +100,7 @@ export default function LoginForm({ isAdminArea = false }: { isAdminArea?: boole
           name='email'
           render={({ field }) => (
             <FormItem>
+              <Label>Email</Label>
               <FormControl>
                 <Input placeholder='Nhập email' {...field} />
               </FormControl>
@@ -112,6 +114,7 @@ export default function LoginForm({ isAdminArea = false }: { isAdminArea?: boole
           name='password'
           render={({ field }) => (
             <FormItem>
+              <Label>Mật khẩu</Label>
               <FormControl>
                 <Input
                   placeholder='Nhập mật khẩu'
@@ -124,7 +127,7 @@ export default function LoginForm({ isAdminArea = false }: { isAdminArea?: boole
           )}
         />
 
-        <div className='flex flex-row'>
+        <div className='flex flex-col items-start sm:flex-row sm:items-center'>
           <div className='flex flex-row items-center justify-center gap-2 space-y-0'>
             <div className='flex flex-row items-center justify-center'>
               <Checkbox id='show-password' onCheckedChange={() => setShowPassword((old) => !old)} />

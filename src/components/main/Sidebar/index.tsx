@@ -23,7 +23,9 @@ export default async function Sidebar() {
 
   return (
     <aside
-      className={cn('left-0 top-0 h-screen border-r px-6 transition-all duration-300 ease-in-out')}
+      className={cn(
+        'left-0 top-0 h-screen border-r bg-white px-6 transition-all duration-300 ease-in-out'
+      )}
       aria-label='sidebar'
     >
       <div className='flex h-full flex-col'>

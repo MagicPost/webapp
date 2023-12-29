@@ -1,6 +1,7 @@
-import NewBranchDialog from './NewBranchDialog';
 import { getCollectionPoints } from '@/actions/branch';
 import BranchImageCard from './BranchImageCard';
+import NewBranchDialog from './NewBranchDialog';
+import { Filter } from './_components/Filter';
 
 export default async function BranchesPage() {
   // https://dribbble.com/shots/14686772-Digital-Building-Passport-Application/attachments/6384375?mode=media
@@ -18,29 +19,20 @@ export default async function BranchesPage() {
   return (
     <div className='p-4'>
       <h1 className='text-2xl font-bold'>Chi Nhánh</h1>
-      <div className='flex flex-row items-center justify-between'>
-        <div className='flex flex-row items-center gap-16'>
-          <div>
-            <p>Số điểm tập kết: {collectionPoints?.length}</p>
-            <p>Số điểm giao dịch: {transactionPointTotal}</p>
-          </div>
+      <div className='flex flex-col gap-2 md:flex-row md:items-center md:justify-between'>
+        <div className='flex flex-col gap-2 md:flex-row md:items-center md:gap-4'>
+          <p>Số điểm tập kết: {collectionPoints?.length}</p>
+          <p>Số điểm giao dịch: {transactionPointTotal}</p>
           <div>Tỉnh thành: {provincesNumber}/63</div>
         </div>
-
         <NewBranchDialog />
       </div>
 
       <div className='mb-8 mt-8 flex flex-row items-center justify-between'>
-        <div className='flex flex-row items-center gap-8'>
-          <p>Bộ lọc</p>
-          <p>Điểm tập kết</p>
-          <p>Tỉnh/Thành phố</p>
-          <p>Quận/huyện</p>
-        </div>
-        <div>Tìm kiếm theo địa chỉ</div>
+        <Filter />
       </div>
 
-      <div className='flex flex-wrap justify-center gap-8'>
+      <div className='grid grid-cols-1 justify-center gap-8 px-8 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5'>
         {collectionPoints && collectionPoints?.length > 0 ? (
           collectionPoints?.map((collectionPoint, index) => (
             <BranchImageCard key={index} collectionPoint={collectionPoint} />

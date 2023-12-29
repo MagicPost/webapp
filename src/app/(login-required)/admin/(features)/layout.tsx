@@ -3,7 +3,7 @@ import Topbar from '@/components/main/Topbar';
 
 export default function ManagementLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className='flex h-screen w-screen flex-row'>
+    <div className='flex h-screen w-screen flex-row bg-gray-50'>
       <Sidebar />
       <div className='flex flex-1 flex-col'>
         <Topbar />
