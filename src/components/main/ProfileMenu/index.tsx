@@ -53,20 +53,20 @@ function NavMenu({
   const displayedRole = roleToText(role);
 
   return (
-    <div className='group/nav relative flex flex-col gap-4 '>
+    <div className='group/nav relative flex cursor-pointer items-center gap-4'>
       <div className='flex flex-col'>
         <div className={'flex w-36 flex-row items-center justify-start gap-1 font-semibold'}>
           <p className='truncate'>{getShortName(title)}</p>
-          {list && (
-            <div className='transition-all group-hover/nav:-rotate-90'>
-              <BiSolidChevronDown fontSize={'1.2rem'} />
-            </div>
-          )}
         </div>
         <span className='text-sm text-gray-700'>{displayedRole}</span>
       </div>
+      {list && (
+        <div className='transition-all duration-150 group-hover/nav:-rotate-90'>
+          <BiSolidChevronDown fontSize={'1.2rem'} />
+        </div>
+      )}
 
-      <div className='absolute right-2 hidden pt-[calc(3rem+14px)] group-hover/nav:block'>
+      <div className='absolute right-2 top-0 hidden w-full pt-[calc(3rem+14px)] opacity-0 transition-all duration-200 group-hover/nav:block group-hover/nav:opacity-100'>
         <div className='relative whitespace-nowrap border-t border-t-gray-400 bg-white text-left shadow-lg'>
           {list?.map((item, index) => (
             <Link href={item.href || '#'} key={index}>
