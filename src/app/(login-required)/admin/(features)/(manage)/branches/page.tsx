@@ -19,20 +19,29 @@ export default async function BranchesPage() {
   return (
     <div className='p-4'>
       <h1 className='text-2xl font-bold'>Chi Nhánh</h1>
-      <div className='flex flex-col gap-2 md:flex-row md:items-center md:justify-between'>
+      <div className='mt-3 flex flex-col gap-2 md:flex-row md:items-center md:justify-between'>
         <div className='flex flex-col gap-2 md:flex-row md:items-center md:gap-4'>
-          <p>Số điểm tập kết: {collectionPoints?.length}</p>
-          <p>Số điểm giao dịch: {transactionPointTotal}</p>
-          <div>Tỉnh thành: {provincesNumber}/63</div>
+          <div className='font-sm rounded-md border bg-white px-4 py-2'>
+            <span className='text-neutral-600'>Số điểm tập kết:</span>{' '}
+            <span className='font-semibold'>{collectionPoints?.length}</span>
+          </div>
+          <div className='font-sm rounded-md border bg-white px-4 py-2'>
+            <span className='text-neutral-600'>Số điểm giao dịch:</span>{' '}
+            <span className='font-semibold'>{transactionPointTotal}</span>
+          </div>
+          <div className='font-sm rounded-md border bg-white px-4 py-2'>
+            <span className='text-neutral-600'>Số tỉnh/thành phố:</span>{' '}
+            <span className='font-semibold'>{provincesNumber}</span>
+          </div>
         </div>
         <NewBranchDialog />
       </div>
 
-      <div className='mb-8 mt-8 flex flex-row items-center justify-between'>
+      <div className='my-4 flex flex-row items-center justify-between'>
         <Filter />
       </div>
 
-      <div className='grid grid-cols-1 justify-center gap-8 px-8 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5'>
+      <div className='grid grid-cols-1 justify-center gap-8 py-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5'>
         {collectionPoints && collectionPoints?.length > 0 ? (
           collectionPoints?.map((collectionPoint, index) => (
             <BranchImageCard key={index} collectionPoint={collectionPoint} />
