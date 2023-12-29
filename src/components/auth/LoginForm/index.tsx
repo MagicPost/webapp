@@ -16,29 +16,29 @@ import { Loader2 } from 'lucide-react';
 import { BranchTypes } from '@/constants';
 import CustomAlert from '@/components/main/CustomAlert';
 import { usePathname, useRouter } from 'next/navigation';
-import { AuthResponse, authenticate } from '@/actions/auth';
+import { ActionResponse } from '@/actions/types';
+import { authenticate } from '@/actions/auth';
 
 const formSchema = z.object({
   branchType: z.enum([BranchTypes.COLLECTION_POINT, BranchTypes.TRANSACTION_POINT]).optional(),
   email: z.string().email(emailError.invalid),
   password: z.string().min(8, passwordError.length).max(32, passwordError.length),
-  remember: z.boolean(),
 });
 
-export default function LoginForm({ isAdmin = false }: { isAdmin?: boolean }) {
+export default function LoginForm({ isAdminArea = false }: { isAdminArea?: boolean }) {
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState<string | undefined>('');
   const { toast } = useToast();
   const router = useRouter();
   const pathname = usePathname();
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      branchType: !isAdmin ? BranchTypes.COLLECTION_POINT : undefined,
+      branchType: !isAdminArea ? BranchTypes.COLLECTION_POINT : undefined,
       email: '',
       password: '',
-      remember: false,
     },
     mode: 'onBlur',
   });
@@ -46,13 +46,12 @@ export default function LoginForm({ isAdmin = false }: { isAdmin?: boolean }) {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setLoading(true);
-      const res: AuthResponse | undefined = await authenticate({
+      const res: ActionResponse | undefined = await authenticate({
         redirect: false,
-        isAdmin,
+        isAdminArea,
         branchType: values.branchType,
         email: values.email,
         password: values.password,
-        remember: values.remember,
       });
       if (!res?.ok) throw res;
       toast({
@@ -79,7 +78,7 @@ export default function LoginForm({ isAdmin = false }: { isAdmin?: boolean }) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
-        {!isAdmin && (
+        {!isAdminArea && (
           <FormField
             control={form.control}
             name={'branchType'}
@@ -114,7 +113,11 @@ export default function LoginForm({ isAdmin = false }: { isAdmin?: boolean }) {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder='Nhập mật khẩu' type='password' {...field} />
+                <Input
+                  placeholder='Nhập mật khẩu'
+                  type={showPassword ? 'text' : 'password'}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -122,23 +125,17 @@ export default function LoginForm({ isAdmin = false }: { isAdmin?: boolean }) {
         />
 
         <div className='flex flex-row'>
-          <FormField
-            control={form.control}
-            name='remember'
-            render={({ field }) => (
-              <FormItem className='flex flex-row items-center justify-center gap-2 space-y-0'>
-                <FormControl className='flex flex-row items-center justify-center'>
-                  <Checkbox id='keep-login' onCheckedChange={() => field.onChange(!field.value)} />
-                </FormControl>
-                <label
-                  htmlFor='keep-login'
-                  className='cursor-pointer text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
-                >
-                  Giữ đăng nhập
-                </label>
-              </FormItem>
-            )}
-          />
+          <div className='flex flex-row items-center justify-center gap-2 space-y-0'>
+            <div className='flex flex-row items-center justify-center'>
+              <Checkbox id='show-password' onCheckedChange={() => setShowPassword((old) => !old)} />
+            </div>
+            <label
+              htmlFor='show-password'
+              className='cursor-pointer text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+            >
+              Hiện mật khẩu
+            </label>
+          </div>
 
           <Button variant='link' className='ml-auto text-slate-600' asChild>
             {/* TODO: replace with Link  */}

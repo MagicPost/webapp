@@ -1,24 +1,23 @@
 import { Areas, Roles } from '@/constants';
-import dbConnect from '@/db/dbConnect';
-import { AccountModel } from '@/db/models/';
-import type { NextAuthConfig } from 'next-auth';
 import { NextResponse } from 'next/server';
+
+import type { NextAuthConfig } from 'next-auth';
 
 const availableRoutes: { [key: string]: any } = {
   [Areas.ADMIN]: ['login', 'branches', 'dashboard', 'employees', 'settings'],
   [Areas.LOGISTICS]: {
-    login: [Roles.MANAGER, Roles.EMPLOYEE],
-    settings: [Roles.MANAGER, Roles.EMPLOYEE],
-    dashboard: [Roles.MANAGER, Roles.EMPLOYEE],
+    login: [Roles.MANAGER, Roles.STAFF],
+    settings: [Roles.MANAGER, Roles.STAFF],
+    dashboard: [Roles.MANAGER, Roles.STAFF],
     employees: [Roles.MANAGER],
-    orders: [Roles.EMPLOYEE],
-    lookup: [Roles.MANAGER, Roles.EMPLOYEE],
+    orders: [Roles.STAFF],
+    lookup: [Roles.MANAGER, Roles.STAFF],
   },
 };
 
 export const authConfig = {
   callbacks: {
-    async authorized({ auth, request: { nextUrl } }) {
+    authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
       const area = nextUrl.pathname.split('/')[1] as Areas;
       const page = nextUrl.pathname.split('/')[2];
@@ -33,10 +32,11 @@ export const authConfig = {
       if (!isLoggedIn) return NextResponse.redirect(loginUrl);
 
       // If user is logged in, but not in the correct area, redirect to login page
-      // await dbConnect();
-      // const user = await AccountModel.findOne({});
+      const parts = auth?.user?.name?.split('/');
       const user = {
-        role: Roles.ADMIN,
+        role: parts?.[0],
+        name: parts?.[1],
+        email: auth?.user?.email,
       };
       if (!user) return NextResponse.redirect(loginUrl);
 

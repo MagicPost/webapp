@@ -6,7 +6,7 @@ export enum Areas {
 export enum Roles {
   ADMIN = 'admin',
   MANAGER = 'manager',
-  EMPLOYEE = 'employee',
+  STAFF = 'staff',
 }
 
 export enum BranchTypes {
@@ -14,11 +14,16 @@ export enum BranchTypes {
   COLLECTION_POINT = 'collection_point',
 }
 
-export enum ShipmentStates {
+export enum PackageStates {
   PENDING = 'pending',
   IN_TRANSIT = 'in_transit',
   DELIVERED = 'delivered',
   RETURNED = 'returned',
+}
+
+export enum ContainerStates {
+  IN_TRANSIT = 'in_transit',
+  ARRIVED = 'arrived',
 }
 
 export enum Payer {

@@ -3,6 +3,7 @@ import { postalCodeRegex } from '@/lib/regex';
 import type { Ref } from '@typegoose/typegoose';
 import { modelOptions, prop } from '@typegoose/typegoose';
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
+import { Account } from './Account';
 
 abstract class AbstractBranch extends TimeStamps {
   public _id!: mongoose.Schema.Types.ObjectId;
@@ -25,13 +26,16 @@ abstract class AbstractBranch extends TimeStamps {
   public address!: string;
 
   @prop({ required: true })
+  public district!: string;
+
+  @prop({ required: true })
   public province!: string;
 
-  // @prop({ ref: () => Account, required: false })
-  // public manager?: Ref<Account>;
+  @prop({ ref: () => Account, required: false })
+  public manager?: Ref<Account>;
 
-  // @prop({ ref: () => Account, required: false, default: [] })
-  // public employees?: Ref<Account>[];
+  @prop({ ref: () => Account, required: false, default: [] })
+  public staffs?: Ref<Account>[];
 }
 
 ////  Collection Point  ////

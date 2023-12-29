@@ -24,7 +24,7 @@ export const roleToText = (role: Roles): string => {
       return 'Quản trị viên';
     case Roles.MANAGER:
       return 'Trưởng điểm';
-    case Roles.EMPLOYEE:
+    case Roles.STAFF:
       return 'Giao dịch viên';
     default:
       return '';

@@ -12,7 +12,7 @@ export default function LoginPage() {
           Admin
         </Badge>
       </div>
-      <LoginForm isAdmin={true} />
+      <LoginForm isAdminArea={true} />
     </LoginLayout>
   );
 }

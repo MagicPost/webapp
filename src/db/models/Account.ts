@@ -28,15 +28,12 @@ export class Account {
     type: () => String,
     required: true,
     enum: Roles,
-    default: () => Roles.EMPLOYEE,
+    default: () => Roles.STAFF,
   })
   public role!: Roles;
 
-  @prop({ required: true, unique: true })
+  @prop({ required: true, unique: true, type: () => String })
   public email!: string;
-
-  @prop({ required: false })
-  public username?: string;
 
   @prop({ required: true, select: false })
   public password!: string;
@@ -55,4 +52,7 @@ export class Account {
 
   @prop({ required: false, type: () => BranchDetails })
   public branch?: BranchDetails;
+
+  @prop({ required: true, default: false })
+  public active!: boolean;
 }

@@ -4,17 +4,17 @@ import Logo from '../Logo';
 import NavigationGroup from './NavigationGroup';
 import {
   adminSidebarNavigation,
-  employeeSidebarNavigation,
+  staffSidebarNavigation,
   managerSidebarNavigation,
 } from '@/constants/sidebar-navigation';
 import { PiMagicWandFill } from 'react-icons/pi';
-import { Roles } from '@/constants';
+import { BranchTypes, Roles } from '@/constants';
 import LogoutDialog from '@/components/auth/LogoutDialog';
 import { MdLogout } from 'react-icons/md';
 import { Badge } from '@/components/ui/badge';
 import { auth } from '@/lib/auth';
 import { getUserByEmail } from '@/actions/user';
-import { ComposeUserDTO } from '@/dtos/user/compose-user-info.dto';
+import { ComposeUserDTO } from '@/dtos/user/user.dto';
 
 export default async function Sidebar() {
   const res = await auth();
@@ -51,7 +51,11 @@ function TopPart({ className = '', user }: { className?: string; user: ComposeUs
         className='flex w-full flex-row items-center justify-center rounded-full py-2'
       >
         <p className='text-sm font-semibold'>
-          {user.role === Roles.ADMIN ? 'Ban quản lý' : user.branch?.type}
+          {user.role === Roles.ADMIN
+            ? 'Ban quản lý'
+            : user.branch?.type === BranchTypes.TRANSACTION_POINT
+              ? 'Điểm giao dịch'
+              : 'Điểm tập kết'}
         </p>
       </Badge>
     </div>
@@ -62,7 +66,7 @@ function MiddlePart({ className = '', user }: { className?: string; user: Compos
   const sidebarNavigation = {
     [Roles.ADMIN]: adminSidebarNavigation,
     [Roles.MANAGER]: managerSidebarNavigation,
-    [Roles.EMPLOYEE]: employeeSidebarNavigation,
+    [Roles.STAFF]: staffSidebarNavigation,
   }[user.role];
 
   return (

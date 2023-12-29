@@ -3,7 +3,7 @@ import { modelOptions, prop } from '@typegoose/typegoose';
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 import mongoose from 'mongoose';
 import { TransactionPoint } from './Branches';
-import { Payer, ShipmentStates } from '@/constants';
+import { Payer, PackageStates } from '@/constants';
 
 class Client {
   public fullname: string;
@@ -13,12 +13,12 @@ class Client {
 }
 
 @modelOptions({
-  schemaOptions: { collection: 'shipment', versionKey: false, timestamps: true },
+  schemaOptions: { collection: 'package', versionKey: false, timestamps: true },
   options: {
     allowMixed: 0,
   },
 })
-export class Shipment extends TimeStamps {
+export class Package extends TimeStamps {
   public _id: mongoose.Schema.Types.ObjectId;
 
   @prop({ required: true, ref: () => TransactionPoint })
@@ -65,7 +65,7 @@ export class Shipment extends TimeStamps {
     },
   ];
 
-  @prop({ required: true, enum: ShipmentStates, default: ShipmentStates.PENDING })
+  @prop({ required: true, enum: PackageStates, default: PackageStates.PENDING })
   public state: string;
 
   @prop({ required: true })

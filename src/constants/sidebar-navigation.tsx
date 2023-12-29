@@ -71,7 +71,7 @@ export const managerSidebarNavigation: TNavigationGroup[] = [
   },
 ];
 
-export const employeeSidebarNavigation: TNavigationGroup[] = [
+export const staffSidebarNavigation: TNavigationGroup[] = [
   {
     groupName: 'Trang chủ',
     items: [

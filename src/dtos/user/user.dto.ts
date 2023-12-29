@@ -1,5 +1,14 @@
 import { Account } from '@/db/models/Account';
 
+export interface CreateUserDTO extends Omit<Account, '_id' | 'password' | 'active' | 'branch'> {
+  branch: {
+    _id: string;
+    type: string;
+    name: string;
+    address: string;
+  };
+}
+
 export interface ComposeUserDTO extends Omit<Account, '_id' | 'password' | 'branch'> {
   _id: string;
   branch?: {
