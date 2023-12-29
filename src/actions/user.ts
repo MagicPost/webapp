@@ -7,6 +7,7 @@ import { ComposeUserDTO, CreateUserDTO } from '@/dtos/user/user.dto';
 import { ActionResponse } from './types';
 import bcrypt from 'bcrypt';
 import { sendActivationMail } from './mail';
+import { AES, enc } from 'crypto-js';
 
 export const getUserByEmail = async (email?: string | null) => {
   if (!email) return null;
@@ -98,6 +99,68 @@ export const createEmployeeAccount = async (createUserDTO: CreateUserDTO) => {
       status: 200,
       message: 'Thêm tài khoản thành công!',
       data: newAccount.toJSON(),
+    } satisfies ActionResponse;
+  } catch (error) {
+    console.error(error);
+    return {
+      ok: false,
+      status: 500,
+      message: 'Có lỗi xảy ra, vui lòng thử lại sau!',
+    } satisfies ActionResponse;
+  }
+};
+
+export const updateEmployeeAccount = async (composeUserDTO: ComposeUserDTO) => {
+  try {
+    await dbConnect();
+
+    const { _id, ...rest } = composeUserDTO;
+    const updatedAccount = await AccountModel.findByIdAndUpdate(_id, { ...rest }, { new: true });
+
+    return {
+      ok: true,
+      status: 200,
+      message: 'Cập nhật tài khoản thành công!',
+      data: updatedAccount?.toJSON(),
+    } satisfies ActionResponse;
+  } catch (error) {
+    console.error(error);
+    return {
+      ok: false,
+      status: 500,
+      message: 'Có lỗi xảy ra, vui lòng thử lại sau!',
+    } satisfies ActionResponse;
+  }
+};
+
+export const updateEmployeePassword = async ({
+  password,
+  token,
+}: {
+  password: string;
+  token: string;
+}) => {
+  try {
+    await dbConnect();
+
+    const decrypted = AES.decrypt(token, process.env.PRIVATE_KEY!);
+    if (!decrypted) throw new Error('Token không hợp lệ!');
+
+    const { _id } = JSON.parse(decrypted.toString(enc.Utf8));
+
+    const encryptedPassword = bcrypt.hashSync(password, 12);
+
+    const updatedAccount = await AccountModel.findByIdAndUpdate(
+      _id,
+      { password: encryptedPassword },
+      { new: true }
+    );
+
+    return {
+      ok: true,
+      status: 200,
+      message: 'Cập nhật mật khẩu thành công!',
+      data: updatedAccount?.toJSON(),
     } satisfies ActionResponse;
   } catch (error) {
     console.error(error);

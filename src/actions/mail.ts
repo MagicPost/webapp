@@ -30,6 +30,7 @@ export const sendActivationMail = async ({
     branch,
   };
   const encrypted = AES.encrypt(JSON.stringify(message), process.env.PRIVATE_KEY!).toString();
+  const base64Encoded = base64.encode(encrypted);
   const mailOptions = {
     from: process.env.MAIL_FROM,
     to: email,
@@ -38,7 +39,7 @@ export const sendActivationMail = async ({
     Xin chào,
     Bạn đã được cấp tài khoản MagicPost với email ${email}.
     Vui lòng nhấn vào link bên dưới để kích hoạt tài khoản:
-    ${process.env.NEXT_PUBLIC_CLIENT_URL}/activate/${encrypted}
+    ${process.env.NEXT_PUBLIC_CLIENT_URL}/activate/${base64Encoded}
     `,
   };
 
