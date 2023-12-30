@@ -3,7 +3,7 @@ import { modelOptions, prop } from '@typegoose/typegoose';
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 import mongoose from 'mongoose';
 import { TransactionPoint } from './Branches';
-import { Payer, PackageStates } from '@/constants';
+import { Payer, PackageStates, PackageTypes } from '@/constants';
 
 class Client {
   public fullname: string;
@@ -21,6 +21,9 @@ class Client {
 export class Package extends TimeStamps {
   public _id: mongoose.Schema.Types.ObjectId;
 
+  @prop({ required: true, enum: PackageTypes, type: () => String })
+  public type!: PackageTypes;
+
   @prop({ required: true, ref: () => TransactionPoint })
   public sentAt!: Ref<TransactionPoint>;
 
@@ -36,8 +39,8 @@ export class Package extends TimeStamps {
   @prop({ required: false })
   public description?: string;
 
-  @prop({ required: true, enum: Payer })
-  public payer: string;
+  @prop({ required: true, enum: Payer, type: () => String })
+  public payer: Payer;
 
   @prop({ required: true })
   public postages: [

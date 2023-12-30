@@ -4,6 +4,7 @@ import { BsFillPeopleFill } from 'react-icons/bs';
 import { FaBuilding } from 'react-icons/fa';
 import { PiPackageFill } from 'react-icons/pi';
 import { RiMoneyDollarCircleFill } from 'react-icons/ri';
+import { FaShippingFast } from 'react-icons/fa';
 
 export const adminSidebarNavigation: TNavigationGroup[] = [
   {
@@ -89,6 +90,11 @@ export const staffSidebarNavigation: TNavigationGroup[] = [
         label: 'Đơn hàng',
         icon: <PiPackageFill />,
         href: '/logistics/orders',
+      },
+      {
+        label: 'Vận đơn',
+        icon: <FaShippingFast />,
+        href: '/logistics/employees',
       },
     ],
   },

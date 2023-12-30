@@ -1,13 +1,15 @@
 import Sidebar from '@/components/main/Sidebar';
 import Topbar from '@/components/main/Topbar';
 
-export default function ManagementLayout({ children }: { children: React.ReactNode }) {
+export default function FeatureLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className='flex h-screen w-screen flex-row'>
-      <Sidebar />
-      <div className='flex flex-1 flex-col'>
+    <div className='h-screen w-screen overflow-hidden pl-64'>
+      <div className='fixed left-0 top-0 h-screen'>
+        <Sidebar />
+      </div>
+      <div className='flex h-full w-full flex-col overflow-auto'>
         <Topbar />
-        <main className='flex-1 overflow-y-auto'>{children}</main>
+        <main className='h-full flex-1'>{children}</main>
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import './globals.css';
 import { Noto_Sans } from 'next/font/google';
 import { Toaster } from '@/components/ui/toaster';
 import { Toaster as HotToaster } from 'react-hot-toast';
+import { cn } from '@/lib/utils';
 
 const notoSans = Noto_Sans({
   subsets: ['latin'],
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang='vi' className='scroll-smooth'>
-      <body className={notoSans.className}>
+      <body className={cn(notoSans.className, 'overflow-y-hidden')}>
         {children}
         <Toaster />
         <HotToaster />
