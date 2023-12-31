@@ -68,7 +68,4 @@ export class CollectionPoint extends AbstractBranch {
     allowMixed: 0,
   },
 })
-export class TransactionPoint extends AbstractBranch {
-  @prop({ required: true })
-  public district!: string;
-}
+export class TransactionPoint extends AbstractBranch {}

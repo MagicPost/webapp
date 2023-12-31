@@ -34,7 +34,7 @@ export default function CustomSelect({
           <FormControl>
             <Select onValueChange={field.onChange} defaultValue={field.value}>
               <FormControl>
-                <SelectTrigger className={cn('gap-4', selectClassName)}>
+                <SelectTrigger className={cn('gap-4 focus:ring-0', selectClassName)}>
                   <SelectValue placeholder={placeholder} />
                 </SelectTrigger>
               </FormControl>

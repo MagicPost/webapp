@@ -1,18 +1,11 @@
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Form } from '@/components/ui/form';
 import { UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 import { clientFormSchema } from './page';
-import { Input } from '@/components/ui/input';
 import CustomComboBox from '@/components/main/CustomCombobox';
 import { provinces } from '@/constants/geography';
 import { useEffect, useMemo } from 'react';
+import CustomInputField from '@/components/main/CustomInputField';
 
 export default function ClientForm({
   form,
@@ -135,41 +128,5 @@ export default function ClientForm({
         </div>
       </form>
     </Form>
-  );
-}
-
-function CustomInputField({
-  form,
-  name,
-  label,
-  placeholder,
-  type = 'text',
-  optional = false,
-}: {
-  form: UseFormReturn<z.infer<typeof clientFormSchema>>;
-  name: any;
-  label: string;
-  placeholder: string;
-  type?: string;
-  optional?: boolean;
-}) {
-  return (
-    <FormField
-      control={form.control}
-      name={name}
-      render={({ field }) => (
-        <FormItem className='flex flex-row items-center justify-between gap-4'>
-          <FormLabel className='w-1/4'>
-            {label} {!optional && <span className='text-red-500'>*</span>}
-          </FormLabel>
-          <div className='flex w-3/4 flex-col gap-1'>
-            <FormControl>
-              <Input className='w-full' placeholder={placeholder} type={type} {...field} />
-            </FormControl>
-            <FormMessage className='text-xs' />
-          </div>
-        </FormItem>
-      )}
-    />
   );
 }

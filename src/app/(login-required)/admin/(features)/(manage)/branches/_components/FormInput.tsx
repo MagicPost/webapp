@@ -39,7 +39,7 @@ export default function CustomInput({
               placeholder={placeholder}
               disabled={disabled}
               id={name}
-              className={cn('w-[200px] justify-between', inputClassName)}
+              className={cn('w-[200px] justify-between focus:ring-0', inputClassName)}
               {...(onTextChange && {
                 onChange: (e) => onTextChange(e.target.value),
               })}
