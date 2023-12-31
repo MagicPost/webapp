@@ -3,12 +3,12 @@ import { ReactNode } from 'react';
 
 export default function CustomTabs({
   icon,
-  iconContainerClassName,
+  iconContainerClassname,
   label,
   total = 0,
 }: {
   icon: ReactNode;
-  iconContainerClassName?: string;
+  iconContainerClassname?: string;
   label: string;
   total?: number;
 }) {
@@ -17,7 +17,7 @@ export default function CustomTabs({
       <div
         className={cn(
           'flex h-8 w-8 flex-row items-center justify-center rounded-lg',
-          iconContainerClassName
+          iconContainerClassname
         )}
       >
         {icon}

@@ -59,6 +59,7 @@ export default function ClientForm({
           label='Số điện thoại'
           placeholder='Nhập số điện thoại'
           type='text'
+          required
         />
 
         <CustomInputField
@@ -67,6 +68,7 @@ export default function ClientForm({
           label='Họ tên'
           placeholder='Nhập họ tên'
           type='text'
+          required
         />
 
         <CustomInputField
@@ -75,7 +77,6 @@ export default function ClientForm({
           label='Email'
           placeholder='Nhập email'
           type='email'
-          optional
         />
 
         <CustomInputField
@@ -84,6 +85,7 @@ export default function ClientForm({
           label='Địa chỉ'
           placeholder='Nhập địa chỉ'
           type='text'
+          required
         />
 
         <div className='mt-2 flex flex-row gap-4'>
@@ -94,9 +96,9 @@ export default function ClientForm({
               name='province'
               label='Tỉnh/Thành phố'
               options={provinceOptions}
-              labelClassName='text-xs'
-              selectClassName='w-full'
-              contentClassName='max-h-[200px] overflow-y-auto'
+              labelClassname='text-xs'
+              selectClassname='w-full'
+              contentClassname='max-h-[200px] overflow-y-auto'
               formMessageClassname='text-xs'
               placeholder='Chọn tỉnh/thành phố'
             />
@@ -106,9 +108,9 @@ export default function ClientForm({
               name='district'
               label='Quận/Huyện'
               options={districtOptions}
-              labelClassName='text-xs'
-              selectClassName='w-full'
-              contentClassName='max-h-[200px] overflow-y-auto'
+              labelClassname='text-xs'
+              selectClassname='w-full'
+              contentClassname='max-h-[200px] overflow-y-auto'
               formMessageClassname='text-xs'
               placeholder='Chọn quận/huyện'
             />
@@ -118,9 +120,9 @@ export default function ClientForm({
               name='ward'
               label='Phường/Xã'
               options={wardOptions}
-              labelClassName='text-xs'
-              selectClassName='w-full'
-              contentClassName='max-h-[200px] overflow-y-auto'
+              labelClassname='text-xs'
+              selectClassname='w-full'
+              contentClassname='max-h-[200px] overflow-y-auto'
               formMessageClassname='text-xs'
               placeholder='Chọn phường/xã'
             />

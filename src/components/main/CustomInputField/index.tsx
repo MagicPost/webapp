@@ -8,14 +8,14 @@ export default function CustomInputField({
   label,
   placeholder,
   type = 'text',
-  optional = false,
+  required = false,
 }: {
   form: UseFormReturn<any>;
-  name: any;
+  name: string;
   label: string;
   placeholder: string;
   type?: string;
-  optional?: boolean;
+  required?: boolean;
 }) {
   return (
     <FormField
@@ -24,7 +24,7 @@ export default function CustomInputField({
       render={({ field }) => (
         <FormItem className='flex flex-row items-center justify-between gap-4'>
           <FormLabel className='w-1/4'>
-            {label} {!optional && <span className='text-red-500'>*</span>}
+            {label} {required && <span className='text-red-500'>*</span>}
           </FormLabel>
           <div className='flex w-3/4 flex-col gap-1'>
             <FormControl>

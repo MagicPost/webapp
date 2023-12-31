@@ -110,15 +110,15 @@ export default function ActivateToken() {
                   label='Mật khẩu mới'
                   type={showPassword ? 'text' : 'password'}
                   control={form.control}
-                  containerClassName='w-full'
-                  inputClassName='w-full'
+                  containerClassname='w-full'
+                  inputClassname='w-full'
                 />
                 <CustomInput
                   name='confirmPassword'
                   label='Nhập lại mật khẩu mới'
                   type='password'
-                  containerClassName='w-full'
-                  inputClassName='w-full'
+                  containerClassname='w-full'
+                  inputClassname='w-full'
                   control={form.control}
                 />
                 <div className='flex flex-row items-center gap-2 space-y-0'>

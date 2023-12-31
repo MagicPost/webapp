@@ -7,8 +7,8 @@ import { HTMLInputTypeAttribute } from 'react';
 export default function CustomInput({
   label,
   placeholder,
-  inputClassName,
-  containerClassName,
+  inputClassname,
+  containerClassname,
   control,
   type,
   disabled,
@@ -17,8 +17,8 @@ export default function CustomInput({
 }: {
   label?: string;
   placeholder?: string;
-  inputClassName?: string;
-  containerClassName?: string;
+  inputClassname?: string;
+  containerClassname?: string;
   disabled?: boolean;
   type?: HTMLInputTypeAttribute;
   control: Control<any>;
@@ -30,7 +30,7 @@ export default function CustomInput({
       name={name}
       control={control}
       render={({ field }) => (
-        <FormItem className={cn('flex flex-col', containerClassName)}>
+        <FormItem className={cn('flex flex-col', containerClassname)}>
           {label && <FormLabel>{label}</FormLabel>}
           <FormControl>
             <Input
@@ -39,7 +39,7 @@ export default function CustomInput({
               placeholder={placeholder}
               disabled={disabled}
               id={name}
-              className={cn('w-[200px] justify-between focus:ring-0', inputClassName)}
+              className={cn('w-[200px] justify-between focus:ring-0', inputClassname)}
               {...(onTextChange && {
                 onChange: (e) => onTextChange(e.target.value),
               })}

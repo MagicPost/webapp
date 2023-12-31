@@ -123,6 +123,7 @@ function NewBranchForm() {
             label='Tên'
             placeholder='Nhập tên điểm tập kết'
             type='text'
+            required
           />
 
           <CustomInputField
@@ -131,6 +132,7 @@ function NewBranchForm() {
             label='Mã bưu chính'
             placeholder='Nhập mã bưu chính'
             type='text'
+            required
           />
         </div>
 
@@ -141,6 +143,7 @@ function NewBranchForm() {
             label='Địa chỉ'
             placeholder='Nhập địa chỉ cụ thể'
             type='text'
+            required
           />
 
           <div className='mt-2 flex flex-row gap-4'>
@@ -151,9 +154,9 @@ function NewBranchForm() {
                 name='province'
                 label='Tỉnh/Thành phố'
                 options={provinceOptions}
-                labelClassName='text-xs'
-                selectClassName='w-full'
-                contentClassName='max-h-[200px] overflow-y-auto'
+                labelClassname='text-xs'
+                selectClassname='w-full'
+                contentClassname='max-h-[200px] overflow-y-auto'
                 formMessageClassname='text-xs'
                 placeholder='Chọn tỉnh/thành phố'
               />
@@ -163,9 +166,9 @@ function NewBranchForm() {
                 name='district'
                 label='Quận/Huyện'
                 options={districtOptions}
-                labelClassName='text-xs'
-                selectClassName='w-full'
-                contentClassName='max-h-[200px] overflow-y-auto'
+                labelClassname='text-xs'
+                selectClassname='w-full'
+                contentClassname='max-h-[200px] overflow-y-auto'
                 formMessageClassname='text-xs'
                 placeholder='Chọn quận/huyện'
               />
@@ -175,9 +178,9 @@ function NewBranchForm() {
                 name='ward'
                 label='Phường/Xã'
                 options={wardOptions}
-                labelClassName='text-xs'
-                selectClassName='w-full'
-                contentClassName='max-h-[200px] overflow-y-auto'
+                labelClassname='text-xs'
+                selectClassname='w-full'
+                contentClassname='max-h-[200px] overflow-y-auto'
                 formMessageClassname='text-xs'
                 placeholder='Chọn phường/xã'
               />

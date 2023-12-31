@@ -12,7 +12,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { BranchTypes, Roles } from '@/constants';
+import { BranchTypes, Gender, Roles } from '@/constants';
 import { CreateUserDTO } from '@/dtos/user/user.dto';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Plus } from 'lucide-react';
@@ -22,6 +22,11 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { z } from 'zod';
+import CustomInputField from '@/components/main/CustomInputField';
+import CustomSelect from '@/components/main/CustomSelect';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
+import CustomComboBox from '@/components/main/CustomCombobox';
 
 export default function NewManagerDialog() {
   const [open, setOpen] = useState(false);
@@ -50,9 +55,10 @@ export default function NewManagerDialog() {
 
 const formSchema = z.object({
   email: z.string().email('Email không hợp lệ'),
+  gender: z.nativeEnum(Gender),
   firstName: z.string().min(1, 'Không được để trống'),
   lastName: z.string().min(1, 'Không được để trống'),
-  phone: z.string().refine(validator.isMobilePhone, 'Số điện thoại không hợp lệ').or(z.literal('')),
+  phone: z.string().refine(validator.isMobilePhone, 'Số điện thoại không hợp lệ'),
   branchType: z.nativeEnum(BranchTypes),
   branchId: z.string().optional(),
 });
@@ -62,6 +68,7 @@ function NewManagerForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: '',
+      gender: Gender.MALE,
       firstName: '',
       lastName: '',
       phone: '',
@@ -76,6 +83,7 @@ function NewManagerForm() {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const payload: CreateUserDTO = {
       role: Roles.MANAGER,
+      gender: data.gender,
       email: data.email,
       firstName: data.firstName,
       lastName: data.lastName,
@@ -106,100 +114,100 @@ function NewManagerForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
-        <FormField
-          control={form.control}
-          name='email'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                Email <span className='text-red-600'>*</span>
-              </FormLabel>
-              <FormControl>
-                <Input placeholder='Nhập email' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className='flex flex-row items-center justify-between gap-2'>
-          <FormField
-            control={form.control}
+        <div className='flex flex-row items-center justify-between gap-8'>
+          <CustomInputField
+            form={form}
             name='firstName'
-            render={({ field }) => (
-              <FormItem className='w-full flex-1'>
-                <FormLabel>
-                  Họ <span className='text-red-600'>*</span>
-                </FormLabel>
-                <FormControl>
-                  <Input placeholder='Nhập họ' {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            label='Họ'
+            placeholder='Nhập họ'
+            type='text'
+            required
           />
 
-          <FormField
-            control={form.control}
+          <CustomInputField
+            form={form}
             name='lastName'
-            render={({ field }) => (
-              <FormItem className='w-full flex-1'>
-                <FormLabel>
-                  Tên <span className='text-red-600'>*</span>
-                </FormLabel>
-                <FormControl>
-                  <Input placeholder='Nhập tên' {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            label='Tên'
+            placeholder='Nhập tên'
+            type='text'
+            required
           />
         </div>
 
         <FormField
           control={form.control}
-          name='phone'
+          name={'gender'}
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Số điện thoại</FormLabel>
+            <FormItem className='flex w-full flex-row items-center gap-4'>
+              <FormLabel htmlFor={field.name} className='mt-1 w-1/4'>
+                Giới tính
+              </FormLabel>
               <FormControl>
-                <Input placeholder='Nhập số điện thoại' {...field} />
+                <RadioGroup
+                  defaultValue={field.value}
+                  onValueChange={field.onChange}
+                  className='flex w-3/4 flex-row gap-4'
+                >
+                  <div className='flex items-center space-x-2'>
+                    <RadioGroupItem value={Gender.MALE} id='male' />
+                    <Label htmlFor='male'>Nam</Label>
+                  </div>
+                  <div className='flex items-center space-x-2'>
+                    <RadioGroupItem value={Gender.FEMALE} id='female' />
+                    <Label htmlFor='female'>Nữ</Label>
+                  </div>
+                </RadioGroup>
               </FormControl>
-              <FormMessage />
             </FormItem>
           )}
         />
 
-        <FormField
+        <CustomInputField
+          form={form}
+          name='email'
+          label='Email'
+          placeholder='Nhập email'
+          type='email'
+          required
+        />
+
+        <CustomInputField
+          form={form}
+          name='phone'
+          label='Số điện thoại'
+          placeholder='Nhập số điện thoại'
+          type='text'
+          required
+        />
+
+        <CustomSelect
           control={form.control}
           name='branchType'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                Loại chi nhánh <span className='text-red-600'>*</span>
-              </FormLabel>
-              <FormControl>
-                <Input placeholder='Loai chi nhanh' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          label='Loại chi nhánh'
+          cointainerClassname='w-full flex flex-row items-center justify-between gap-4'
+          labelClassname='w-1/4'
+          selectClassname='w-3/4'
+          options={[
+            { label: 'Điểm tập kết', value: BranchTypes.COLLECTION_POINT },
+            { label: 'Điểm giao dịch', value: BranchTypes.TRANSACTION_POINT },
+          ]}
         />
 
-        <FormField
+        <CustomComboBox
           control={form.control}
           name='branchId'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                Id chi nhánh <span className='text-red-600'>*</span>
-              </FormLabel>
-              <FormControl>
-                <Input placeholder='_id' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          label='Chi nhánh'
+          containerClassname='w-full flex flex-row items-center justify-between gap-4'
+          labelClassname='w-1/4'
+          selectClassname='w-3/4'
+          options={[
+            { label: 'Chi nhánh 1', value: '1' },
+            { label: 'Chi nhánh 2', value: '2' },
+            { label: 'Chi nhánh 3', value: '3' },
+            { label: 'Chi nhánh 4', value: '4' },
+            { label: 'Chi nhánh 5', value: '5' },
+          ]}
+          required
         />
 
         <div className='flex flex-row items-center justify-center gap-2'>

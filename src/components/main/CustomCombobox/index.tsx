@@ -20,14 +20,16 @@ export default function CustomComboBox({
   name,
   label,
   description,
-  labelClassName,
-  selectClassName,
+  containerClassname,
+  labelClassname,
+  selectClassname,
   inputValue,
-  contentClassName,
+  contentClassname,
   formMessageClassname,
   onInputChange,
   onValueChange,
   placeholder,
+  required = false,
 }: {
   control: Control<any>;
   options: {
@@ -37,14 +39,16 @@ export default function CustomComboBox({
   name: string;
   label: string;
   description?: string;
-  selectClassName?: string;
-  labelClassName?: string;
+  containerClassname?: string;
+  selectClassname?: string;
+  labelClassname?: string;
   onInputChange?: (value: string) => void;
   inputValue?: string;
-  contentClassName?: string;
+  contentClassname?: string;
   formMessageClassname?: string;
   onValueChange?: (value: string) => void;
   placeholder?: string;
+  required?: boolean;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -53,8 +57,10 @@ export default function CustomComboBox({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className='flex w-full flex-col'>
-          <FormLabel className={cn(labelClassName)}>{label}</FormLabel>
+        <FormItem className={cn('flex w-full flex-col', containerClassname)}>
+          <FormLabel className={cn(labelClassname)}>
+            {label} {required && <span className='text-red-500'>*</span>}
+          </FormLabel>
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <FormControl>
@@ -68,7 +74,7 @@ export default function CustomComboBox({
                   className={cn(
                     'w-[200px] justify-between',
                     !field.value && 'mt-2 text-muted-foreground',
-                    selectClassName
+                    selectClassname
                   )}
                 >
                   {field.value && options?.length > 0
@@ -78,7 +84,7 @@ export default function CustomComboBox({
                 </Button>
               </FormControl>
             </PopoverTrigger>
-            <PopoverContent className={cn('border p-2', contentClassName)}>
+            <PopoverContent className={cn('border p-2', contentClassname)}>
               <div>
                 <Input
                   placeholder={placeholder}

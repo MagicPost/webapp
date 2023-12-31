@@ -56,7 +56,7 @@ export const Filter = () => {
             control={form.control}
             options={provinceOptions}
             placeholder='Tỉnh/Thành phố'
-            selectClassName='w-full border-orange-300'
+            selectClassname='w-full border-orange-300'
           />
         </div>
         <div>
@@ -65,7 +65,7 @@ export const Filter = () => {
             control={form.control}
             options={districtOptions}
             placeholder='Quận/Huyện'
-            selectClassName='w-full border-orange-300'
+            selectClassname='w-full border-orange-300'
           />
         </div>
 
@@ -77,8 +77,8 @@ export const Filter = () => {
             name='branchAddress'
             control={form.control}
             placeholder='Tên, địa chỉ, mã bưu chính'
-            containerClassName='w-full'
-            inputClassName='w-full border-0'
+            containerClassname='w-full'
+            inputClassname='w-full border-0'
           />
           <Search size={16} />
         </Label>

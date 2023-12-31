@@ -63,3 +63,8 @@ export enum PickupTime {
   TIME_IN_WORKS = 'time_in_works',
   SUNDAY = 'sunday',
 }
+
+export enum Gender {
+  MALE = 'male',
+  FEMALE = 'female',
+}

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import type { Ref } from '@typegoose/typegoose';
 import { modelOptions, prop } from '@typegoose/typegoose';
-import { BranchTypes, Roles } from '@/constants/index';
+import { BranchTypes, Gender, Roles } from '@/constants/index';
 import { CollectionPoint, TransactionPoint } from './Branches';
 
 class BranchDetails {
@@ -32,6 +32,9 @@ export class Account {
   })
   public role!: Roles;
 
+  @prop({ required: true, enum: Gender, type: () => String, default: Gender.MALE })
+  public gender!: string;
+
   @prop({ required: true, unique: true, type: () => String })
   public email!: string;
 
@@ -44,8 +47,8 @@ export class Account {
   @prop({ required: true })
   public lastName!: string;
 
-  @prop()
-  public phone?: string;
+  @prop({ required: true })
+  public phone!: string;
 
   @prop()
   public avatar?: string;
