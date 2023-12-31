@@ -36,7 +36,6 @@ export default function ClientForm({
 
   const districtOptions = useMemo(() => {
     if (!form.watch('province')) return [];
-    console.log(provinces.filter((province) => province.codename === form.watch('province'))[0]);
     return (
       provinces
         .filter((province) => province.codename === form.watch('province'))[0]
@@ -60,7 +59,7 @@ export default function ClientForm({
 
   return (
     <Form {...form}>
-      <form className='space-y-4 px-4 pt-6'>
+      <form className='space-y-4 px-4 pt-6' onSubmit={(event) => event.preventDefault()}>
         <CustomInputField
           form={form}
           name='phone'
@@ -83,6 +82,7 @@ export default function ClientForm({
           label='Email'
           placeholder='Nhập email'
           type='email'
+          optional
         />
 
         <CustomInputField
@@ -104,6 +104,7 @@ export default function ClientForm({
               labelClassName='text-xs'
               selectClassName='w-full'
               contentClassName='max-h-[200px] overflow-y-auto'
+              formMessageClassname='text-xs'
               placeholder='Chọn tỉnh/thành phố'
             />
 
@@ -115,6 +116,7 @@ export default function ClientForm({
               labelClassName='text-xs'
               selectClassName='w-full'
               contentClassName='max-h-[200px] overflow-y-auto'
+              formMessageClassname='text-xs'
               placeholder='Chọn quận/huyện'
             />
 
@@ -126,6 +128,7 @@ export default function ClientForm({
               labelClassName='text-xs'
               selectClassName='w-full'
               contentClassName='max-h-[200px] overflow-y-auto'
+              formMessageClassname='text-xs'
               placeholder='Chọn phường/xã'
             />
           </div>
@@ -141,12 +144,14 @@ function CustomInputField({
   label,
   placeholder,
   type = 'text',
+  optional = false,
 }: {
   form: UseFormReturn<z.infer<typeof clientFormSchema>>;
   name: any;
   label: string;
   placeholder: string;
   type?: string;
+  optional?: boolean;
 }) {
   return (
     <FormField
@@ -155,7 +160,7 @@ function CustomInputField({
       render={({ field }) => (
         <FormItem className='flex flex-row items-center justify-between gap-4'>
           <FormLabel className='w-1/4'>
-            {label} <span className='text-red-600'>*</span>
+            {label} {!optional && <span className='text-red-500'>*</span>}
           </FormLabel>
           <div className='flex w-3/4 flex-col gap-1'>
             <FormControl>

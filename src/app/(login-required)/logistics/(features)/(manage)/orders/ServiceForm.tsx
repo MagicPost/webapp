@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { PickupTime, PlusServiceTypes, TransitServiceTypes } from '@/constants';
+import { Payer, PickupTime, PlusServiceTypes, TransitServiceTypes } from '@/constants';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import {
@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import CustomFormLabel from './CustomFormLabel';
+import { Textarea } from '@/components/ui/textarea';
 
 const plusServices = [
   {
@@ -58,12 +59,14 @@ const pickupTimes = [
 
 export default function ServiceForm({
   form,
+  totalPackagePrice,
 }: {
   form: UseFormReturn<z.infer<typeof serviceFormSchema>>;
+  totalPackagePrice: number;
 }) {
   return (
     <Form {...form}>
-      <form className='space-y-4 px-4 pt-8'>
+      <form className='space-y-4 px-4 pt-8' onSubmit={(event) => event.preventDefault()}>
         <div className='flex flex-row flex-wrap gap-4'>
           <FormField
             control={form.control}
@@ -72,27 +75,27 @@ export default function ServiceForm({
               <FormItem className='flex-2'>
                 <CustomFormLabel htmlFor={field.name}>Dịch vụ chính</CustomFormLabel>
                 <FormControl>
-                  <RadioGroup
-                    defaultValue={TransitServiceTypes.ECONOMICAL}
-                    onValueChange={field.onChange}
-                  >
+                  <RadioGroup defaultValue={field.value} onValueChange={field.onChange}>
                     <div className='flex items-center space-x-2'>
-                      <RadioGroupItem value={TransitServiceTypes.ECONOMICAL} id='r1' />
-                      <Label htmlFor='r1'>Tiết kiệm</Label>
+                      <RadioGroupItem
+                        value={TransitServiceTypes.ECONOMICAL}
+                        id='transit_economical'
+                      />
+                      <Label htmlFor='transit_economical'>Tiết kiệm</Label>
                     </div>
                     <div className='flex items-center space-x-2'>
-                      <RadioGroupItem value={TransitServiceTypes.STANDARD} id='r2' />
-                      <Label htmlFor='r2'>Tiêu chuẩn</Label>
+                      <RadioGroupItem value={TransitServiceTypes.STANDARD} id='transit_standard' />
+                      <Label htmlFor='transit_standard'>Tiêu chuẩn</Label>
                     </div>
                     <div className='flex items-center space-x-2'>
-                      <RadioGroupItem value={TransitServiceTypes.EXPRESS} id='r3' />
-                      <Label htmlFor='r3'>Hỏa tốc</Label>
+                      <RadioGroupItem value={TransitServiceTypes.EXPRESS} id='transit_express' />
+                      <Label htmlFor='transit_express'>Hỏa tốc</Label>
                     </div>
                   </RadioGroup>
                 </FormControl>
 
-                <div className='mt-2 flex items-center gap-2'>
-                  <span> Thời gian giao hàng dự kiến:</span>
+                <div className='mt-2 flex items-center gap-2 italic'>
+                  <span className='text-sm'>Thời gian giao hàng dự kiến:</span>
                   <span className='font-medium'> 2 - 3 ngày</span>
                 </div>
               </FormItem>
@@ -141,17 +144,14 @@ export default function ServiceForm({
               <FormItem className='flex-1'>
                 <CustomFormLabel htmlFor={field.name}>Người trả phí</CustomFormLabel>
                 <FormControl>
-                  <RadioGroup
-                    defaultValue={TransitServiceTypes.ECONOMICAL}
-                    onValueChange={field.onChange}
-                  >
+                  <RadioGroup defaultValue={field.value} onValueChange={field.onChange}>
                     <div className='flex items-center space-x-2'>
-                      <RadioGroupItem value={TransitServiceTypes.ECONOMICAL} id='r1' />
-                      <Label htmlFor='r1'>Người gửi trả</Label>
+                      <RadioGroupItem value={Payer.SENDER} id='sender_pays' />
+                      <Label htmlFor='sender_pays'>Người gửi trả</Label>
                     </div>
                     <div className='flex items-center space-x-2'>
-                      <RadioGroupItem value={TransitServiceTypes.STANDARD} id='r2' />
-                      <Label htmlFor='r2'>Người nhận trả</Label>
+                      <RadioGroupItem value={Payer.RECEIVER} id='receiver_pay' />
+                      <Label htmlFor='receiver_pay'>Người nhận trả</Label>
                     </div>
                   </RadioGroup>
                 </FormControl>
@@ -167,11 +167,28 @@ export default function ServiceForm({
             render={({ field }) => (
               <FormItem className='flex-1'>
                 <CustomFormLabel htmlFor={field.name}>Tiền thu hộ</CustomFormLabel>
-                <FormControl>
-                  <Input {...field} placeholder='Số tiền thu hộ' className='w-[240px]' />
-                </FormControl>
+                <div className="flex items-center after:top-1 after:-translate-x-[calc(100%+40px)] after:text-sm after:text-gray-500 after:content-['VNĐ']">
+                  <FormControl>
+                    <Input
+                      {...field}
+                      placeholder='Số tiền thu hộ'
+                      className='w-[240px]'
+                      type='number'
+                      onChange={(event) => {
+                        const value = Number(event.target.value);
+                        field.onChange(value);
+                      }}
+                    />
+                  </FormControl>
+                </div>
+
                 <div className='flex items-center space-x-2'>
-                  <Checkbox id='terms' />
+                  <Checkbox
+                    id='terms'
+                    onCheckedChange={(checked) =>
+                      checked ? form.setValue('COD', totalPackagePrice) : form.setValue('COD', 0)
+                    }
+                  />
                   <label
                     htmlFor='terms'
                     className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
@@ -191,7 +208,7 @@ export default function ServiceForm({
                   Thời gian giao hàng mong muốn
                 </CustomFormLabel>
                 <FormControl>
-                  <Select>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <SelectTrigger className='w-[180px]'>
                       <SelectValue placeholder='Chọn khung thời gian phù hợp' />
                     </SelectTrigger>
@@ -218,11 +235,7 @@ export default function ServiceForm({
             <FormItem className='flex-1'>
               <CustomFormLabel htmlFor={field.name}>Ghi chú</CustomFormLabel>
               <FormControl>
-                <textarea
-                  {...field}
-                  className='w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-300'
-                  placeholder='Ghi chú đơn hàng'
-                />
+                <Textarea {...field} placeholder='Ghi chú đơn hàng' />
               </FormControl>
             </FormItem>
           )}

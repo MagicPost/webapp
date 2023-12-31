@@ -24,6 +24,7 @@ export default function CustomComboBox({
   selectClassName,
   inputValue,
   contentClassName,
+  formMessageClassname,
   onInputChange,
   onValueChange,
   placeholder,
@@ -41,6 +42,7 @@ export default function CustomComboBox({
   onInputChange?: (value: string) => void;
   inputValue?: string;
   contentClassName?: string;
+  formMessageClassname?: string;
   onValueChange?: (value: string) => void;
   placeholder?: string;
 }) {
@@ -127,7 +129,7 @@ export default function CustomComboBox({
             </PopoverContent>
           </Popover>
           {description && <FormDescription>{description}</FormDescription>}
-          <FormMessage />
+          <FormMessage className={cn(formMessageClassname)} />
         </FormItem>
       )}
     />

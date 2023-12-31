@@ -1,4 +1,11 @@
-import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import { UseFormReturn } from 'react-hook-form';
 import { packageFormSchema } from './page';
 import { z } from 'zod';
@@ -42,23 +49,23 @@ export default function PackageForm({
 }) {
   return (
     <Form {...form}>
-      <form className='space-y-4 px-4 pt-8'>
+      <form className='space-y-4 px-4 pt-8' onSubmit={(event) => event.preventDefault()}>
         <div className='flex flex-row gap-4'>
           <FormField
             control={form.control}
             name={'type'}
             render={({ field }) => (
-              <FormItem className='w-1/3 '>
+              <FormItem className='w-1/3'>
                 <CustomFormLabel htmlFor={field.name}>Loại kiện hàng</CustomFormLabel>
                 <FormControl>
-                  <RadioGroup defaultValue={PackageTypes.PARCEL} onValueChange={field.onChange}>
+                  <RadioGroup defaultValue={field.value} onValueChange={field.onChange}>
                     <div className='flex items-center space-x-2'>
-                      <RadioGroupItem value={PackageTypes.PARCEL} id='r1' />
-                      <Label htmlFor='r1'>Bưu kiện</Label>
+                      <RadioGroupItem value={PackageTypes.PARCEL} id='package_parcel' />
+                      <Label htmlFor='package_parcel'>Bưu kiện</Label>
                     </div>
                     <div className='flex items-center space-x-2'>
-                      <RadioGroupItem value={PackageTypes.DOCUMENT} id='r2' />
-                      <Label htmlFor='r2'>Tài liệu</Label>
+                      <RadioGroupItem value={PackageTypes.DOCUMENT} id='package_document' />
+                      <Label htmlFor='package_document'>Tài liệu</Label>
                     </div>
                   </RadioGroup>
                 </FormControl>
@@ -104,56 +111,138 @@ export default function PackageForm({
           />
         </div>
 
-        <div>
-          <CustomFormLabel htmlFor='items'>Hàng hóa</CustomFormLabel>
-          <div className='mt-2 flex flex-col space-y-4'>
-            <ItemInput />
-            <ItemInput />
-            <ItemInput />
-          </div>
+        <div className='mt-2 flex flex-col space-y-4'>
+          {form.watch('items').map((_, index) => (
+            <div className='flex flex-row items-center space-x-4' key={index}>
+              <ItemInputField
+                form={form}
+                index={index}
+                label={
+                  <>
+                    Tên hàng <span className='text-red-500'>*</span>
+                  </>
+                }
+                placeholder='Nhập tên hàng'
+                fieldName='name'
+              />
+
+              <ItemInputField
+                form={form}
+                index={index}
+                label={
+                  <>
+                    Số lượng <span className='text-red-500'>*</span>
+                  </>
+                }
+                fieldName='quantity'
+                type='number'
+              />
+
+              <ItemInputField
+                form={form}
+                index={index}
+                label={
+                  <>
+                    Khối lượng đơn (g) <span className='text-red-500'>*</span>
+                  </>
+                }
+                fieldName='weight'
+                type='number'
+              />
+
+              <ItemInputField
+                form={form}
+                index={index}
+                label={
+                  <>
+                    Đơn giá (VNĐ) <span className='text-red-500'>*</span>
+                  </>
+                }
+                fieldName='price'
+                type='number'
+              />
+
+              <Button
+                type='button'
+                variant='destructive'
+                className='px-4 py-2'
+                onClick={() => {
+                  const items = form.getValues().items;
+                  const newItems = items.filter((_, itemIndex) => itemIndex !== index);
+                  form.reset({ ...form.watch(), items: [...newItems] });
+                }}
+              >
+                <Trash2 size={16} />
+              </Button>
+            </div>
+          ))}
         </div>
 
         <div className='flex h-full justify-center'>
-          <AddItemButton />
+          <Button
+            type='button'
+            variant='outline'
+            className='mt-2 space-x-2 border-2 border-orange-400 px-4 py-2 text-base'
+            onClick={() => {
+              form.setValue('items', [
+                ...form.getValues().items,
+                {
+                  name: '',
+                  quantity: 0,
+                  weight: 0,
+                  price: 0,
+                },
+              ]);
+            }}
+          >
+            <Plus size={16} />
+            <span>Thêm hàng hóa</span>
+          </Button>
         </div>
       </form>
     </Form>
   );
 }
 
-function ItemInput() {
+function ItemInputField({
+  form,
+  index,
+  type,
+  placeholder,
+  label,
+  fieldName,
+}: {
+  form: UseFormReturn<z.infer<typeof packageFormSchema>>;
+  index: number;
+  type?: HTMLInputTypeAttribute;
+  placeholder?: string;
+  label: string | JSX.Element;
+  fieldName: keyof z.infer<typeof packageFormSchema>['items'][number];
+}) {
   return (
-    <div className='flex flex-row items-center space-x-4'>
-      <InputElement label='Tên hàng' />
-      <InputElement label='Số lượng' type='number' />
-      <InputElement label='Khối lượng' type='number' />
-      <InputElement label='Giá trị' type='number' />
-
-      <Button type='button' variant='destructive' className='mt-6 px-4 py-2'>
-        <Trash2 size={16} />
-      </Button>
-    </div>
-  );
-}
-
-function InputElement({ label, type }: { label: string; type?: HTMLInputTypeAttribute }) {
-  return (
-    <div className='flex w-1/2 flex-col gap-2'>
-      <Label className='text-sm font-semibold'>{label}</Label>
-      <Input className='w-full rounded-md border border-gray-300 px-4 py-2' type={type} />
-    </div>
-  );
-}
-
-function AddItemButton() {
-  return (
-    <Button
-      type='button'
-      variant='outline'
-      className='mt-6 space-x-2 border-2 border-orange-400 px-4 py-2 text-base'
-    >
-      <Plus size={16} />
-      <span>Thêm hàng hóa</span>
-    </Button>
+    <FormField
+      control={form.control}
+      name={`items.${index}.${fieldName}`}
+      render={({ field }) => {
+        return (
+          <FormControl>
+            <div className='flex w-1/2 flex-col gap-2'>
+              <FormLabel className='text-sm font-semibold'>{label}</FormLabel>
+              <Input
+                className='w-full rounded-md border border-gray-300 px-4 py-2'
+                type={type}
+                {...field}
+                onChange={(event) => {
+                  const value = type === 'number' ? Number(event.target.value) : event.target.value;
+                  field.onChange(value);
+                }}
+                placeholder={placeholder}
+              />
+              <FormMessage className='block text-xs' holdOn />
+            </div>
+          </FormControl>
+        );
+      }}
+    />
   );
 }

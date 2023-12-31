@@ -1,5 +1,4 @@
 import Sidebar from '@/components/main/Sidebar';
-import Topbar from '@/components/main/Topbar';
 
 export default function FeatureLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -8,7 +7,6 @@ export default function FeatureLayout({ children }: { children: React.ReactNode 
         <Sidebar />
       </div>
       <div className='flex h-full w-full flex-col overflow-auto'>
-        <Topbar />
         <main className='h-full flex-1'>{children}</main>
       </div>
     </div>

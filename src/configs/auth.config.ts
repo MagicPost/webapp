@@ -10,6 +10,7 @@ const availableRoutes: { [key: string]: any } = {
     settings: [Roles.MANAGER, Roles.STAFF],
     dashboard: [Roles.MANAGER, Roles.STAFF],
     employees: [Roles.MANAGER],
+    shipments: [Roles.STAFF],
     orders: [Roles.STAFF],
     lookup: [Roles.MANAGER, Roles.STAFF],
   },

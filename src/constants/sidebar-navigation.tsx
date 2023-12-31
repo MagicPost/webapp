@@ -94,7 +94,7 @@ export const staffSidebarNavigation: TNavigationGroup[] = [
       {
         label: 'Vận đơn',
         icon: <FaShippingFast />,
-        href: '/logistics/employees',
+        href: '/logistics/shipments',
       },
     ],
   },

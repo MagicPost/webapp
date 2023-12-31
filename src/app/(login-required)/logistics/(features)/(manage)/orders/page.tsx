@@ -15,23 +15,20 @@ import {
 import PackageForm from './PackageForm';
 import ServiceForm from './ServiceForm';
 import { Button } from '@/components/ui/button';
+import { useMemo } from 'react';
 
 export const clientFormSchema = z.object({
-  phone: z.string().refine(validator.isMobilePhone, 'Số điện thoại không hợp lệ').or(z.literal('')),
+  phone: z.string().refine(validator.isMobilePhone, 'Số điện thoại không hợp lệ'),
   email: z.string().email('Email không hợp lệ').or(z.literal('')),
-  fullname: z.string(),
-  address: z.string(),
-  province: z.string(),
-  district: z.string(),
-  ward: z.string(),
+  fullname: z.string().min(1, 'Không được để trống!'),
+  address: z.string().min(1, 'Không được để trống!'),
+  province: z.string().min(1, 'Không được để trống!'),
+  district: z.string().min(1, 'Không được để trống!'),
+  ward: z.string().min(1, 'Không được để trống!'),
 });
 
 export const packageFormSchema = z.object({
   type: z.nativeEnum(PackageTypes),
-  weight: z.number().positive('Khối lượng phải là số dương'),
-  length: z.number().positive('Chiều dài phải là số dương'),
-  width: z.number().positive('Chiều rộng phải là số dương'),
-  height: z.number().positive('Chiều cao phải là số dương'),
   specialNotes: z.object({
     [SpecialProperties.HIGHVALUE]: z.boolean(),
     [SpecialProperties.FRAGILE]: z.boolean(),
@@ -41,9 +38,10 @@ export const packageFormSchema = z.object({
   }),
   items: z.array(
     z.object({
-      name: z.string(),
-      quantity: z.number().positive('Số lượng phải là số dương'),
-      price: z.number().positive('Giá phải là số dương'),
+      name: z.string().min(1, 'Không được để trống!'),
+      quantity: z.number().positive('Phải lớn hơn 0!'),
+      weight: z.number().positive('Phải lớn hơn 0!'),
+      price: z.number().positive('Phải lớn hơn 0!'),
     })
   ),
 });
@@ -87,10 +85,6 @@ export default function OrdersPage() {
     resolver: zodResolver(packageFormSchema),
     defaultValues: {
       type: PackageTypes.PARCEL,
-      weight: 0,
-      length: 0,
-      width: 0,
-      height: 0,
       specialNotes: {
         [SpecialProperties.HIGHVALUE]: false,
         [SpecialProperties.FRAGILE]: false,
@@ -98,7 +92,14 @@ export default function OrdersPage() {
         [SpecialProperties.PERISHABLE]: false,
         [SpecialProperties.BULKY]: false,
       },
-      items: [],
+      items: [
+        {
+          name: '',
+          weight: 0,
+          quantity: 0,
+          price: 0,
+        },
+      ],
     },
     mode: 'onBlur',
   });
@@ -114,10 +115,48 @@ export default function OrdersPage() {
       note: '',
       COD: 0,
       payer: Payer.SENDER,
-      pickupTime: PickupTime.MORNING,
+      pickupTime: PickupTime.ALL_DAY,
     },
     mode: 'onBlur',
   });
+
+  const totalPackageWeight = useMemo(() => {
+    return Math.max(
+      0,
+      packageForm.watch('items').reduce((acc, item) => acc + item.weight * item.quantity, 0)
+    );
+  }, [JSON.stringify(packageForm.watch('items'))]);
+
+  const totalPackagePrice = useMemo(() => {
+    return Math.max(
+      0,
+      packageForm.watch('items').reduce((acc, item) => acc + item.price * item.quantity, 0)
+    );
+  }, [JSON.stringify(packageForm.watch('items'))]);
+
+  const totalItemNumber = useMemo(() => {
+    return Math.max(
+      0,
+      packageForm.watch('items').reduce((acc, item) => acc + item.quantity, 0)
+    );
+  }, [JSON.stringify(packageForm.watch('items'))]);
+
+  const onSubmit = async () => {
+    console.log(serviceForm.getValues());
+
+    senderForm.handleSubmit((senderFormData) => {
+      receiverForm.handleSubmit((receiverFormData) => {
+        packageForm.handleSubmit((packageFormData) => {
+          serviceForm.handleSubmit((serviceFormData) => {
+            console.log(senderFormData);
+            console.log(receiverFormData);
+            console.log(packageFormData);
+            console.log(serviceFormData);
+          })();
+        })();
+      })();
+    })();
+  };
 
   return (
     <>
@@ -136,12 +175,32 @@ export default function OrdersPage() {
           </div>
 
           <div className='flex w-3/5 flex-col gap-4'>
-            <SectionWrapper title='Thông tin đơn hàng'>
+            <SectionWrapper
+              title='Thông tin đơn hàng'
+              footer={
+                <div className='flex flex-row justify-end'>
+                  <div className='flex flex-col gap-2 font-semibold'>
+                    <div className='flex flex-row justify-between gap-44'>
+                      <div>Tổng khối lượng</div>
+                      <div>{totalPackageWeight} (g)</div>
+                    </div>
+                    <div className='flex flex-row justify-between'>
+                      <div>Tổng giá trị</div>
+                      <div>{totalPackagePrice} (VNĐ)</div>
+                    </div>
+                    <div className='flex flex-row justify-between'>
+                      <div>Tổng số lượng</div>
+                      <div>{totalItemNumber}</div>
+                    </div>
+                  </div>
+                </div>
+              }
+            >
               <PackageForm form={packageForm} />
             </SectionWrapper>
 
             <SectionWrapper title='Chọn dịch vụ'>
-              <ServiceForm form={serviceForm} />
+              <ServiceForm form={serviceForm} totalPackagePrice={totalPackagePrice} />
             </SectionWrapper>
           </div>
         </div>
@@ -160,20 +219,30 @@ export default function OrdersPage() {
         <div>Thời gian dự kiến</div>
 
         <div>
-          <Button>Hoàn tất</Button>
+          <Button onClick={onSubmit}>Hoàn tất</Button>
         </div>
       </div>
     </>
   );
 }
 
-function SectionWrapper({ title, children }: { title: string; children: React.ReactNode }) {
+function SectionWrapper({
+  title,
+  children,
+  footer,
+}: {
+  title: string;
+  children: React.ReactNode;
+  footer?: React.ReactNode;
+}) {
   return (
-    <div className='rounded-lg border border-red-500 pb-6'>
+    <div className={`rounded-lg border border-red-500 ${footer ? 'pb-4' : 'pb-6'}`}>
       <div className='border-b border-red-500 px-4 py-2'>
         <h2 className='font-semibold uppercase'>{title}</h2>
       </div>
       {children}
+
+      {footer && <div className='mt-4 border-t border-red-500 px-4 py-2'>{footer}</div>}
     </div>
   );
 }

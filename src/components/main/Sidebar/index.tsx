@@ -7,7 +7,6 @@ import {
   staffSidebarNavigation,
   managerSidebarNavigation,
 } from '@/constants/sidebar-navigation';
-import { PiMagicWandFill } from 'react-icons/pi';
 import { BranchTypes, Roles } from '@/constants';
 import LogoutDialog from '@/components/auth/LogoutDialog';
 import { MdLogout } from 'react-icons/md';
@@ -15,6 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import { auth } from '@/lib/auth';
 import { getUserByEmail } from '@/actions/user';
 import { ComposeUserDTO } from '@/dtos/user/user.dto';
+import ProfileMenu from '../ProfileMenu';
 
 export default async function Sidebar() {
   const res = await auth();
@@ -38,13 +38,8 @@ export default async function Sidebar() {
 function TopPart({ className = '', user }: { className?: string; user: ComposeUserDTO }) {
   return (
     <div className={cn('', className)}>
-      <div className='flex h-topbar flex-row items-center gap-2'>
-        <Button variant={'ghost'} className='h-10 w-10 rounded-full'>
-          <span className='text-2xl'>
-            <PiMagicWandFill />
-          </span>
-        </Button>
-        <Logo className={cn('text-xl transition-all duration-200 ease-in-out')} />
+      <div className='mt-2 h-topbar'>
+        <Logo />
       </div>
       <Badge
         variant={'default'}
@@ -70,11 +65,14 @@ function MiddlePart({ className = '', user }: { className?: string; user: Compos
   }[user.role];
 
   return (
-    <div className={cn('flex flex-col space-y-4', className)}>
-      {sidebarNavigation.map((group, index) => (
-        <NavigationGroup key={index} {...group} />
-      ))}
-    </div>
+    <>
+      <ProfileMenu />
+      <div className={cn('flex flex-col space-y-4', className)}>
+        {sidebarNavigation.map((group, index) => (
+          <NavigationGroup key={index} {...group} />
+        ))}
+      </div>
+    </>
   );
 }
 

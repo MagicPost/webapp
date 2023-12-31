@@ -133,13 +133,23 @@ FormDescription.displayName = 'FormDescription';
 
 const FormMessage = React.forwardRef<
   HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement>
->(({ className, children, ...props }, ref) => {
+  React.HTMLAttributes<HTMLParagraphElement> & { holdOn?: boolean }
+>(({ className, children, holdOn = false, ...props }, ref) => {
   const { error, formMessageId } = useFormField();
   const body = error ? String(error?.message) : children;
 
   if (!body) {
-    return null;
+    if (!holdOn) return null;
+    return (
+      <p
+        ref={ref}
+        id={formMessageId}
+        className={cn('select-none text-sm font-medium text-transparent', className)}
+        {...props}
+      >
+        .
+      </p>
+    );
   }
 
   return (
