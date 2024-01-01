@@ -6,7 +6,7 @@ import { Form } from '@/components/ui/form';
 import { Search } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import CustomSelect from '@/components/main/CustomSelect';
-import CustomInput from './FormInput';
+import CustomInput from '@/components/main/CustomInput';
 import { provinces } from '@/constants/geography';
 import { useEffect, useMemo } from 'react';
 
@@ -26,7 +26,7 @@ export const Filter = () => {
 
   const provinceOptions = useMemo(() => {
     return provinces.map((province) => {
-      return { label: province.name, value: province.codename };
+      return { label: province.name, value: province.name };
     });
   }, []);
 
@@ -34,9 +34,9 @@ export const Filter = () => {
     if (!form.watch('province')) return [];
     return (
       provinces
-        .filter((province) => province.codename === form.watch('province'))[0]
+        .filter((province) => province.name === form.watch('province'))[0]
         ?.districts.map((district) => {
-          return { label: district.name, value: district.codename };
+          return { label: district.name, value: district.name };
         }) || []
     );
   }, [form.watch('province')]);
@@ -80,6 +80,7 @@ export const Filter = () => {
             containerClassname='w-full'
             inputClassname='w-full border-0'
           />
+
           <Search size={16} />
         </Label>
       </form>

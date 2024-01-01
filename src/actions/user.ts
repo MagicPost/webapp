@@ -3,11 +3,12 @@
 import { BranchTypes, Roles } from '@/constants';
 import dbConnect from '@/db/dbConnect';
 import { AccountModel } from '@/db/models';
-import { ComposeUserDTO, CreateUserDTO } from '@/dtos/user/user.dto';
+import { ComposeUserDTO, CreateUserDTO, toComposeUserDTO } from '@/dtos/user/user.dto';
 import { ActionResponse } from './types';
 import bcrypt from 'bcrypt';
 import { sendActivationMail } from './mail';
 import { AES, enc } from 'crypto-js';
+import { Account } from '@/db/models/Account';
 
 export const getUserByEmail = async (email?: string | null) => {
   if (!email) return null;
@@ -46,13 +47,20 @@ export const getEmployees = async ({
   try {
     await dbConnect();
     const query = AccountModel.find(filter);
-    const employees = await query.exec();
+    let employees = await query.lean().exec();
+
+    employees = employees.map((employee) => {
+      const temp = toComposeUserDTO(employee as Account);
+      return temp;
+    });
+    console.log(employees);
 
     return {
       ok: true,
       status: 200,
       message: '',
-      data: employees,
+      // data: employees as ComposeUserDTO[],
+      data: [],
     } satisfies ActionResponse;
   } catch (error) {
     return {
@@ -62,6 +70,8 @@ export const getEmployees = async ({
     } satisfies ActionResponse;
   }
 };
+
+const DEFAULT_PASSWORD = 'abcd1234';
 
 export const createEmployeeAccount = async (createUserDTO: CreateUserDTO) => {
   if (createUserDTO.role === Roles.ADMIN) return;
@@ -79,7 +89,13 @@ export const createEmployeeAccount = async (createUserDTO: CreateUserDTO) => {
         message: 'Email đã tồn tại!',
       };
 
-    const password = bcrypt.hashSync('abcd1234', 12);
+    const password = bcrypt.hashSync(DEFAULT_PASSWORD, 12);
+    const branch = {
+      type: createUserDTO.branch.type,
+      [createUserDTO.branch.type === BranchTypes.COLLECTION_POINT
+        ? 'collectionPoint'
+        : 'transactionPoint']: createUserDTO.branch._id,
+    };
     const newAccount = await AccountModel.create({
       ...createUserDTO,
       password,

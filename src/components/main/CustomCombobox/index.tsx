@@ -61,7 +61,7 @@ export default function CustomComboBox({
           <FormLabel className={cn(labelClassname)}>
             {label} {required && <span className='text-red-500'>*</span>}
           </FormLabel>
-          <Popover open={open} onOpenChange={setOpen}>
+          <Popover open={open} onOpenChange={setOpen} modal={true}>
             <PopoverTrigger asChild>
               <FormControl>
                 <Button

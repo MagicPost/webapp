@@ -23,7 +23,7 @@ export default function ClientForm({
 
   const provinceOptions = useMemo(() => {
     return provinces.map((province) => {
-      return { label: province.name, value: province.codename };
+      return { label: province.name, value: province.name };
     });
   }, []);
 
@@ -31,9 +31,9 @@ export default function ClientForm({
     if (!form.watch('province')) return [];
     return (
       provinces
-        .filter((province) => province.codename === form.watch('province'))[0]
+        .filter((province) => province.name === form.watch('province'))[0]
         ?.districts.map((district) => {
-          return { label: district.name, value: district.codename };
+          return { label: district.name, value: district.name };
         }) || []
     );
   }, [form.watch('province')]);
@@ -42,10 +42,10 @@ export default function ClientForm({
     if (!form.watch('province') || !form.watch('district')) return [];
     return (
       provinces
-        .filter((province) => province.codename === form.watch('province'))[0]
-        ?.districts.filter((district) => district.codename === form.watch('district'))[0]
+        .filter((province) => province.name === form.watch('province'))[0]
+        ?.districts.filter((district) => district.name === form.watch('district'))[0]
         ?.wards.map((ward) => {
-          return { label: ward.name, value: ward.codename };
+          return { label: ward.name, value: ward.name };
         }) || []
     );
   }, [form.watch('province'), form.watch('district')]);

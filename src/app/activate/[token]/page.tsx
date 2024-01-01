@@ -1,7 +1,7 @@
 'use client';
 
 import { updateEmployeePassword } from '@/actions/user';
-import CustomInput from '@/app/(login-required)/admin/(features)/(manage)/branches/_components/FormInput';
+import CustomInput from '@/components/main/CustomInput';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Form, FormItem } from '@/components/ui/form';

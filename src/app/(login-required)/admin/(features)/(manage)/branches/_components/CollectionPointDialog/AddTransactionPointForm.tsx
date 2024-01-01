@@ -5,6 +5,7 @@ import CustomInputField from '@/components/main/CustomInputField';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { provinces } from '@/constants/geography';
+import { GetCollectionPointDTO } from '@/dtos/branches/collection-point.dto';
 import { postalCodeRegex } from '@/lib/regex';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useMemo, useState } from 'react';
@@ -15,12 +16,15 @@ const formSchema = z.object({
   name: z.string().min(1, 'Không được để trống!'),
   address: z.string().min(1, 'Không được để trống!'),
   district: z.string().min(1, 'Không được để trống!'),
-  province: z.string().min(1, 'Không được để trống!'),
   ward: z.string().min(1, 'Không được để trống!'),
-  postalCode: z.string().regex(postalCodeRegex, 'Mã bưu chính không hợp lệ'),
+  postalCode: z.string().regex(postalCodeRegex, 'Mã bưu chính không hợp lệ, phải gồm 6 chữ số!'),
 });
 
-export default function NewBranchForm() {
+export default function AddTransactionPointForm({
+  collectionPoint,
+}: {
+  collectionPoint: GetCollectionPointDTO;
+}) {
   const [showForm, setShowForm] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -29,49 +33,42 @@ export default function NewBranchForm() {
       name: '',
       address: '',
       district: '',
-      province: '',
       postalCode: '',
     },
-    mode: 'onBlur',
+    mode: 'onSubmit',
   });
-
-  useEffect(() => {
-    form.setValue('district', '');
-    form.setValue('ward', '');
-  }, [form.watch('province')]);
 
   useEffect(() => {
     form.setValue('ward', '');
   }, [form.watch('district')]);
 
-  const provinceOptions = useMemo(() => {
-    return provinces.map((province) => {
-      return { label: province.name, value: province.codename };
-    });
-  }, []);
+  const province = useMemo(() => {
+    return provinces.filter((province) => province.name === collectionPoint.province)[0];
+  }, [collectionPoint.province]);
 
   const districtOptions = useMemo(() => {
-    if (!form.watch('province')) return [];
+    if (!province) return [];
     return (
-      provinces
-        .filter((province) => province.codename === form.watch('province'))[0]
-        ?.districts.map((district) => {
-          return { label: district.name, value: district.codename };
-        }) || []
+      province?.districts.map((district) => {
+        return { label: district.name, value: district.name };
+      }) || []
     );
-  }, [form.watch('province')]);
+  }, []);
 
   const wardOptions = useMemo(() => {
-    if (!form.watch('province') || !form.watch('district')) return [];
+    if (!province || !form.watch('district')) return [];
     return (
-      provinces
-        .filter((province) => province.codename === form.watch('province'))[0]
-        ?.districts.filter((district) => district.codename === form.watch('district'))[0]
+      province?.districts
+        .filter((district) => district.name === form.watch('district'))[0]
         ?.wards.map((ward) => {
-          return { label: ward.name, value: ward.codename };
+          return { label: ward.name, value: ward.name };
         }) || []
     );
-  }, [form.watch('province'), form.watch('district')]);
+  }, [province, form.watch('district')]);
+
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    console.log(data);
+  };
 
   return (
     <div>
@@ -87,7 +84,7 @@ export default function NewBranchForm() {
 
       {showForm && (
         <Form {...form}>
-          <form className='flex flex-col gap-0 space-y-8'>
+          <form className='flex flex-col gap-0 space-y-8' onSubmit={form.handleSubmit(onSubmit)}>
             <div className='max-h-[21rem] overflow-auto'>
               <div className='flex-1'>
                 <CustomInputField
@@ -124,18 +121,6 @@ export default function NewBranchForm() {
                   <div className='w-3/4 space-y-5'>
                     <CustomComboBox
                       control={form.control}
-                      name='province'
-                      label='Tỉnh/Thành phố'
-                      options={provinceOptions}
-                      labelClassname='text-xs'
-                      selectClassname='w-full'
-                      contentClassname='max-h-[200px] overflow-y-auto'
-                      formMessageClassname='text-xs'
-                      placeholder='Chọn tỉnh/thành phố'
-                    />
-
-                    <CustomComboBox
-                      control={form.control}
                       name='district'
                       label='Quận/Huyện'
                       options={districtOptions}
@@ -168,6 +153,7 @@ export default function NewBranchForm() {
               </Button>
               <Button
                 variant='outline'
+                type='button'
                 onClick={() => {
                   form.reset();
                   setShowForm(false);

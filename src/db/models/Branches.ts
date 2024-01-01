@@ -1,7 +1,7 @@
-import mongoose from 'mongoose';
+import mongoose, { Collection } from 'mongoose';
 import { postalCodeRegex } from '@/lib/regex';
 import type { Ref } from '@typegoose/typegoose';
-import { modelOptions, prop } from '@typegoose/typegoose';
+import { modelOptions, pre, prop } from '@typegoose/typegoose';
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 import { Account } from './Account';
 
@@ -50,11 +50,11 @@ abstract class AbstractBranch extends TimeStamps {
   },
 })
 export class CollectionPoint extends AbstractBranch {
-  @prop({ required: true, type: () => [TransactionPoint] })
-  public transactionPoints!: TransactionPoint[];
+  @prop({ required: true, ref: () => TransactionPoint, default: [] })
+  public transactionPoints!: Ref<TransactionPoint>[];
 
-  @prop({ ref: () => CollectionPoint, required: false, default: [] })
-  public neighbors?: Ref<CollectionPoint>[];
+  @prop({ required: true })
+  public geolocation!: string;
 }
 
 ////  Transaction Point  ////
@@ -68,4 +68,7 @@ export class CollectionPoint extends AbstractBranch {
     allowMixed: 0,
   },
 })
-export class TransactionPoint extends AbstractBranch {}
+export class TransactionPoint extends AbstractBranch {
+  @prop({ required: true, ref: () => CollectionPoint })
+  public collectionPoint!: Ref<CollectionPoint>;
+}

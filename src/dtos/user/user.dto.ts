@@ -1,4 +1,6 @@
+import { BranchTypes } from '@/constants';
 import { Account } from '@/db/models/Account';
+import { transformObjectIdFromLeanedDoc } from '@/lib/mongo';
 
 export interface CreateUserDTO extends Omit<Account, '_id' | 'password' | 'active' | 'branch'> {
   branch: {
@@ -19,13 +21,21 @@ export interface ComposeUserDTO extends Omit<Account, '_id' | 'password' | 'bran
 }
 
 export const toComposeUserDTO = (account: Account) => {
-  const { _id, branch, ...rest } = account;
+  const { branch, ...rest } = transformObjectIdFromLeanedDoc(account);
+
+  const branchId =
+    branch?.type === BranchTypes.COLLECTION_POINT
+      ? branch?.collectionPoint
+      : branch?.transactionPoint;
+
   return {
-    _id: String(_id),
-    // branch: {
-    //   _id: String(branch?.collectionPoint),
-    //   type: branch?.type!,
-    // },
+    ...(branch?.type &&
+      branchId && {
+        branch: {
+          _id: String(branchId),
+          type: branch?.type,
+        },
+      }),
     ...rest,
   } satisfies ComposeUserDTO;
 };

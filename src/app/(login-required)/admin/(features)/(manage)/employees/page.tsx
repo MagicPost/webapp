@@ -1,5 +1,7 @@
 import { getEmployees } from '@/actions/user';
-import NewManagerDialog from './NewManagerDialog';
+import NewManagerDialog from './_components/NewManagerDialog';
+import EmployeeTable from './_components/EmployeeTable';
+import { columns } from './_components/EmployeeColumns';
 
 export default async function EmployeesPage() {
   const managers = (
@@ -14,13 +16,10 @@ export default async function EmployeesPage() {
     })
   )?.data;
 
-  // console.log(managers);
-  // console.log(staffs);
-
   return (
     <div className='p-4'>
       <h1 className='text-2xl font-bold'>Quản lý nhân sự</h1>
-      <div>
+      {/* <div>
         Trưởng điểm chi nhánh
         {managers && managers.length > 0 ? (
           managers.map((item, index) => <div key={index}>{JSON.stringify(item)}</div>)
@@ -36,7 +35,9 @@ export default async function EmployeesPage() {
         ) : (
           <div>Nothing</div>
         )}
-      </div>
+      </div> */}
+
+      <EmployeeTable columns={columns} data={[...managers!, ...staffs!]} />
 
       <NewManagerDialog />
     </div>

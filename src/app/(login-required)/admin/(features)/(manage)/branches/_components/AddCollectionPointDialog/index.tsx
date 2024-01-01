@@ -4,7 +4,10 @@ import { createCollectionPoint } from '@/actions/branch';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/components/ui/dialog';
 import { Form } from '@/components/ui/form';
-import { CreateCollectionPointDTO } from '@/dtos/branches/collection-point.dto';
+import {
+  CreateCollectionPointDTO,
+  GetCollectionPointDTO,
+} from '@/dtos/branches/collection-point.dto';
 import { postalCodeRegex } from '@/lib/regex';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Plus } from 'lucide-react';
@@ -17,7 +20,7 @@ import { z } from 'zod';
 import CustomInputField from '@/components/main/CustomInputField';
 import CustomComboBox from '@/components/main/CustomCombobox';
 
-export default function NewBranchDialog() {
+export default function AddCollectionPointDialog(props: any) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -36,7 +39,7 @@ export default function NewBranchDialog() {
         <DialogHeader className='mx-auto my-4 text-center text-xl font-semibold'>
           Thêm điểm tập kết
         </DialogHeader>
-        <NewBranchForm />
+        <NewBranchForm {...props} />
       </DialogContent>
     </Dialog>
   );
@@ -48,10 +51,14 @@ const formSchema = z.object({
   district: z.string().min(1, 'Không được để trống!'),
   province: z.string().min(1, 'Không được để trống!'),
   ward: z.string().min(1, 'Không được để trống!'),
-  postalCode: z.string().regex(postalCodeRegex, 'Mã bưu chính không hợp lệ'),
+  postalCode: z.string().regex(postalCodeRegex, 'Mã bưu chính không hợp lệ, phải gồm 6 chữ số!'),
 });
 
-function NewBranchForm() {
+function NewBranchForm({
+  setSavedCollectionPoints,
+}: {
+  setSavedCollectionPoints: React.Dispatch<React.SetStateAction<GetCollectionPointDTO[]>>;
+}) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -75,7 +82,7 @@ function NewBranchForm() {
 
   const provinceOptions = useMemo(() => {
     return provinces.map((province) => {
-      return { label: province.name, value: province.codename };
+      return { label: province.name, value: province.name };
     });
   }, []);
 
@@ -83,9 +90,9 @@ function NewBranchForm() {
     if (!form.watch('province')) return [];
     return (
       provinces
-        .filter((province) => province.codename === form.watch('province'))[0]
+        .filter((province) => province.name === form.watch('province'))[0]
         ?.districts.map((district) => {
-          return { label: district.name, value: district.codename };
+          return { label: district.name, value: district.name };
         }) || []
     );
   }, [form.watch('province')]);
@@ -94,10 +101,10 @@ function NewBranchForm() {
     if (!form.watch('province') || !form.watch('district')) return [];
     return (
       provinces
-        .filter((province) => province.codename === form.watch('province'))[0]
-        ?.districts.filter((district) => district.codename === form.watch('district'))[0]
+        .filter((province) => province.name === form.watch('province'))[0]
+        ?.districts.filter((district) => district.name === form.watch('district'))[0]
         ?.wards.map((ward) => {
-          return { label: ward.name, value: ward.codename };
+          return { label: ward.name, value: ward.name };
         }) || []
     );
   }, [form.watch('province'), form.watch('district')]);
@@ -109,6 +116,7 @@ function NewBranchForm() {
       toast.error(res?.message);
     } else {
       toast.success(res?.message);
+      setSavedCollectionPoints((prev) => [...prev, res?.data]);
       form.reset();
     }
   };
