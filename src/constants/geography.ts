@@ -5,6 +5,8 @@ export type Province = {
   division_type: string;
   phone_code: number;
   districts: District[];
+  id: string;
+  geolocation: string;
 };
 
 export type District = {
@@ -4356,6 +4358,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704413791',
+    geolocation: '21.0283,105.8542',
   },
   {
     name: 'Tỉnh Hà Giang',
@@ -5815,6 +5819,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704495953',
+    geolocation: '22.8333,104.9833',
   },
   {
     name: 'Tỉnh Cao Bằng',
@@ -7041,6 +7047,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704552735',
+    geolocation: '22.6667,106.2583',
   },
   {
     name: 'Tỉnh Bắc Kạn',
@@ -7878,6 +7886,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704000217',
+    geolocation: '22.1333,105.8333',
   },
   {
     name: 'Tỉnh Tuyên Quang',
@@ -8916,6 +8926,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704662313',
+    geolocation: '21.8167,105.2167',
   },
   {
     name: 'Tỉnh Lào Cai',
@@ -10070,6 +10082,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704290986',
+    geolocation: '22.4806,103.9750',
   },
   {
     name: 'Tỉnh Điện Biên',
@@ -11072,6 +11086,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704081536',
+    geolocation: '21.3833,103.0167',
   },
   {
     name: 'Tỉnh Lai Châu',
@@ -11895,6 +11911,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704983526',
+    geolocation: '22.3992,103.4392',
   },
   {
     name: 'Tỉnh Sơn La',
@@ -13440,6 +13458,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704957010',
+    geolocation: '21.3270,103.9141',
   },
   {
     name: 'Tỉnh Yên Bái',
@@ -14741,6 +14761,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704249231',
+    geolocation: '21.7000,104.8667',
   },
   {
     name: 'Tỉnh Hoà Bình',
@@ -15897,6 +15919,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704237072',
+    geolocation: '20.8133,105.3383',
   },
   {
     name: 'Tỉnh Thái Nguyên',
@@ -17226,6 +17250,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704613715',
+    geolocation: '21.6000,105.8500',
   },
   {
     name: 'Tỉnh Lạng Sơn',
@@ -18734,6 +18760,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704004349',
+    geolocation: '21.8478,106.7578',
   },
   {
     name: 'Tỉnh Quảng Ninh',
@@ -20099,6 +20127,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704379547',
+    geolocation: '20.9500,107.0667',
   },
   {
     name: 'Tỉnh Bắc Giang',
@@ -21661,6 +21691,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704256754',
+    geolocation: '21.2667,106.2000',
   },
   {
     name: 'Tỉnh Phú Thọ',
@@ -23362,6 +23394,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704332956',
+    geolocation: '21.3000,105.4333',
   },
   {
     name: 'Tỉnh Vĩnh Phúc',
@@ -24404,6 +24438,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704905946',
+    geolocation: '21.3100,105.5967',
   },
   {
     name: 'Tỉnh Bắc Ninh',
@@ -25367,6 +25403,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704025181',
+    geolocation: '21.1833,106.0500',
   },
   {
     name: 'Tỉnh Hải Dương',
@@ -27129,6 +27167,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704909566',
+    geolocation: '20.9397,106.3306',
   },
   {
     name: 'Thành phố Hải Phòng',
@@ -28791,6 +28831,8 @@ export const provinces: Province[] = [
         wards: [],
       },
     ],
+    id: '1704000623',
+    geolocation: '20.8651,106.6838',
   },
   {
     name: 'Tỉnh Hưng Yên',
@@ -30017,6 +30059,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704000203',
+    geolocation: '20.6500,106.0667',
   },
   {
     name: 'Tỉnh Thái Bình',
@@ -31918,6 +31962,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704716027',
+    geolocation: '20.4461,106.3422',
   },
   {
     name: 'Tỉnh Hà Nam',
@@ -32744,6 +32790,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704841896',
+    geolocation: '20.5411,105.9139',
   },
   {
     name: 'Tỉnh Nam Định',
@@ -34425,6 +34473,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704906277',
+    geolocation: '20.4200,106.1683',
   },
   {
     name: 'Tỉnh Ninh Bình',
@@ -35507,6 +35557,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704442748',
+    geolocation: '20.2539,105.9750',
   },
   {
     name: 'Tỉnh Thanh Hóa',
@@ -39672,6 +39724,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704016079',
+    geolocation: '19.8075,105.7764',
   },
   {
     name: 'Tỉnh Nghệ An',
@@ -43090,6 +43144,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704960059',
+    geolocation: '18.6667,105.6667',
   },
   {
     name: 'Tỉnh Hà Tĩnh',
@@ -44728,6 +44784,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704544061',
+    geolocation: '18.3333,105.9000',
   },
   {
     name: 'Tỉnh Quảng Bình',
@@ -45866,6 +45924,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704323043',
+    geolocation: '17.4831,106.5997',
   },
   {
     name: 'Tỉnh Quảng Trị',
@@ -46839,6 +46899,8 @@ export const provinces: Province[] = [
         wards: [],
       },
     ],
+    id: '1704264596',
+    geolocation: '16.8303,107.0972',
   },
   {
     name: 'Tỉnh Thừa Thiên Huế',
@@ -47916,6 +47978,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704016023',
+    geolocation: '16.4667,107.5792',
   },
   {
     name: 'Thành phố Đà Nẵng',
@@ -48388,6 +48452,8 @@ export const provinces: Province[] = [
         wards: [],
       },
     ],
+    id: '1704949870',
+    geolocation: '16.0748,108.2240',
   },
   {
     name: 'Tỉnh Quảng Nam',
@@ -50246,6 +50312,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704410655',
+    geolocation: '15.5667,108.4833',
   },
   {
     name: 'Tỉnh Quảng Ngãi',
@@ -51582,6 +51650,8 @@ export const provinces: Province[] = [
         wards: [],
       },
     ],
+    id: '1704029499',
+    geolocation: '15.1167,108.8000',
   },
   {
     name: 'Tỉnh Bình Định',
@@ -52803,6 +52873,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704056461',
+    geolocation: '13.7667,109.2333',
   },
   {
     name: 'Tỉnh Phú Yên',
@@ -53663,6 +53735,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704697424',
+    geolocation: '13.0819,109.2950',
   },
   {
     name: 'Tỉnh Khánh Hòa',
@@ -54726,6 +54800,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704497901',
+    geolocation: '12.2450,109.1917',
   },
   {
     name: 'Tỉnh Ninh Thuận',
@@ -55253,6 +55329,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704094609',
+    geolocation: '11.5667,108.9833',
   },
   {
     name: 'Tỉnh Bình Thuận',
@@ -56220,6 +56298,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704221456',
+    geolocation: '10.9333,108.1000',
   },
   {
     name: 'Tỉnh Kon Tum',
@@ -57033,6 +57113,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704988146',
+    geolocation: '14.3544,108.0075',
   },
   {
     name: 'Tỉnh Gia Lai',
@@ -58735,6 +58817,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704220080',
+    geolocation: '13.9833,108.0000',
   },
   {
     name: 'Tỉnh Đắk Lắk',
@@ -60167,6 +60251,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704542086',
+    geolocation: '12.6667,108.0500',
   },
   {
     name: 'Tỉnh Đắk Nông',
@@ -60745,6 +60831,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704361005',
+    geolocation: '11.9833,107.7000',
   },
   {
     name: 'Tỉnh Lâm Đồng',
@@ -61856,6 +61944,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704933464',
+    geolocation: '11.9359,108.4429',
   },
   {
     name: 'Tỉnh Bình Phước',
@@ -62741,6 +62831,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704845487',
+    geolocation: '11.5169,106.8392',
   },
   {
     name: 'Tỉnh Tây Ninh',
@@ -63489,6 +63581,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704250951',
+    geolocation: '11.3678,106.1189',
   },
   {
     name: 'Tỉnh Bình Dương',
@@ -64216,6 +64310,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704890399',
+    geolocation: '10.9667,106.6500',
   },
   {
     name: 'Tỉnh Đồng Nai',
@@ -65514,6 +65610,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704863046',
+    geolocation: '10.9500,106.8167',
   },
   {
     name: 'Tỉnh Bà Rịa - Vũng Tàu',
@@ -66168,6 +66266,8 @@ export const provinces: Province[] = [
         wards: [],
       },
     ],
+    id: '1704581438',
+    geolocation: '10.3833,107.1167',
   },
   {
     name: 'Thành phố Hồ Chí Minh',
@@ -68559,6 +68659,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704774326',
+    geolocation: '10.7756,106.7019',
   },
   {
     name: 'Tỉnh Long An',
@@ -70019,6 +70121,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704199290',
+    geolocation: '10.5333,106.4167',
   },
   {
     name: 'Tỉnh Tiền Giang',
@@ -71331,6 +71435,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704000376',
+    geolocation: '10.3500,106.3500',
   },
   {
     name: 'Tỉnh Bến Tre',
@@ -72520,6 +72626,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704108909',
+    geolocation: '10.2333,106.3833',
   },
   {
     name: 'Tỉnh Trà Vinh',
@@ -73352,6 +73460,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704929966',
+    geolocation: '9.9333,106.3500',
   },
   {
     name: 'Tỉnh Vĩnh Long',
@@ -74182,6 +74292,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704262419',
+    geolocation: '10.2500,105.9667',
   },
   {
     name: 'Tỉnh Đồng Tháp',
@@ -75300,6 +75412,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704276832',
+    geolocation: '10.4672,105.6303',
   },
   {
     name: 'Tỉnh An Giang',
@@ -76500,6 +76614,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704453892',
+    geolocation: '10.3736,105.4458',
   },
   {
     name: 'Tỉnh Kiên Giang',
@@ -77652,6 +77768,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704872008',
+    geolocation: '10.0167,105.0833',
   },
   {
     name: 'Thành phố Cần Thơ',
@@ -78323,6 +78441,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704783472',
+    geolocation: '10.0333,105.7833',
   },
   {
     name: 'Tỉnh Hậu Giang',
@@ -78929,6 +79049,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704210026',
+    geolocation: '9.7833,105.4708',
   },
   {
     name: 'Tỉnh Sóc Trăng',
@@ -79800,6 +79922,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704758756',
+    geolocation: '9.6028,105.9736',
   },
   {
     name: 'Tỉnh Bạc Liêu',
@@ -80320,6 +80444,8 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704298745',
+    geolocation: '9.2833,105.7167',
   },
   {
     name: 'Tỉnh Cà Mau',
@@ -81117,5 +81243,7 @@ export const provinces: Province[] = [
         ],
       },
     ],
+    id: '1704320474',
+    geolocation: '9.1833,105.1500',
   },
 ];
