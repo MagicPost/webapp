@@ -1,10 +1,11 @@
 import { TransactionPoint } from '@/db/models/Branches';
 
-export interface GetTransactionPointDTO extends Omit<TransactionPoint, '_id'> {
+export interface GetTransactionPointDTO extends Omit<TransactionPoint, '_id' | 'collectionPoint'> {
   _id: string;
+  collectionPoint: string;
 }
 
-export interface CreateTransactionPoint
+export interface CreateTransactionPointDTO
   extends Omit<TransactionPoint, '_id' | 'manager' | 'staffs' | 'collectionPoint'> {
   collectionPoint: string;
 }

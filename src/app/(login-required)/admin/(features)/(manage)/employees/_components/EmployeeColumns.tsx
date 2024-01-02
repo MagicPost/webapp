@@ -13,7 +13,7 @@ import { ComposeUserDTO } from '@/dtos/user/user.dto';
 import { roleToText } from '@/lib/text';
 import { getViLocaleDateString } from '@/lib/time';
 import { ColumnDef } from '@tanstack/react-table';
-import { Check, MoreHorizontal, X } from 'lucide-react';
+import { ArrowUpDown, Check, MoreHorizontal, X } from 'lucide-react';
 
 export const columns: ColumnDef<ComposeUserDTO>[] = [
   {
@@ -39,9 +39,19 @@ export const columns: ColumnDef<ComposeUserDTO>[] = [
   },
   {
     accessorKey: 'createdAt',
-    header: 'Ngày cấp',
     cell: ({ row }) => {
       return getViLocaleDateString(row.original.createdAt);
+    },
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Ngày cấp
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
     },
   },
   {

@@ -1,6 +1,8 @@
 'use client';
 
+import Empty from '@/components/main/Empty';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
@@ -11,11 +13,17 @@ import {
 } from '@/components/ui/table';
 import {
   ColumnDef,
+  ColumnFiltersState,
+  SortingState,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+import { useState } from 'react';
+import NewManagerDialog from './NewManagerDialog';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -26,15 +34,35 @@ export default function EmployeeTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      sorting,
+      columnFilters,
+    },
   });
 
   return (
     <div>
+      <div className='flex flex-row items-center justify-between py-4'>
+        <Input
+          placeholder='Tìm kiếm theo email...'
+          value={(table.getColumn('email')?.getFilterValue() as string) ?? ''}
+          onChange={(event) => table.getColumn('email')?.setFilterValue(event.target.value)}
+          className='max-w-sm'
+        />
+        <NewManagerDialog />
+      </div>
       <div className='rounded-md border'>
         <Table>
           <TableHeader>
@@ -65,8 +93,8 @@ export default function EmployeeTable<TData, TValue>({
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className='h-24 text-center'>
-                  No results.
+                <TableCell colSpan={columns.length} className='h-60 text-center'>
+                  <Empty message='Chưa thêm tài khoản nào' />
                 </TableCell>
               </TableRow>
             )}
@@ -80,7 +108,7 @@ export default function EmployeeTable<TData, TValue>({
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
-          Previous
+          Trước
         </Button>
         <Button
           variant='outline'
@@ -88,7 +116,7 @@ export default function EmployeeTable<TData, TValue>({
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
-          Next
+          Sau
         </Button>
       </div>
     </div>

@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { GetCollectionPointDTO } from '@/dtos/branches/collection-point.dto';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import { Clock4, MapPin } from 'lucide-react';
+import { Clock4, Loader2, MapPin, Sigma } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import SearchBar from '@/components/main/SearchBar';
 import AddTransactionPointForm from './AddTransactionPointForm';
@@ -14,14 +14,17 @@ import { useQuery } from '@tanstack/react-query';
 import { getTransactionPointsOf } from '@/actions/branch';
 import { GetTransactionPointDTO } from '@/dtos/branches/transaction-point.dto';
 import Empty from '@/components/main/Empty';
+import toast from 'react-hot-toast';
+import { Dispatch, SetStateAction, useState } from 'react';
 
 export default function BranchImageCard({
   collectionPoint,
 }: {
   collectionPoint: GetCollectionPointDTO;
 }) {
+  const [version, setVersion] = useState(0);
   return (
-    <Dialog>
+    <Dialog onOpenChange={() => setVersion(version + 1)}>
       <DialogTrigger>
         <div className='max-w-sm overflow-hidden rounded bg-white shadow-lg'>
           <Image
@@ -51,21 +54,51 @@ export default function BranchImageCard({
         </div>
       </DialogTrigger>
       <DialogContent className='h-[88vh] max-h-[800px] w-[68vw] max-w-[1400px] py-8'>
-        <DialogInnerContent collectionPoint={collectionPoint} />
+        <DialogInnerContent
+          version={version}
+          setVersion={setVersion}
+          collectionPoint={collectionPoint}
+        />
       </DialogContent>
     </Dialog>
   );
 }
 
-function DialogInnerContent({ collectionPoint }: { collectionPoint: GetCollectionPointDTO }) {
-  const { data, error } = useQuery({
+function DialogInnerContent({
+  version,
+  setVersion,
+  collectionPoint,
+}: {
+  version: number;
+  setVersion: Dispatch<SetStateAction<number>>;
+  collectionPoint: GetCollectionPointDTO;
+}) {
+  const { data, error, refetch, isLoading } = useQuery({
     queryKey: ['collectionPoint', collectionPoint._id],
-    queryFn: () => getTransactionPointsOf(collectionPoint._id),
+    queryFn: () =>
+      new Promise((resolve, reject) => {
+        getTransactionPointsOf(collectionPoint._id)
+          .then((res) => {
+            if (!res.ok) throw new Error(res.message);
+            else resolve(res.data);
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      }),
+    enabled: false,
   });
 
-  if (error) return <div>Error</div>;
+  if (version === 1) {
+    refetch();
+    setVersion((prev) => prev + 1);
+  }
 
-  const transactionPoints = data?.data || ([] as GetTransactionPointDTO[]);
+  if (error && !data) {
+    toast.error(error.message);
+    return <Empty message='Có lỗi xảy ra!' />;
+  }
+  const transactionPoints = (data || []) as GetTransactionPointDTO[];
 
   return (
     <div className='flex flex-row gap-4'>
@@ -96,11 +129,19 @@ function DialogInnerContent({ collectionPoint }: { collectionPoint: GetCollectio
         </div>
 
         <div>
-          <AddTransactionPointForm collectionPoint={collectionPoint} />
+          <AddTransactionPointForm
+            collectionPoint={collectionPoint}
+            // setTransactionPoints={setTransactionPoints}
+          />
         </div>
       </div>
       <div className='w-3/5'>
-        <p className='mb-4 text-xl font-semibold text-black'>Các điểm giao dịch trực thuộc:</p>
+        <div className='mb-4 flex flex-row items-center justify-between'>
+          <p className='text-xl font-semibold text-black'>Các điểm giao dịch trực thuộc:</p>
+          <div className='flex flex-row items-center justify-center gap-1'>
+            <span className=' font-semibold'>(Tổng: {transactionPoints.length})</span>
+          </div>
+        </div>
         <div className='mb-4'>
           <SearchBar
             classname='w-[32rem]'
@@ -109,9 +150,16 @@ function DialogInnerContent({ collectionPoint }: { collectionPoint: GetCollectio
         </div>
 
         <div className='h-[28rem] space-y-2 overflow-y-scroll'>
-          {transactionPoints && transactionPoints.length > 0 ? (
+          {isLoading ? (
+            <div className='flex flex-col items-center justify-center'>
+              <Loader2 size={24} className='animate-spin' />
+              <p className='mt-2 text-sm font-semibold'>Đang tải...</p>
+            </div>
+          ) : transactionPoints && transactionPoints.length > 0 ? (
             transactionPoints.map((item: GetTransactionPointDTO, index: any) => (
-              <TransactionPointCard key={index} transactionPoint={item} />
+              <div key={index}>
+                <TransactionPointCard transactionPoint={item} />
+              </div>
             ))
           ) : (
             <Empty classname='mt-4' message='Chưa có điểm giao dịch nào' />

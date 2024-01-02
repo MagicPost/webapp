@@ -1,15 +1,22 @@
 'use client';
 
+import { createTransactionPoint } from '@/actions/branch';
 import CustomComboBox from '@/components/main/CustomCombobox';
 import CustomInputField from '@/components/main/CustomInputField';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { provinces } from '@/constants/geography';
 import { GetCollectionPointDTO } from '@/dtos/branches/collection-point.dto';
+import {
+  CreateTransactionPointDTO,
+  GetTransactionPointDTO,
+} from '@/dtos/branches/transaction-point.dto';
 import { postalCodeRegex } from '@/lib/regex';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useMemo, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { z } from 'zod';
 
 const formSchema = z.object({
@@ -26,6 +33,7 @@ export default function AddTransactionPointForm({
   collectionPoint: GetCollectionPointDTO;
 }) {
   const [showForm, setShowForm] = useState(false);
+  const queryClient = useQueryClient();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -67,7 +75,22 @@ export default function AddTransactionPointForm({
   }, [province, form.watch('district')]);
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    console.log(data);
+    const payload: CreateTransactionPointDTO = {
+      ...data,
+      province: collectionPoint.province,
+      collectionPoint: collectionPoint._id,
+    };
+    const res = await createTransactionPoint(payload);
+    if (!res?.ok) {
+      toast.error(res?.message);
+    } else {
+      toast.success(res?.message);
+      queryClient.setQueryData(
+        ['collectionPoint', collectionPoint._id],
+        (prev: GetTransactionPointDTO[]) => [...prev, res?.data]
+      );
+      form.reset();
+    }
   };
 
   return (
@@ -85,7 +108,7 @@ export default function AddTransactionPointForm({
       {showForm && (
         <Form {...form}>
           <form className='flex flex-col gap-0 space-y-8' onSubmit={form.handleSubmit(onSubmit)}>
-            <div className='max-h-[21rem] overflow-auto'>
+            <div className='max-h-[18rem] overflow-auto'>
               <div className='flex-1'>
                 <CustomInputField
                   form={form}

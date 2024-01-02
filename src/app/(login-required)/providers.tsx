@@ -12,6 +12,8 @@ export const NextAuthProvider = ({ children }: { children: React.ReactNode }) =>
           queries: {
             refetchOnWindowFocus: false,
             retry: false,
+            refetchOnMount: true,
+            staleTime: Infinity,
           },
         },
       })

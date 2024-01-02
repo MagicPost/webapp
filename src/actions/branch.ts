@@ -9,9 +9,10 @@ import {
 import { ActionResponse } from './types';
 import { transformObjectIdFromLeanedDoc } from '@/lib/mongo';
 import {
-  CreateTransactionPoint,
+  CreateTransactionPointDTO,
   GetTransactionPointDTO,
 } from '@/dtos/branches/transaction-point.dto';
+import { getGeolocation } from '@/lib/geography';
 
 export const getCollectionPoints = async ({
   withTransactionPoints = false,
@@ -47,13 +48,17 @@ export const createCollectionPoint = async (collectionPointDto: CreateCollection
   try {
     await dbConnect();
 
-    let collectionPoint = await CollectionPointModel.create(collectionPointDto);
+    const geolocation = getGeolocation(collectionPointDto.province);
+    let collectionPoint = await CollectionPointModel.create({
+      ...collectionPointDto,
+      geolocation,
+    });
     collectionPoint = transformObjectIdFromLeanedDoc(collectionPoint.toObject());
 
     return {
       ok: true,
       message: 'Tạo điểm tập kết thành công!',
-      status: 200,
+      status: 201,
       data: collectionPoint as GetCollectionPointDTO,
     } satisfies ActionResponse;
   } catch (error) {
@@ -70,20 +75,21 @@ export const getTransactionPointsOf = async (collectionPointId: string) => {
   try {
     await dbConnect();
 
-    let transactionPoints = await CollectionPointModel.findById(collectionPointId)
-      .populate({
-        path: 'transactionPoints',
-      })
+    let transactionPoints = await TransactionPointModel.find({
+      collectionPoint: collectionPointId,
+    })
       .lean()
       .exec();
 
     transactionPoints = transformObjectIdFromLeanedDoc(transactionPoints as any);
 
+    if (!Array.isArray(transactionPoints)) transactionPoints = [transactionPoints];
+
     return {
       ok: true,
       message: 'Lấy danh sách điểm giao dịch thành công!',
       status: 200,
-      data: transactionPoints,
+      data: transactionPoints as GetTransactionPointDTO[],
     } satisfies ActionResponse;
   } catch (error) {
     console.error(error);
@@ -95,7 +101,7 @@ export const getTransactionPointsOf = async (collectionPointId: string) => {
   }
 };
 
-export const createTransactionPoint = async (transactionPointDto: CreateTransactionPoint) => {
+export const createTransactionPoint = async (transactionPointDto: CreateTransactionPointDTO) => {
   try {
     await dbConnect();
 
@@ -110,7 +116,7 @@ export const createTransactionPoint = async (transactionPointDto: CreateTransact
     return {
       ok: true,
       message: 'Tạo điểm giao dịch thành công!',
-      status: 200,
+      status: 201,
       data: transactionPoint as GetTransactionPointDTO,
     } satisfies ActionResponse;
   } catch (error) {

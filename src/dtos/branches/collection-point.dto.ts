@@ -5,7 +5,10 @@ export interface GetCollectionPointDTO extends Omit<CollectionPoint, '_id'> {
 }
 
 export interface CreateCollectionPointDTO
-  extends Omit<CollectionPoint, '_id' | 'manager' | 'staffs' | 'transactionPoints' | 'neighbors'> {}
+  extends Omit<
+    CollectionPoint,
+    '_id' | 'manager' | 'staffs' | 'transactionPoints' | 'geolocation'
+  > {}
 
 export interface UpdateCollectionPointDTO
-  extends Omit<CollectionPoint, '_id' | 'manager' | 'staffs' | 'transactionPoints' | 'neighbors'> {}
+  extends Omit<CollectionPoint, '_id' | 'manager' | 'staffs' | 'transactionPoints'> {}
