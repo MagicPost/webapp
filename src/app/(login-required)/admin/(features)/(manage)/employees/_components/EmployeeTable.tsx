@@ -23,7 +23,6 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { useState } from 'react';
-import NewManagerDialog from './NewManagerDialog';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -31,9 +30,12 @@ interface DataTableProps<TData, TValue> {
 }
 
 export default function EmployeeTable<TData, TValue>({
-  columns,
-  data,
-}: DataTableProps<TData, TValue>) {
+  tableProps: { columns, data },
+  addManagerComponent,
+}: {
+  tableProps: DataTableProps<TData, TValue>;
+  addManagerComponent?: React.ReactNode;
+}) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
@@ -61,7 +63,7 @@ export default function EmployeeTable<TData, TValue>({
           onChange={(event) => table.getColumn('email')?.setFilterValue(event.target.value)}
           className='max-w-sm'
         />
-        <NewManagerDialog />
+        {addManagerComponent}
       </div>
       <div className='rounded-md border'>
         <Table>
@@ -84,11 +86,16 @@ export default function EmployeeTable<TData, TValue>({
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
+                  {row.getVisibleCells().map((cell) => {
+                    return (
+                      <TableCell
+                        key={cell.id}
+                        className={`${cell.column.id === 'active' ? 'text-center' : 'text-left'}`}
+                      >
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    );
+                  })}
                 </TableRow>
               ))
             ) : (

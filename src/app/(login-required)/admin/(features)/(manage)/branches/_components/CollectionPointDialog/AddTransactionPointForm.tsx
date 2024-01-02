@@ -1,6 +1,6 @@
 'use client';
 
-import { createTransactionPoint } from '@/actions/branch';
+import { createTransactionPoint } from '@/actions/branch/createTransactionPoint';
 import CustomComboBox from '@/components/main/CustomCombobox';
 import CustomInputField from '@/components/main/CustomInputField';
 import { Button } from '@/components/ui/button';

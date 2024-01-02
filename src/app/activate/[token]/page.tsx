@@ -1,6 +1,6 @@
 'use client';
 
-import { updateEmployeePassword } from '@/actions/user';
+import { updateEmployeePassword } from '@/actions/user/updateEmployeeAccount';
 import CustomInput from '@/components/main/CustomInput';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';

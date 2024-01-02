@@ -60,17 +60,9 @@ export class Account extends TimeStamps {
   @prop()
   public avatar?: string;
 
-  @prop({ required: false, type: () => BranchDetails })
+  @prop({ required: false, type: () => BranchDetails, _id: false })
   public branch?: BranchDetails;
 
   @prop({ required: true, default: false })
   public active!: boolean;
-
-  // public get id() {
-  //   return this._id.toString();
-  // }
-
-  // public get fullName() {
-  //   return `${this.lastName} ${this.firstName}`;
-  // }
 }

@@ -1,4 +1,4 @@
-import { getCollectionPoints } from '@/actions/branch';
+import { getCollectionPoints } from '@/actions/branch/getCollectionPoints';
 import InnerPage from './InnerPage';
 
 export default async function BranchesPage() {

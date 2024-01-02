@@ -1,6 +1,6 @@
 'use client';
 
-import { createEmployeeAccount } from '@/actions/user';
+import { createEmployeeAccount } from '@/actions/user/createEmployeeAccount';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/components/ui/dialog';
 import {
@@ -75,6 +75,7 @@ function NewManagerForm() {
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const payload: CreateUserDTO = {
+      gender: 'male',
       role: Roles.STAFF,
       email: data.email,
       firstName: data.firstName,
@@ -83,8 +84,6 @@ function NewManagerForm() {
       branch: {
         type: data.branchType,
         _id: data.branchId!,
-        name: 'BranchName',
-        address: 'BranchAdress',
       },
     };
     try {

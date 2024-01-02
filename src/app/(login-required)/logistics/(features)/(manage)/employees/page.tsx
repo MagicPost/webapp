@@ -1,4 +1,4 @@
-import { getEmployees } from '@/actions/user';
+import { getEmployees } from '@/actions/user/getEmployees';
 import NewStaffDialog from './NewStaffDialog';
 
 export default async function EmployeesPage() {
@@ -14,7 +14,7 @@ export default async function EmployeesPage() {
       <div>
         Giao dịch viên
         {staffs && staffs.length > 0 ? (
-          staffs.map((item, index) => <div key={index}>{JSON.stringify(item)}</div>)
+          staffs.map((item: any, index: any) => <div key={index}>{JSON.stringify(item)}</div>)
         ) : (
           <div>Nothing</div>
         )}

@@ -1,6 +1,6 @@
 'use client';
 
-import { createEmployeeAccount } from '@/actions/user';
+import { createEmployeeAccount } from '@/actions/user/createEmployeeAccount';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
@@ -10,7 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Plus } from 'lucide-react';
 import validator from 'validator';
 
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { z } from 'zod';
@@ -19,8 +19,10 @@ import CustomSelect from '@/components/main/CustomSelect';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import CustomComboBox from '@/components/main/CustomCombobox';
+import { DisplayCollectionPointDTO } from '@/dtos/branches/collection-point.dto';
+import { DisplayTransactionPointDTO } from '@/dtos/branches/transaction-point.dto';
 
-export default function NewManagerDialog() {
+export default function NewManagerDialog(props: any) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -39,7 +41,7 @@ export default function NewManagerDialog() {
         <DialogHeader className='mx-auto my-4 text-center text-xl font-semibold'>
           Thêm tài khoản trưởng điểm
         </DialogHeader>
-        <NewManagerForm />
+        <NewManagerForm {...props} />
       </DialogContent>
     </Dialog>
   );
@@ -52,10 +54,20 @@ const formSchema = z.object({
   lastName: z.string().min(1, 'Không được để trống'),
   phone: z.string().refine(validator.isMobilePhone, 'Số điện thoại không hợp lệ'),
   branchType: z.nativeEnum(BranchTypes),
-  branchId: z.string().optional(),
+  collectionPointId: z.string().optional(),
+  transactionPointId: z.string().optional(),
 });
 
-function NewManagerForm() {
+function NewManagerForm({
+  branches,
+  setManagers,
+}: {
+  branches: {
+    collectionPoints: DisplayCollectionPointDTO[];
+    transactionPoints: DisplayTransactionPointDTO[];
+  };
+  setManagers: Dispatch<SetStateAction<DisplayCollectionPointDTO[]>>;
+}) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -64,13 +76,40 @@ function NewManagerForm() {
       firstName: '',
       lastName: '',
       phone: '',
-      branchType: BranchTypes.TRANSACTION_POINT,
-      branchId: '',
+      branchType: BranchTypes.COLLECTION_POINT,
+      collectionPointId: '',
+      transactionPointId: '',
     },
     mode: 'onSubmit',
   });
 
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    form.setValue('transactionPointId', '');
+  }, [form.watch('branchType')]);
+
+  const collectionPointOptions = useMemo(
+    () =>
+      branches.collectionPoints.map((cp) => ({
+        label: cp.name,
+        value: cp._id,
+      })),
+    []
+  );
+
+  const transactionPointOptions = useMemo(() => {
+    const selectedBranchType = form.watch('branchType');
+    if (selectedBranchType === BranchTypes.COLLECTION_POINT) return [];
+
+    const selectedCollectionPointId = form.watch('collectionPointId');
+    return branches.transactionPoints
+      .filter((tp) => tp.collectionPoint === selectedCollectionPointId)
+      .map((tp) => ({
+        label: tp.name,
+        value: tp._id,
+      }));
+  }, [form.watch('branchType'), form.watch('collectionPointId')]);
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const payload: CreateUserDTO = {
@@ -82,9 +121,10 @@ function NewManagerForm() {
       phone: data.phone,
       branch: {
         type: data.branchType,
-        _id: data.branchId!,
-        name: 'BranchName',
-        address: 'BranchAdress',
+        _id:
+          data.branchType === BranchTypes.COLLECTION_POINT
+            ? data.collectionPointId!
+            : data.transactionPointId!,
       },
     };
     try {
@@ -93,6 +133,20 @@ function NewManagerForm() {
       if (!res?.ok) throw res?.message as string;
       else {
         toast.success(res?.message);
+        const branchName =
+          data.branchType === BranchTypes.COLLECTION_POINT
+            ? branches.collectionPoints.find((cp) => cp._id === data.collectionPointId)?.name
+            : branches.transactionPoints.find((tp) => tp._id === data.transactionPointId)?.name;
+        setManagers((prev) => [
+          ...prev,
+          {
+            ...res?.data,
+            branch: {
+              ...res?.data.branch,
+              name: branchName,
+            },
+          },
+        ]);
         form.reset();
       }
     } catch (err) {
@@ -187,20 +241,28 @@ function NewManagerForm() {
 
         <CustomComboBox
           control={form.control}
-          name='branchId'
+          name='collectionPointId'
           label='Chi nhánh'
           containerClassname='w-full flex flex-row items-center justify-between gap-4'
           labelClassname='w-1/4'
           selectClassname='w-3/4'
-          options={[
-            { label: 'Chi nhánh 1', value: '1' },
-            { label: 'Chi nhánh 2', value: '2' },
-            { label: 'Chi nhánh 3', value: '3' },
-            { label: 'Chi nhánh 4', value: '4' },
-            { label: 'Chi nhánh 5', value: '5' },
-          ]}
+          options={collectionPointOptions}
+          placeholder='Chọn điểm tập kết'
           required
         />
+
+        {form.watch('branchType') === BranchTypes.TRANSACTION_POINT && (
+          <CustomComboBox
+            control={form.control}
+            name='transactionPointId'
+            label=''
+            containerClassname='mt-0 w-full flex flex-row items-center justify-between gap-4'
+            labelClassname='w-1/4'
+            selectClassname='w-3/4'
+            options={transactionPointOptions}
+            placeholder='Chọn điểm giao dịch'
+          />
+        )}
 
         <div className='flex flex-row items-center justify-center gap-2'>
           <Button variant='default' disabled={loading} type='submit'>

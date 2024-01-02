@@ -3,7 +3,7 @@
 import { StatusCodes } from 'http-status-codes';
 import { signIn, signOut } from '@/lib/auth';
 import { AuthError } from 'next-auth';
-import { ActionResponse } from './types';
+import { ActionResponse } from './_helpers/types';
 
 export async function authenticate(options: Record<string, any>) {
   try {

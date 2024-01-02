@@ -12,8 +12,8 @@ import LogoutDialog from '@/components/auth/LogoutDialog';
 import { MdLogout } from 'react-icons/md';
 import { Badge } from '@/components/ui/badge';
 import { auth } from '@/lib/auth';
-import { getUserByEmail } from '@/actions/user';
-import { ComposeUserDTO } from '@/dtos/user/user.dto';
+import { getUserByEmail } from '@/actions/user/getUserByEmail';
+import { GetUserDTO } from '@/dtos/user/user.dto';
 import ProfileMenu from '../ProfileMenu';
 
 export default async function Sidebar() {
@@ -35,7 +35,7 @@ export default async function Sidebar() {
   );
 }
 
-function TopPart({ className = '', user }: { className?: string; user: ComposeUserDTO }) {
+function TopPart({ className = '', user }: { className?: string; user: GetUserDTO }) {
   return (
     <div className={cn('', className)}>
       <div className='mt-2 h-topbar'>
@@ -57,7 +57,7 @@ function TopPart({ className = '', user }: { className?: string; user: ComposeUs
   );
 }
 
-function MiddlePart({ className = '', user }: { className?: string; user: ComposeUserDTO }) {
+function MiddlePart({ className = '', user }: { className?: string; user: GetUserDTO }) {
   const sidebarNavigation = {
     [Roles.ADMIN]: adminSidebarNavigation,
     [Roles.MANAGER]: managerSidebarNavigation,

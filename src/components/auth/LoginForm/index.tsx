@@ -16,7 +16,7 @@ import { Loader2 } from 'lucide-react';
 import { BranchTypes } from '@/constants';
 import CustomAlert from '@/components/main/CustomAlert';
 import { usePathname, useRouter } from 'next/navigation';
-import { ActionResponse } from '@/actions/types';
+import { ActionResponse } from '@/actions/_helpers/types';
 import { authenticate } from '@/actions/auth';
 import { Label } from '@/components/ui/label';
 

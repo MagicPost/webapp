@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { GetCollectionPointDTO } from '@/dtos/branches/collection-point.dto';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import { Clock4, Loader2, MapPin, Sigma } from 'lucide-react';
+import { Clock4, Loader2, MapPin } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import SearchBar from '@/components/main/SearchBar';
 import AddTransactionPointForm from './AddTransactionPointForm';
@@ -11,7 +11,7 @@ import TransactionPointCard from './TransactionPointCard';
 import { getViLocaleDateString } from '@/lib/time';
 import { getFullAddress } from '@/lib/address';
 import { useQuery } from '@tanstack/react-query';
-import { getTransactionPointsOf } from '@/actions/branch';
+import { getTransactionPointsOf } from '@/actions/branch/getTransactionPointsOf';
 import { GetTransactionPointDTO } from '@/dtos/branches/transaction-point.dto';
 import Empty from '@/components/main/Empty';
 import toast from 'react-hot-toast';
@@ -129,10 +129,7 @@ function DialogInnerContent({
         </div>
 
         <div>
-          <AddTransactionPointForm
-            collectionPoint={collectionPoint}
-            // setTransactionPoints={setTransactionPoints}
-          />
+          <AddTransactionPointForm collectionPoint={collectionPoint} />
         </div>
       </div>
       <div className='w-3/5'>

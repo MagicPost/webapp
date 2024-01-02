@@ -4,7 +4,7 @@ import { BranchTypes, Roles } from '@/constants';
 import dbConnect from '@/db/dbConnect';
 import { AccountModel } from '@/db/models';
 import bcrypt from 'bcrypt';
-import { toComposeUserDTO, ComposeUserDTO } from '@/dtos/user/user.dto';
+import { transformIntoGetUserDTO, GetUserDTO } from '@/dtos/user/user.dto';
 
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
@@ -20,7 +20,7 @@ async function getUser({
   password: string;
   isAdminArea: boolean;
   branchType?: BranchTypes;
-}): Promise<ComposeUserDTO | null> {
+}): Promise<GetUserDTO | null> {
   try {
     await dbConnect();
 
@@ -46,7 +46,7 @@ async function getUser({
     if (!passwordsMatch) return null;
 
     const { password: _, ...rest } = user.toJSON();
-    return toComposeUserDTO(rest);
+    return transformIntoGetUserDTO(rest);
   } catch (error) {
     console.error('Failed to fetch user:', error as Error);
     throw error;

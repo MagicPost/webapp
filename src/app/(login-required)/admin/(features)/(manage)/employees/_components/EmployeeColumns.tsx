@@ -9,17 +9,28 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { ComposeUserDTO } from '@/dtos/user/user.dto';
+import { GetUserDTO } from '@/dtos/user/user.dto';
 import { roleToText } from '@/lib/text';
 import { getViLocaleDateString } from '@/lib/time';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, Check, MoreHorizontal, X } from 'lucide-react';
 
-export const columns: ColumnDef<ComposeUserDTO>[] = [
+export const columns: ColumnDef<GetUserDTO>[] = [
   {
     accessorKey: 'role',
     header: 'Vai trò',
     cell: ({ row }) => roleToText(row.original.role),
+  },
+  {
+    accessorKey: 'branch',
+    header: 'Chi nhánh',
+    cell: ({ row }) => {
+      return row.original.branch ? (
+        <span>{row.original.branch.name}</span>
+      ) : (
+        <span className='text-red-600'>Chưa có</span>
+      );
+    },
   },
   {
     accessorKey: 'fullname',
@@ -47,6 +58,7 @@ export const columns: ColumnDef<ComposeUserDTO>[] = [
         <Button
           variant='ghost'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className='-ml-4'
         >
           Ngày cấp
           <ArrowUpDown className='ml-2 h-4 w-4' />
@@ -69,7 +81,7 @@ export const columns: ColumnDef<ComposeUserDTO>[] = [
     accessorKey: 'actions',
     header: '',
     cell: ({ row }) => {
-      const payment = row.original;
+      const user = row.original;
 
       return (
         <DropdownMenu>
@@ -80,13 +92,11 @@ export const columns: ColumnDef<ComposeUserDTO>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            {/* <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>
-              Copy payment ID
-            </DropdownMenuItem> */}
+            <DropdownMenuLabel>Hành động</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(user._id)}>
+              Copy mã nhân viên
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

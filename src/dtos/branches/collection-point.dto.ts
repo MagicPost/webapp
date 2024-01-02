@@ -4,6 +4,12 @@ export interface GetCollectionPointDTO extends Omit<CollectionPoint, '_id'> {
   _id: string;
 }
 
+export interface DisplayCollectionPointDTO {
+  _id: string;
+  name: string;
+  transactionPoints: string[];
+}
+
 export interface CreateCollectionPointDTO
   extends Omit<
     CollectionPoint,

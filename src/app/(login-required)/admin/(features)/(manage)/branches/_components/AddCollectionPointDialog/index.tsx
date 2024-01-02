@@ -1,6 +1,6 @@
 'use client';
 
-import { createCollectionPoint } from '@/actions/branch';
+import { createCollectionPoint } from '@/actions/branch/createCollectionPoint';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/components/ui/dialog';
 import { Form } from '@/components/ui/form';

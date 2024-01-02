@@ -4,7 +4,7 @@ import { BiSolidChevronDown } from 'react-icons/bi';
 import { auth } from '@/lib/auth';
 import { getAbbreviation, getShortName, roleToText } from '@/lib/text';
 import { Roles } from '@/constants';
-import { getUserByEmail } from '@/actions/user';
+import { getUserByEmail } from '@/actions/user/getUserByEmail';
 
 const dropdownNavItems = [
   {

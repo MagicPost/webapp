@@ -11,8 +11,8 @@ const notoSans = Noto_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'Magic Post',
-  description: '',
+  title: 'MagicPost',
+  description: 'Giao hàng hơn bao giờ hết!',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
