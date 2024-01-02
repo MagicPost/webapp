@@ -31,7 +31,7 @@ export default function InnerPage({
       </TabsList>
       <TabsContent value='manager'>
         <EmployeeTable
-          tableProps={{ columns, data: managers! }}
+          tableProps={{ columns, data: [...managers!, ...managers!, ...managers!] }}
           addManagerComponent={<NewManagerDialog branches={branches!} setManagers={setManagers} />}
         />
       </TabsContent>
