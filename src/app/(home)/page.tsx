@@ -1,8 +1,17 @@
+import './styles/slick.css';
+
+import Footer from './_components/Footer';
+import Header from './_components/Header';
+import Hero from './_components/Hero';
+import Testimoni from './_components/Testimoni';
+
 export default function HomePage() {
   return (
-    <main className='flex min-h-screen flex-col items-center justify-between'>
-      <h1>Hello MagicPost!</h1>
-      {/* TODO: build landing page, QR scanner, parcel search */}
+    <main className='h-screen overflow-y-scroll'>
+      <Header />
+      <Hero />
+      <Testimoni />
+      <Footer />
     </main>
   );
 }
