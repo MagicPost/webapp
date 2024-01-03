@@ -141,7 +141,7 @@ function DialogInnerContent({
         </div>
         <div className='mb-4'>
           <SearchBar
-            classname='w-[32rem]'
+            className='w-[32rem]'
             placeholder='Tìm kiếm theo tên, địa chỉ, mã bưu chính, tên trưởng điểm'
           />
         </div>
@@ -159,7 +159,7 @@ function DialogInnerContent({
               </div>
             ))
           ) : (
-            <Empty classname='mt-4' message='Chưa có điểm giao dịch nào' />
+            <Empty className='mt-4' message='Chưa có điểm giao dịch nào' />
           )}
         </div>
       </div>

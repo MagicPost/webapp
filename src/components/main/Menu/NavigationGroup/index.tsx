@@ -44,7 +44,9 @@ function NavigationItem({ label, icon, href = '#' }: TNavigationItem) {
     >
       <Link href={href}>
         <span className='text-xl'>{icon}</span>
-        <nav className='ml-2 text-base'>{label}</nav>
+        <nav className='ml-2 overflow-hidden truncate text-base' title={label}>
+          {label}
+        </nav>
       </Link>
     </Button>
   );

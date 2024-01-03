@@ -1,4 +1,4 @@
-import { TNavigationGroup } from '@/components/main/Sidebar/NavigationGroup';
+import { TNavigationGroup } from '@/components/main/Menu/NavigationGroup';
 import { BiSolidDashboard } from 'react-icons/bi';
 import { BsFillPeopleFill } from 'react-icons/bs';
 import { FaBuilding } from 'react-icons/fa';

@@ -87,13 +87,13 @@ export default function Testimoni() {
 
   return (
     <div
-      className='mx-auto my-16 mt-20 flex w-full max-w-screen-xl flex-col px-6 py-3 sm:px-8 sm:py-4 lg:px-16'
+      className='mx-auto my-6 flex w-full max-w-screen-xl flex-col px-6 py-3 sm:my-16 sm:px-8 sm:py-4 lg:px-16'
       id='testimoni'
     >
       <ScrollAnimationWrapper>
         <motion.h3
           variants={scrollAnimation}
-          className='text-black-600 w-9/12 text-center text-2xl font-medium leading-normal sm:mx-auto sm:text-3xl lg:w-4/12 lg:text-4xl'
+          className='text-black-600 mx-auto w-9/12 text-center text-2xl font-medium leading-normal sm:mx-auto sm:text-3xl lg:w-4/12 lg:text-4xl'
         >
           Tin tưởng từ khách hàng trên cả nước.
         </motion.h3>

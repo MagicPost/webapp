@@ -1,7 +1,5 @@
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import Logo from '../Logo';
-import NavigationGroup from './NavigationGroup';
 import {
   adminSidebarNavigation,
   staffSidebarNavigation,
@@ -14,24 +12,21 @@ import { Badge } from '@/components/ui/badge';
 import { auth } from '@/lib/auth';
 import { getUserByEmail } from '@/actions/user/getUserByEmail';
 import { GetUserDTO } from '@/dtos/user/user.dto';
-import ProfileMenu from '../ProfileMenu';
+import Logo from '../Logo';
+import ProfileMenu from './ProfileMenu';
+import NavigationGroup from './NavigationGroup';
 
-export default async function Sidebar() {
+export default async function Menu() {
   const res = await auth();
   const user = await getUserByEmail(res?.user?.email);
   if (!user) return null;
 
   return (
-    <aside
-      className={cn('h-full w-64 border-r bg-white px-6 transition-all duration-300 ease-in-out')}
-      aria-label='sidebar'
-    >
-      <div className='flex h-full flex-col'>
-        <TopPart user={user} />
-        <MiddlePart user={user} className='mt-8 flex-1' />
-        <BottomPart className='h-topbar' />
-      </div>
-    </aside>
+    <div className='flex h-full flex-col'>
+      <TopPart user={user} />
+      <MiddlePart user={user} className='mt-8 flex-1' />
+      <BottomPart className='h-topbar' />
+    </div>
   );
 }
 

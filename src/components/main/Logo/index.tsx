@@ -6,17 +6,17 @@ export default function Logo({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        'text-xl transition-all duration-200 ease-in-out',
+        'text-xl transition-all duration-200 ease-in-out min-[300px]:text-2xl',
         'flex flex-row items-center gap-2',
         className
       )}
     >
-      <Button variant={'ghost'} className='h-10 w-10 rounded-full'>
-        <span className='text-2xl'>
+      <Button variant={'ghost'} className='rounded-full p-0 text-[1em] md:h-10 md:w-10'>
+        <span className='p-0 text-[1.2em]'>
           <PiMagicWandFill />
         </span>
       </Button>
-      <h1 className={cn('text-2xl font-bold', className)} aria-label='logo'>
+      <h1 className={cn('font-bold', className)} aria-label='logo'>
         MagicPost
       </h1>
     </div>

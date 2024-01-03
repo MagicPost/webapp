@@ -1,9 +1,9 @@
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 
-export default function Empty({ message, classname }: { message: string; classname?: string }) {
+export default function Empty({ message, className }: { message: string; className?: string }) {
   return (
-    <div className={cn(classname)}>
+    <div className={cn(className)}>
       <div className='flex w-full flex-col items-center justify-center'>
         <Image
           src='/empty.png'

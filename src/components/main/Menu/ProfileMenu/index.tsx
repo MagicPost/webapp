@@ -23,7 +23,7 @@ export default async function ProfileMenu() {
   if (!user) return null;
 
   return (
-    <div className='mt-8 flex flex-row items-center  gap-2 border-b-2 pb-4'>
+    <div className='mx-auto mt-8 flex w-full flex-row items-center gap-2 border-b-2 pb-4'>
       <Avatar>
         <AvatarImage src={user.avatar} />
         <AvatarFallback className='border-2 border-amber-700 bg-amber-200'>
@@ -55,19 +55,21 @@ function NavMenu({
   const displayedRole = roleToText(role);
 
   return (
-    <div className='group/nav relative flex cursor-pointer items-center'>
-      <div className='flex flex-col'>
-        <div className={'flex w-36 flex-row items-center justify-start gap-1 font-semibold'}>
-          <p className='truncate'>{getShortName(title)}</p>
+    <div className='group/nav relative flex w-full cursor-pointer items-center'>
+      <div className='flex w-full flex-row items-center justify-between'>
+        <div className='flex flex-col'>
+          <div className={'flex w-full flex-row items-center justify-start gap-1 font-semibold'}>
+            <p className='truncate'>{getShortName(title)}</p>
+          </div>
+          <span className='text-sm text-gray-700'>{displayedRole}</span>
         </div>
-        <span className='text-sm text-gray-700'>{displayedRole}</span>
-      </div>
 
-      {list && (
-        <div className='transition-all duration-150 group-hover/nav:-rotate-90'>
-          <BiSolidChevronDown fontSize={'1.2rem'} />
-        </div>
-      )}
+        {list && (
+          <div className='transition-all duration-150 group-hover/nav:-rotate-90'>
+            <BiSolidChevronDown fontSize={'1.2rem'} />
+          </div>
+        )}
+      </div>
 
       <div className='absolute right-2 top-0 hidden w-full pt-[calc(3rem+14px)] opacity-0 transition-all duration-200 group-hover/nav:block group-hover/nav:opacity-100'>
         <div className='relative whitespace-nowrap border-t-2 border-t-amber-700 bg-white text-left shadow-lg'>

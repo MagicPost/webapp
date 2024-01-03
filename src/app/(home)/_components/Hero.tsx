@@ -33,7 +33,7 @@ export default function Hero() {
     <div className='mx-auto mt-24 max-w-screen-xl px-8 xl:px-16' id='about'>
       <ScrollAnimationWrapper>
         <motion.div
-          className='grid grid-flow-row grid-rows-2 gap-8 py-6 sm:grid-flow-col sm:grid-cols-2 sm:py-16 md:grid-rows-1'
+          className='flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between sm:space-x-8'
           variants={scrollAnimation}
         >
           <div className=' row-start-2 flex flex-col items-start justify-center sm:row-start-1'>
@@ -54,7 +54,7 @@ export default function Hero() {
                 quality={100}
                 width={612}
                 height={383}
-                layout='responsive'
+                sizes='100vw'
               />
             </motion.div>
           </div>
@@ -62,20 +62,20 @@ export default function Hero() {
       </ScrollAnimationWrapper>
       <div className='relative flex w-full'>
         <ScrollAnimationWrapper className='bg-white-500 z-10 grid w-full grid-flow-row grid-cols-1 divide-y-2 divide-gray-100 rounded-lg py-9 sm:grid-flow-row sm:grid-cols-3 sm:divide-x-2 sm:divide-y-0'>
-          {infoList.map((listUsers, index) => (
+          {infoList.map((info, index) => (
             <motion.div
-              className='mx-auto flex w-8/12 items-center justify-start px-4 py-4 sm:mx-0 sm:w-auto sm:justify-center sm:py-6'
+              className='mx-auto flex w-full items-center justify-start px-4 py-4 sm:mx-0 sm:w-full sm:justify-center sm:py-6 md:w-8/12'
               key={index}
               custom={{ duration: 2 + index }}
               variants={scrollAnimation}
             >
-              <div className='mx-auto flex w-40 sm:w-auto'>
+              <div className='mx-auto flex w-full sm:w-auto'>
                 <div className='mr-6 flex h-12 w-12 items-center justify-center rounded-full bg-orange-100'>
-                  <span>{listUsers.icon}</span>
+                  <span>{info.icon}</span>
                 </div>
                 <div className='flex flex-col'>
-                  <p className='text-black-600 text-xl font-bold'>{listUsers.number}</p>
-                  <p className='text-black-500 text-lg'>{listUsers.name}</p>
+                  <p className='text-black-600 text-xl font-bold'>{info.number}</p>
+                  <p className='text-black-500 text-lg'>{info.name}</p>
                 </div>
               </div>
             </motion.div>
