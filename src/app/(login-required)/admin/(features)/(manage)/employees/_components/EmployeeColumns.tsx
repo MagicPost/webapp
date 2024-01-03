@@ -1,5 +1,6 @@
 'use client';
 
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -9,11 +10,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Gender } from '@/constants';
 import { GetUserDTO } from '@/dtos/user/user.dto';
 import { roleToText } from '@/lib/text';
 import { getViLocaleDateString } from '@/lib/time';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, Check, MoreHorizontal, X } from 'lucide-react';
+import Image from 'next/image';
 
 export const columns: ColumnDef<GetUserDTO>[] = [
   {
@@ -35,7 +38,22 @@ export const columns: ColumnDef<GetUserDTO>[] = [
   {
     accessorKey: 'fullname',
     header: 'Họ tên',
-    accessorFn: (row) => `${row.firstName} ${row.lastName}`,
+    cell: ({ row }) => {
+      return (
+        <div className='flex flex-row items-center justify-start gap-4'>
+          <Image
+            src={`/avatar/${row.original.gender === Gender.MALE ? 'male' : 'female'}.svg`}
+            alt={'avatar'}
+            width={0}
+            height={0}
+            className='h-8 w-8 rounded-full'
+          />
+          <p className='font-semibold'>
+            {row.original.firstName} {row.original.lastName}
+          </p>
+        </div>
+      );
+    },
   },
   {
     accessorKey: 'email',
@@ -68,12 +86,12 @@ export const columns: ColumnDef<GetUserDTO>[] = [
   },
   {
     accessorKey: 'active',
-    header: 'Kích hoạt',
+    header: 'Trạng thái',
     cell: ({ row }) => {
       return row.original.active ? (
-        <Check className='text-teal-500' />
+        <Badge className='select-none bg-lime-600 hover:bg-lime-500'>Đã kích hoạt</Badge>
       ) : (
-        <X className='text-rose-400' />
+        <Badge className=' select-none bg-red-600 hover:bg-red-500'>Chưa kích hoạt</Badge>
       );
     },
   },
