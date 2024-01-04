@@ -10,14 +10,14 @@ export default function TransactionPointCard({
   transactionPoint: GetTransactionPointDTO;
 }) {
   return (
-    <div className='flex w-[32rem] flex-row rounded-lg border border-gray-700'>
+    <div className='flex w-full flex-col rounded-lg border border-gray-700 min-[350px]:flex-row'>
       <Image
         src='/building.jpg'
         alt=''
         width={0}
         height={0}
         sizes='100vw'
-        className='aspect-square h-full w-1/3 rounded-bl-lg rounded-tl-lg object-cover p-[0.4]'
+        className='aspect-square h-full w-full rounded-bl-lg rounded-tl-lg object-cover p-[0.4] min-[350px]:w-1/3'
       />
 
       <div className='flex flex-col items-start justify-center gap-2 p-2 px-3'>

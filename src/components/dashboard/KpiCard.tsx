@@ -16,7 +16,7 @@ export default function KpiCard({
   icon,
 }: KpiCardProps) {
   return (
-    <div className='flex w-full flex-row justify-between rounded-lg border p-4'>
+    <div className='flex w-full min-w-[50%] flex-row justify-between rounded-lg border p-4 md:min-w-0'>
       <div className='flex flex-1 flex-col'>
         <span className=' mb-1 font-semibold'>{title}</span>
         <span className=' text-3xl font-extrabold'>

@@ -39,7 +39,7 @@ export default function TopChart({ legend, rows }: LeadingCardProps) {
 
 function ChartRow({ image, name, description, indicator }: LeadingRowProps) {
   return (
-    <div className='flex flex-row py-2'>
+    <div className='flex flex-col py-2 min-[400px]:flex-row'>
       <Image
         src={image.src}
         alt={image?.alt || ''}

@@ -6,8 +6,11 @@ const data = {
   series: [44, 55, 13, 43, 22],
   chartOptions: {
     chart: {
-      width: 380,
+      width: '300',
       type: 'pie' as const,
+    },
+    legend: {
+      position: 'bottom' as const,
     },
     labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E'],
     responsive: [
@@ -15,10 +18,15 @@ const data = {
         breakpoint: 480,
         options: {
           chart: {
-            width: 200,
+            width: 280,
           },
-          legend: {
-            position: 'bottom',
+        },
+      },
+      {
+        breakpoint: 340,
+        options: {
+          chart: {
+            width: 200,
           },
         },
       },

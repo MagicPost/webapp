@@ -1,10 +1,10 @@
 import { DollarSign, Package, UndoDot } from 'lucide-react';
-import KpiCard, { KpiCardProps } from '../_components/KpiCard';
-import LeadingCard, { LeadingCardProps } from '../_components/LeadingCard';
-import { OrderChartProps } from '../_components/OrderChart';
+import KpiCard, { KpiCardProps } from '@/components/dashboard/KpiCard';
+import LeadingCard, { LeadingCardProps } from '@/components/dashboard/LeadingCard';
+import { OrderChartProps } from '@/components/dashboard/OrderChart';
 import dynamic from 'next/dynamic';
 
-const OrderChart = dynamic(() => import('../_components/OrderChart'), { ssr: false });
+const OrderChart = dynamic(() => import('@/components/dashboard/OrderChart'), { ssr: false });
 
 const kpiCardProps: KpiCardProps[] = [
   {
@@ -183,24 +183,24 @@ const orderChartProps: OrderChartProps = {
     },
   ],
   style: {
-    width: '640',
-    height: '580',
+    width: '100%',
+    height: '560px',
   },
 };
 
 export default function CountryTab() {
   return (
-    <div className='mt-4'>
-      <div className='flex w-full flex-row items-stretch gap-2'>
+    <div className='mt-4 w-full'>
+      <div className='flex w-full flex-row flex-wrap items-stretch gap-2 md:flex-nowrap'>
         {kpiCardProps.map((card, index) => (
           <KpiCard key={index} {...card} />
         ))}
       </div>
-      <div className='mt-8 flex w-full flex-row gap-2'>
-        <div className='flex flex-1 flex-col rounded-lg border p-4'>
+      <div className='mt-8 flex w-full flex-col gap-2 md:flex-row'>
+        <div className='flex w-full flex-1 flex-col rounded-lg border p-4'>
           <OrderChart {...orderChartProps} />
         </div>
-        <div className='flex w-full flex-col gap-4'>
+        <div className='flex w-full flex-col gap-4 sm:flex-row md:w-1/2 md:flex-col '>
           <LeadingCard {...collectionTopChart} />
           <LeadingCard {...transactionTopChart} />
         </div>

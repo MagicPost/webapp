@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { BranchTypes, Gender, Roles } from '@/constants';
-import { CreateUserDTO } from '@/dtos/user/user.dto';
+import { CreateUserDTO, GetUserDTO } from '@/dtos/user/user.dto';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Plus } from 'lucide-react';
 import validator from 'validator';
@@ -66,7 +66,7 @@ function NewManagerForm({
     collectionPoints: DisplayCollectionPointDTO[];
     transactionPoints: DisplayTransactionPointDTO[];
   };
-  setManagers: Dispatch<SetStateAction<DisplayCollectionPointDTO[]>>;
+  setManagers: Dispatch<SetStateAction<GetUserDTO[]>>;
 }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

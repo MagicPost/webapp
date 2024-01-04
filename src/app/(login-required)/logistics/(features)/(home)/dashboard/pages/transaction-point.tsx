@@ -82,7 +82,7 @@ const orderChartProps: OrderChartProps = {
   },
 };
 
-export default function TransactionPointTab() {
+export default function TransactionPointPage() {
   return (
     <div className='mt-4'>
       <div className='flex w-full flex-row flex-wrap items-stretch gap-2 md:flex-nowrap'>

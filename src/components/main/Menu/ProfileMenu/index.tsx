@@ -18,14 +18,18 @@ const dropdownNavItems = [
 ];
 
 export default async function ProfileMenu() {
-  const res = await auth();
-  const user = await getUserByEmail(res?.user?.email);
+  const session = await auth();
+  const user = await getUserByEmail({
+    email: session?.user?.email,
+  });
+
+  /* TODO: redirect to login page if failed to get user */
   if (!user) return null;
 
   return (
     <div className='mx-auto mt-8 flex w-full flex-row items-center gap-2 border-b-2 pb-4'>
       <Avatar>
-        <AvatarImage src={user.avatar} />
+        <AvatarImage src={user.avatar || `/avatar/${user?.gender}.svg`} />
         <AvatarFallback className='border-2 border-amber-700 bg-amber-200'>
           {getAbbreviation(user.firstName + ' ' + user.lastName)}
         </AvatarFallback>

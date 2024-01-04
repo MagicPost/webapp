@@ -53,7 +53,7 @@ export default function BranchImageCard({
           </div>
         </div>
       </DialogTrigger>
-      <DialogContent className='h-[88vh] max-h-[800px] w-[68vw] max-w-[1400px] py-8'>
+      <DialogContent className='h-[94vh] max-h-[1000px] w-full max-w-[1400px] overflow-y-scroll py-8 sm:w-[80vw]'>
         <DialogInnerContent
           version={version}
           setVersion={setVersion}
@@ -101,8 +101,8 @@ function DialogInnerContent({
   const transactionPoints = (data || []) as GetTransactionPointDTO[];
 
   return (
-    <div className='flex flex-row gap-4'>
-      <div className='w-2/5 px-4'>
+    <div className='flex flex-col gap-4 lg:flex-row'>
+      <div className='w-full lg:w-2/5'>
         <p className='text-xl font-semibold text-black'>{collectionPoint.name}</p>
 
         <div className='mb-2 mt-4 grid grid-cols-3 gap-2 rounded-lg border border-gray-400 p-2'>
@@ -132,8 +132,8 @@ function DialogInnerContent({
           <AddTransactionPointForm collectionPoint={collectionPoint} />
         </div>
       </div>
-      <div className='w-3/5'>
-        <div className='mb-4 flex flex-row items-center justify-between'>
+      <div className='mt-4 w-full lg:mt-0 lg:w-3/5'>
+        <div className='mb-4 flex flex-col items-center justify-between min-[500px]:flex-row'>
           <p className='text-xl font-semibold text-black'>Các điểm giao dịch trực thuộc:</p>
           <div className='flex flex-row items-center justify-center gap-1'>
             <span className=' font-semibold'>(Tổng: {transactionPoints.length})</span>
@@ -141,7 +141,7 @@ function DialogInnerContent({
         </div>
         <div className='mb-4'>
           <SearchBar
-            className='w-[32rem]'
+            className='w-full'
             placeholder='Tìm kiếm theo tên, địa chỉ, mã bưu chính, tên trưởng điểm'
           />
         </div>

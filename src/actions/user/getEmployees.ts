@@ -1,5 +1,3 @@
-'use server';
-
 import { BranchTypes, Roles } from '@/constants';
 import dbConnect from '@/db/dbConnect';
 import { AccountModel } from '@/db/models';

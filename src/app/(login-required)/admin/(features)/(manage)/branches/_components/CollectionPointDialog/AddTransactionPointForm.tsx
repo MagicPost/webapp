@@ -108,7 +108,7 @@ export default function AddTransactionPointForm({
       {showForm && (
         <Form {...form}>
           <form className='flex flex-col gap-0 space-y-8' onSubmit={form.handleSubmit(onSubmit)}>
-            <div className='max-h-[18rem] overflow-auto'>
+            <div className='max-h-[22rem] overflow-auto'>
               <div className='flex-1'>
                 <CustomInputField
                   form={form}

@@ -1,7 +1,33 @@
-export default function DashboardPage() {
+import { getBranchOf } from '@/actions/branch/getBranchOf';
+import { BranchTypes } from '@/constants';
+import { GetBasicBranchDTO } from '@/dtos/branches/branch.dto';
+import { auth } from '@/lib/auth';
+import CollectionPointPage from './pages/collection-point';
+import TransactionPointPage from './pages/transaction-point';
+
+export default async function DashboardPage() {
+  const session = await auth();
+
+  const branch: Omit<GetBasicBranchDTO, 'address' | 'manager'> = (
+    await getBranchOf({
+      user: { email: session?.user?.email },
+    })
+  ).data;
+
+  if (!branch) {
+    return (
+      <div className='p-4 text-base text-gray-600'>Bạn không có quyền truy cập vào trang này</div>
+    );
+  }
+
   return (
-    <div className='p-4'>
-      <h1>Dashboard</h1>
+    <div className='mt-12 p-4 lg:mt-0'>
+      <h1 className='mb-4 text-2xl font-bold'>Thống kê</h1>
+      {branch.type === BranchTypes.COLLECTION_POINT ? (
+        <CollectionPointPage />
+      ) : (
+        <TransactionPointPage />
+      )}
     </div>
   );
 }

@@ -9,10 +9,16 @@ export default function DashboardPage() {
       <h1 className='mb-4 text-2xl font-bold'>Thống kê</h1>
 
       <Tabs defaultValue='country' className='w-full'>
-        <TabsList>
-          <TabsTrigger value='country'>Toàn quốc</TabsTrigger>
-          <TabsTrigger value='collection-points'>Các điểm tập kết</TabsTrigger>
-          <TabsTrigger value='transaction-points'>Các điểm giao dịch</TabsTrigger>
+        <TabsList className='my-12 flex h-full w-full flex-col md:my-4 md:flex-row'>
+          <TabsTrigger value='country' className='w-full'>
+            Toàn quốc
+          </TabsTrigger>
+          <TabsTrigger value='collection-points' className='w-full'>
+            Các điểm tập kết
+          </TabsTrigger>
+          <TabsTrigger value='transaction-points' className='w-full'>
+            Các điểm giao dịch
+          </TabsTrigger>
         </TabsList>
         <TabsContent value='country'>
           <CountryTab />

@@ -17,8 +17,11 @@ import ProfileMenu from './ProfileMenu';
 import NavigationGroup from './NavigationGroup';
 
 export default async function Menu() {
-  const res = await auth();
-  const user = await getUserByEmail(res?.user?.email);
+  const session = await auth();
+  const user = await getUserByEmail({
+    email: session?.user?.email,
+    withBranch: true,
+  });
   if (!user) return null;
 
   return (
@@ -41,11 +44,7 @@ function TopPart({ className = '', user }: { className?: string; user: GetUserDT
         className='flex w-full flex-row items-center justify-center rounded-full py-2'
       >
         <p className='text-sm font-semibold'>
-          {user.role === Roles.ADMIN
-            ? 'Ban quản lý'
-            : user.branch?.type === BranchTypes.TRANSACTION_POINT
-              ? 'Điểm giao dịch'
-              : 'Điểm tập kết'}
+          {user.role === Roles.ADMIN ? 'Ban quản lý' : user.branch?.name}
         </p>
       </Badge>
     </div>

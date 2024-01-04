@@ -26,7 +26,7 @@ export type OrderChartProps = {
 
 export default function NewChart({ legend, options, series, style }: OrderChartProps) {
   return (
-    <div>
+    <div className='w-full'>
       <p className='text-lg font-bold'>{legend.title}</p>
       <Chart options={options} series={series} type='line' {...style} />
     </div>
