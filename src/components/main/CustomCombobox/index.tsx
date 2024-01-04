@@ -72,7 +72,7 @@ export default function CustomComboBox({
                     setOpen(!open);
                   }}
                   className={cn(
-                    'w-[200px] justify-between',
+                    'justify-between',
                     !field.value && 'mt-2 text-muted-foreground',
                     selectClassname
                   )}

@@ -29,7 +29,7 @@ export default async function EmployeesPage() {
   });
 
   return (
-    <div className='p-4'>
+    <div className='mt-12 p-4 lg:mt-0'>
       <h1 className='mb-4 text-2xl font-bold'>Quản lý nhân sự</h1>
       <StaffTable
         tableProps={{

@@ -14,10 +14,11 @@ import { Label } from '@/components/ui/label';
 import { PackageTypes, SpecialProperties } from '@/constants';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
-import { HTMLInputTypeAttribute } from 'react';
+import { Fragment, HTMLInputTypeAttribute } from 'react';
 import { Button } from '@/components/ui/button';
 import { Plus, Trash2 } from 'lucide-react';
 import CustomFormLabel from './CustomFormLabel';
+import { Separator } from '@/components/ui/separator';
 
 const specialProps = [
   {
@@ -49,7 +50,7 @@ export default function PackageForm({
 }) {
   return (
     <Form {...form}>
-      <form className='space-y-4 px-4 pt-8' onSubmit={(event) => event.preventDefault()}>
+      <form className='w-full space-y-4 px-4 pt-8' onSubmit={(event) => event.preventDefault()}>
         <div className='flex flex-row gap-4'>
           <FormField
             control={form.control}
@@ -111,70 +112,75 @@ export default function PackageForm({
           />
         </div>
 
-        <div className='mt-2 flex flex-col space-y-4'>
+        <div className='mt-2 flex w-full flex-col space-y-2'>
           {form.watch('items').map((_, index) => (
-            <div className='flex flex-row items-center space-x-4' key={index}>
-              <ItemInputField
-                form={form}
-                index={index}
-                label={
-                  <>
-                    Tên hàng <span className='text-red-500'>*</span>
-                  </>
-                }
-                placeholder='Nhập tên hàng'
-                fieldName='name'
-              />
+            <Fragment key={index}>
+              <Separator className='w-full text-secondary' />
 
-              <ItemInputField
-                form={form}
-                index={index}
-                label={
-                  <>
-                    Số lượng <span className='text-red-500'>*</span>
-                  </>
-                }
-                fieldName='quantity'
-                type='number'
-              />
+              <div className='flex flex-col items-center gap-2 sm:flex-row'>
+                <div className='flex w-full flex-col flex-wrap gap-2 md:flex-row'>
+                  <ItemInputField
+                    form={form}
+                    index={index}
+                    label={
+                      <>
+                        Tên hàng <span className='text-red-500'>*</span>
+                      </>
+                    }
+                    placeholder='Nhập tên hàng'
+                    fieldName='name'
+                  />
 
-              <ItemInputField
-                form={form}
-                index={index}
-                label={
-                  <>
-                    Khối lượng đơn (g) <span className='text-red-500'>*</span>
-                  </>
-                }
-                fieldName='weight'
-                type='number'
-              />
+                  <ItemInputField
+                    form={form}
+                    index={index}
+                    label={
+                      <>
+                        Số lượng <span className='text-red-500'>*</span>
+                      </>
+                    }
+                    fieldName='quantity'
+                    type='number'
+                  />
 
-              <ItemInputField
-                form={form}
-                index={index}
-                label={
-                  <>
-                    Đơn giá (VNĐ) <span className='text-red-500'>*</span>
-                  </>
-                }
-                fieldName='price'
-                type='number'
-              />
+                  <ItemInputField
+                    form={form}
+                    index={index}
+                    label={
+                      <>
+                        Khối lượng đơn (g) <span className='text-red-500'>*</span>
+                      </>
+                    }
+                    fieldName='weight'
+                    type='number'
+                  />
 
-              <Button
-                type='button'
-                variant='destructive'
-                className='px-4 py-2'
-                onClick={() => {
-                  const items = form.getValues().items;
-                  const newItems = items.filter((_, itemIndex) => itemIndex !== index);
-                  form.reset({ ...form.watch(), items: [...newItems] });
-                }}
-              >
-                <Trash2 size={16} />
-              </Button>
-            </div>
+                  <ItemInputField
+                    form={form}
+                    index={index}
+                    label={
+                      <>
+                        Đơn giá (VNĐ) <span className='text-red-500'>*</span>
+                      </>
+                    }
+                    fieldName='price'
+                    type='number'
+                  />
+                </div>
+                <Button
+                  type='button'
+                  variant='destructive'
+                  className='px-4 py-2 max-sm:w-[100px]'
+                  onClick={() => {
+                    const items = form.getValues().items;
+                    const newItems = items.filter((_, itemIndex) => itemIndex !== index);
+                    form.reset({ ...form.watch(), items: [...newItems] });
+                  }}
+                >
+                  <Trash2 className='h-5 w-5 sm:h-4 sm:w-4' />
+                </Button>
+              </div>
+            </Fragment>
           ))}
         </div>
 
@@ -226,7 +232,7 @@ function ItemInputField({
       render={({ field }) => {
         return (
           <FormControl>
-            <div className='flex w-1/2 flex-col gap-2'>
+            <div className='flex w-full basis-auto flex-col gap-2 sm:basis-[48%] min-[1350px]:basis-[23%]'>
               <FormLabel className='text-sm font-semibold'>{label}</FormLabel>
               <Input
                 className='w-full rounded-md border border-gray-300 px-4 py-2'

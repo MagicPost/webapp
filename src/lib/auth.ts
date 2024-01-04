@@ -26,6 +26,7 @@ async function getUser({
 
     const filter = {
       email,
+      active: true,
       ...(isAdminArea
         ? { role: Roles.ADMIN }
         : {
@@ -38,7 +39,7 @@ async function getUser({
 
     const user = await AccountModel.findOne(filter).select('+password');
 
-    console.log('filter', filter, 'user', user);
+    // console.log('filter', filter, 'user', user);
 
     if (!user) return null;
 

@@ -21,6 +21,26 @@ export enum PackageStates {
   RETURNED = 'returned',
 }
 
+export enum PackageTrackingActions {
+  CREATED = 'created',
+  CANCELLED = 'cancelled',
+  ARRIVED = 'arrived',
+  DEPARTED = 'departed',
+  DELIVERING = 'delivering',
+  DELIVERED = 'delivered',
+  RETURNED = 'returned',
+}
+
+export const PackageTrackingActionsMap = {
+  [PackageTrackingActions.CREATED]: 'Đã tạo đơn',
+  [PackageTrackingActions.CANCELLED]: 'Đã hủy đơn',
+  [PackageTrackingActions.ARRIVED]: 'Đã đến kho',
+  [PackageTrackingActions.DEPARTED]: 'Đã rời kho',
+  [PackageTrackingActions.DELIVERING]: 'Đang giao hàng',
+  [PackageTrackingActions.DELIVERED]: 'Đã giao hàng',
+  [PackageTrackingActions.RETURNED]: 'Người nhận đã trả hàng',
+};
+
 export enum PackageTypes {
   DOCUMENT = 'document',
   PARCEL = 'parcel',

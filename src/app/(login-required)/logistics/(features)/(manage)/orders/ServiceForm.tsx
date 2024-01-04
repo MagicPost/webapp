@@ -172,7 +172,7 @@ export default function ServiceForm({
                     <Input
                       {...field}
                       placeholder='Số tiền thu hộ'
-                      className='w-[240px]'
+                      className='w-full max-w-[240px]'
                       type='number'
                       onChange={(event) => {
                         const value = Number(event.target.value);

@@ -1,14 +1,5 @@
 import { cn } from '@/lib/utils';
-
-enum PackageActions {
-  CREATED = 'Đã tạo đơn',
-  CANCELLED = 'Đã hủy đơn',
-  ARRIVED = 'Đã đến kho',
-  DEPARTED = 'Đã rời kho',
-  DELIVERING = 'Đang giao hàng',
-  DELIVERED = 'Đã giao hàng',
-  RETURNED = 'Người nhận đã trả hàng',
-}
+import { PackageTrackingActions, PackageTrackingActionsMap } from '@/constants/';
 
 enum TimelineType {
   PAST = 'past',
@@ -23,15 +14,15 @@ export default function TransitProgress() {
         title='Điểm tập kết C1. Hà Nội'
         actions={[
           {
-            type: PackageActions.RETURNED,
+            type: PackageTrackingActions.RETURNED,
             timestamp: '10:20:23 12/12/2021',
           },
           {
-            type: PackageActions.DELIVERING,
+            type: PackageTrackingActions.DELIVERING,
             timestamp: '10:20:23 12/12/2021',
           },
           {
-            type: PackageActions.ARRIVED,
+            type: PackageTrackingActions.ARRIVED,
             timestamp: '10:20:23 12/12/2021',
           },
         ]}
@@ -41,25 +32,11 @@ export default function TransitProgress() {
         title='Điểm tập kết C5. Thanh Hóa'
         actions={[
           {
-            type: PackageActions.DEPARTED,
+            type: PackageTrackingActions.DEPARTED,
             timestamp: '10:20:23 12/12/2021',
           },
           {
-            type: PackageActions.ARRIVED,
-            timestamp: '10:20:23 12/12/2021',
-          },
-        ]}
-        type={TimelineType.PAST}
-      />
-      <Timeline
-        title='Điểm giao dịch T4. Hoằng Hóa: '
-        actions={[
-          {
-            type: PackageActions.DEPARTED,
-            timestamp: '10:20:23 12/12/2021',
-          },
-          {
-            type: PackageActions.CREATED,
+            type: PackageTrackingActions.ARRIVED,
             timestamp: '10:20:23 12/12/2021',
           },
         ]}
@@ -69,11 +46,25 @@ export default function TransitProgress() {
         title='Điểm giao dịch T4. Hoằng Hóa: '
         actions={[
           {
-            type: PackageActions.DEPARTED,
+            type: PackageTrackingActions.DEPARTED,
             timestamp: '10:20:23 12/12/2021',
           },
           {
-            type: PackageActions.CREATED,
+            type: PackageTrackingActions.CREATED,
+            timestamp: '10:20:23 12/12/2021',
+          },
+        ]}
+        type={TimelineType.PAST}
+      />
+      <Timeline
+        title='Điểm giao dịch T4. Hoằng Hóa: '
+        actions={[
+          {
+            type: PackageTrackingActions.DEPARTED,
+            timestamp: '10:20:23 12/12/2021',
+          },
+          {
+            type: PackageTrackingActions.CREATED,
             timestamp: '10:20:23 12/12/2021',
           },
         ]}
@@ -94,15 +85,15 @@ function Timeline({
   isStart?: boolean;
   title: string;
   actions: {
-    type: PackageActions;
+    type: PackageTrackingActions;
     timestamp: string;
   }[];
   description?: string;
   type?: TimelineType;
 }) {
-  const isDelivered = actions.some((action) => action.type === PackageActions.DELIVERED);
-  const isCancelled = actions.some((action) => action.type === PackageActions.CANCELLED);
-  const isReturned = actions.some((action) => action.type === PackageActions.RETURNED);
+  const isDelivered = actions.some((action) => action.type === PackageTrackingActions.DELIVERED);
+  const isCancelled = actions.some((action) => action.type === PackageTrackingActions.CANCELLED);
+  const isReturned = actions.some((action) => action.type === PackageTrackingActions.RETURNED);
 
   return (
     <li className={isStart ? 'border-l-0' : 'border-l-2'}>
@@ -133,7 +124,7 @@ function Timeline({
               >
                 {action.timestamp}
               </span>
-              <span className='text-sm'>: {action.type}</span>
+              <span className='text-sm'>: {PackageTrackingActionsMap[action.type]}</span>
             </div>
           ))}
         </div>

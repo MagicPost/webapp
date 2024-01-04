@@ -30,6 +30,13 @@ export async function authenticate(options: Record<string, any>) {
           } satisfies ActionResponse;
       }
     }
+    if (error instanceof Error) {
+      return {
+        ok: false,
+        message: error.message,
+        status: StatusCodes.INTERNAL_SERVER_ERROR,
+      } satisfies ActionResponse;
+    }
   }
 }
 

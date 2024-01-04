@@ -122,7 +122,7 @@ export default function ClientForm({
               options={wardOptions}
               labelClassname='text-xs'
               selectClassname='w-full'
-              contentClassname='max-h-[200px] overflow-y-auto'
+              contentClassname='w-full overflow-y-auto'
               formMessageClassname='text-xs'
               placeholder='Chọn phường/xã'
             />

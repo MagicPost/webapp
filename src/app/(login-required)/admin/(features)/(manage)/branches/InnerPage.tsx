@@ -28,7 +28,7 @@ export default function InnerPage({
   );
 
   return (
-    <div className='p-4'>
+    <div className='mt-12 p-4 lg:mt-0'>
       <h1 className='text-2xl font-bold'>Chi Nhánh</h1>
       <div className='mt-3 flex flex-col gap-2 md:flex-row md:items-center md:justify-between'>
         <div className='flex flex-col gap-2 md:flex-row md:items-center md:gap-4'>

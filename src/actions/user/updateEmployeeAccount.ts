@@ -14,13 +14,14 @@ export const updateEmployeeAccount = catchAsync(async (getUserDTO: GetUserDTO) =
   await dbConnect();
 
   const { _id, ...rest } = getUserDTO;
-  const updatedAccount = await AccountModel.findByIdAndUpdate(_id, { ...rest }, { new: true });
+  let updatedAccount = await AccountModel.findByIdAndUpdate(_id, { ...rest }, { new: true }).lean();
+  updatedAccount = transformObjectIdFromLeanedDoc(updatedAccount as Account);
 
   return {
     ok: true,
     status: 200,
     message: 'Cập nhật tài khoản thành công!',
-    data: updatedAccount?.toJSON(),
+    data: updatedAccount,
   } satisfies ActionResponse;
 });
 
@@ -37,7 +38,7 @@ export const updateEmployeePassword = catchAsync(
 
     let updatedAccount = await AccountModel.findByIdAndUpdate(
       _id,
-      { password: encryptedPassword },
+      { password: encryptedPassword, active: true },
       { new: true }
     ).lean();
 

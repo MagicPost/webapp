@@ -160,11 +160,11 @@ export default function OrdersPage() {
 
   return (
     <>
-      <div className='w-full p-4'>
-        <h1 className='mb-8 text-xl font-semibold'>Tạo đơn hàng</h1>
+      <div className='mt-12 w-full p-4 lg:mt-0'>
+        <h1 className='mb-8 text-2xl font-bold'>Tạo đơn hàng</h1>
 
-        <div className='mb-16 flex flex-row gap-8'>
-          <div className='flex w-2/5 flex-col gap-4'>
+        <div className='mb-16 flex flex-col gap-8 lg:flex-row'>
+          <div className='flex w-full flex-col gap-4 lg:w-2/5'>
             <SectionWrapper title='Thông tin người gửi'>
               <ClientForm form={senderForm} />
             </SectionWrapper>
@@ -174,7 +174,7 @@ export default function OrdersPage() {
             </SectionWrapper>
           </div>
 
-          <div className='flex w-3/5 flex-col gap-4'>
+          <div className='flex w-full flex-col gap-4 lg:w-3/5'>
             <SectionWrapper
               title='Thông tin đơn hàng'
               footer={
@@ -205,21 +205,28 @@ export default function OrdersPage() {
           </div>
         </div>
       </div>
-      <div className='item-center sticky bottom-0 z-10 flex h-24 flex-row justify-between border bg-white'>
-        <div className=''>
-          <div>Tổng cước</div>
-        </div>
-        <div className=''>
-          <div>Tiền thu hộ</div>
-        </div>
 
-        <div className=''>
-          <div>Tiền thu người gửi</div>
+      <div className='item-center sticky bottom-0 z-10 flex h-24 flex-row items-center justify-between gap-2 overflow-auto border bg-white px-4 py-2 lg:px-20'>
+        <div className='flex h-full max-w-[500px] flex-1 flex-row flex-wrap items-center justify-between gap-1  text-xs lg:p-2 lg:text-sm'>
+          <div className='flex basis-[4rem] flex-col min-[400px]:basis-[8rem]'>
+            <span>Tổng cước:</span>
+            <span className='text-sm font-semibold sm:text-base'>30000đ</span>
+          </div>
+          <div className='flex basis-[4rem] flex-col min-[400px]:basis-[8rem]'>
+            <span>Tiền thu hộ:</span>
+            <span className='text-sm font-semibold sm:text-base'>30000đ</span>
+          </div>
+
+          <div className='flex basis-[4rem] flex-col min-[400px]:basis-[8rem]'>
+            <span>Tiền thu người gửi:</span>
+            <span className='text-sm font-semibold sm:text-base'>30000đ</span>
+          </div>
         </div>
-        <div>Thời gian dự kiến</div>
 
         <div>
-          <Button onClick={onSubmit}>Hoàn tất</Button>
+          <Button onClick={onSubmit} className='text-xs sm:text-base'>
+            Hoàn tất
+          </Button>
         </div>
       </div>
     </>
