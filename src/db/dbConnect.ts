@@ -11,7 +11,7 @@ declare global {
 const MONGODB_URI = process.env.DB_URI!;
 
 if (!MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable inside .env');
+  throw new Error('Please define the DB_URI environment variable inside .env');
 }
 
 let cached = global.mongoose;
