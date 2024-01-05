@@ -28,8 +28,8 @@ class Client {
   @prop({ required: true })
   public phone!: string;
 
-  @prop({ required: true })
-  public email!: string;
+  @prop({ required: false })
+  public email?: string;
 }
 
 @modelOptions({
@@ -118,8 +118,8 @@ export class Package extends TimeStamps {
     },
   ];
 
-  @prop({ required: true, enum: PackageStates, default: PackageStates.PENDING })
-  public state: string;
+  @prop({ required: true, enum: PackageStates, default: PackageStates.PENDING, type: () => String })
+  public state: PackageStates;
 
   @prop({ required: true, type: () => [Tracking], _id: false })
   public tracking!: Tracking[];

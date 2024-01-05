@@ -17,7 +17,7 @@ import Empty from '@/components/main/Empty';
 import toast from 'react-hot-toast';
 import { Dispatch, SetStateAction, useState } from 'react';
 
-export default function BranchImageCard({
+export default function CollectionPointDialog({
   collectionPoint,
 }: {
   collectionPoint: GetCollectionPointDTO;

@@ -1,3 +1,5 @@
+'use server';
+
 import dbConnect from '@/db/dbConnect';
 import { catchAsync } from '../_helpers/catchAsync';
 import { AccountModel } from '@/db/models';

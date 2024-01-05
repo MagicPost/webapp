@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "build:dev": "set NODE_ENV=development && next build",
+    "build:prod": "set NODE_ENV=production && next build",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -57,10 +59,10 @@
     "react-scroll": "^1.9.0",
     "react-slick": "^0.29.0",
     "slick-carousel": "^1.8.1",
+    "sqids": "^0.3.0",
     "tailwind-merge": "^2.0.0",
     "tailwindcss-animate": "^1.0.7",
     "types": "link:@auth/core/types",
-    "uuid": "^9.0.1",
     "validator": "^13.11.0",
     "vaul": "^0.8.0",
     "zod": "^3.22.4"

@@ -1,3 +1,5 @@
+'use server';
+
 import dbConnect from '@/db/dbConnect';
 import { TransactionPointModel } from '@/db/models';
 import { ActionResponse } from '../_helpers/types';

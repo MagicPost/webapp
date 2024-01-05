@@ -1,7 +1,7 @@
 import { Form } from '@/components/ui/form';
 import { UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
-import { clientFormSchema } from './page';
+import { clientFormSchema } from './schema';
 import CustomComboBox from '@/components/main/CustomCombobox';
 import { provinces } from '@/constants/geography';
 import { useEffect, useMemo } from 'react';
@@ -122,7 +122,7 @@ export default function ClientForm({
               options={wardOptions}
               labelClassname='text-xs'
               selectClassname='w-full'
-              contentClassname='w-full overflow-y-auto'
+              contentClassname='max-h-[200px] overflow-y-auto'
               formMessageClassname='text-xs'
               placeholder='Chọn phường/xã'
             />

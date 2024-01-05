@@ -36,7 +36,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
 }
 
-export default function OrderTable<TData, TValue>({
+export default function TableTemplate<TData, TValue>({
   tableProps: { columns, data },
   branchInfo,
 }: {
@@ -60,6 +60,10 @@ export default function OrderTable<TData, TValue>({
         pageIndex: 0,
         pageSize: 6,
       },
+      columnVisibility: columns.reduce((acc: Record<string, boolean>, item: any) => {
+        acc[item.accessorKey!] = !item.meta?.hidden;
+        return acc;
+      }, {}),
     },
     state: {
       sorting,
@@ -70,12 +74,12 @@ export default function OrderTable<TData, TValue>({
   return (
     <div>
       <div className='flex flex-col-reverse items-center justify-between gap-2 py-4 sm:flex-row'>
-        <Input
+        {/* <Input
           placeholder='Tìm kiếm theo email...'
           value={(table.getColumn('email')?.getFilterValue() as string) ?? ''}
           onChange={(event) => table.getColumn('email')?.setFilterValue(event.target.value)}
           className='w-full sm:max-w-sm'
-        />
+        /> */}
       </div>
       <div className='rounded-md border'>
         <Table>

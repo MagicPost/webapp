@@ -1,11 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  images: {
-    remotePatterns: [
-      {
-        hostname: 'v1.tailwindcss.com',
-      },
-    ],
+  experimental: {
+    // esmExternals: 'loose',
+    serverComponentsExternalPackages: ['mongoose', '@typegoose/typegoose'],
   },
 };
 

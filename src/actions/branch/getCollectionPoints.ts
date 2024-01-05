@@ -1,3 +1,5 @@
+'use server';
+
 import dbConnect from '@/db/dbConnect';
 import { CollectionPointModel } from '@/db/models';
 import { GetCollectionPointDTO } from '@/dtos/branches/collection-point.dto';

@@ -63,11 +63,6 @@ export const managerSidebarNavigation: TNavigationGroup[] = [
         icon: <RiMoneyDollarCircleFill />,
         href: '/logistics/lookup/postage',
       },
-      {
-        label: 'Chi nhánh',
-        icon: <FaBuilding />,
-        href: '/logistics/lookup/branches',
-      },
     ],
   },
 ];
@@ -105,11 +100,6 @@ export const staffSidebarNavigation: TNavigationGroup[] = [
         label: 'Cước phí',
         icon: <RiMoneyDollarCircleFill />,
         href: '/logistics/lookup/postage',
-      },
-      {
-        label: 'Chi nhánh',
-        icon: <FaBuilding />,
-        href: '/logistics/lookup/branches',
       },
     ],
   },

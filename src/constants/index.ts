@@ -65,7 +65,7 @@ export enum SpecialProperties {
   BULKY = 'bulky',
 }
 
-export enum ContainerStates {
+export enum BatchStates {
   IN_TRANSIT = 'in_transit',
   ARRIVED = 'arrived',
 }

@@ -1,5 +1,5 @@
 import { UseFormReturn } from 'react-hook-form';
-import { serviceFormSchema } from './page';
+import { serviceFormSchema } from './schema';
 import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -166,7 +166,8 @@ export default function ServiceForm({
             name={'COD'}
             render={({ field }) => (
               <FormItem className='flex-1'>
-                <CustomFormLabel htmlFor={field.name}>Tiền thu hộ</CustomFormLabel>
+                <CustomFormLabel htmlFor={field.name}>Tiền thu hộ</CustomFormLabel>{' '}
+                <span className='text-xs'>(miễn phí)</span>
                 <div className="flex items-center after:top-1 after:-translate-x-[calc(100%+40px)] after:text-sm after:text-gray-500 after:content-['VNĐ']">
                   <FormControl>
                     <Input
@@ -181,7 +182,6 @@ export default function ServiceForm({
                     />
                   </FormControl>
                 </div>
-
                 <div className='flex items-center space-x-2'>
                   <Checkbox
                     id='terms'

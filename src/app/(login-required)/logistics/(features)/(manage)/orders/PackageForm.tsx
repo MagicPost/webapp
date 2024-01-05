@@ -7,14 +7,14 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { UseFormReturn } from 'react-hook-form';
-import { packageFormSchema } from './page';
+import { packageFormSchema } from './schema';
 import { z } from 'zod';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { PackageTypes, SpecialProperties } from '@/constants';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
-import { Fragment, HTMLInputTypeAttribute } from 'react';
+import { Fragment, HTMLInputTypeAttribute, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Plus, Trash2 } from 'lucide-react';
 import CustomFormLabel from './CustomFormLabel';
@@ -95,7 +95,7 @@ export default function PackageForm({
                             <FormControl>
                               <Checkbox
                                 checked={field.value}
-                                onCheckedChange={(checked) => {
+                                onCheckedChange={(checked: boolean) => {
                                   return field.onChange(checked);
                                 }}
                               />
@@ -239,7 +239,12 @@ function ItemInputField({
                 type={type}
                 {...field}
                 onChange={(event) => {
-                  const value = type === 'number' ? Number(event.target.value) : event.target.value;
+                  if (type === 'number') {
+                    const actualValue = Number(event.target.value);
+                    field.onChange(actualValue);
+                    return;
+                  }
+                  const value = event.target.value;
                   field.onChange(value);
                 }}
                 placeholder={placeholder}

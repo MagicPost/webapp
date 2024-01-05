@@ -1,3 +1,5 @@
+'use server';
+
 import dbConnect from '@/db/dbConnect';
 import { AccountModel } from '@/db/models';
 import { GetUserDTO } from '@/dtos/user/user.dto';

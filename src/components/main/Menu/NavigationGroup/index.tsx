@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { BranchTypes } from '@/constants';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -16,15 +17,20 @@ export type TNavigationItem = {
   href?: string;
 };
 
-export default function NavigationGroup({ groupName, items }: TNavigationGroup) {
+export default function NavigationGroup({
+  groupName,
+  items,
+  isCollectionPointStaff,
+}: TNavigationGroup & { isCollectionPointStaff?: boolean }) {
   return (
     <div>
       <p className='mb-1 select-none text-xs uppercase'>{groupName}</p>
 
       <div className='flex flex-col gap-1'>
-        {items.map((item, index) => (
-          <NavigationItem key={index} {...item} />
-        ))}
+        {items.map((item, index) => {
+          if (isCollectionPointStaff && item.href === '/logistics/orders') return null;
+          return <NavigationItem key={index} {...item} />;
+        })}
       </div>
     </div>
   );

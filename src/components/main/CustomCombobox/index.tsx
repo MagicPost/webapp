@@ -1,3 +1,5 @@
+'use client';
+
 import { cn } from '@/lib/utils';
 import { Check, ChevronsUpDown, Plus } from 'lucide-react';
 import { Control } from 'react-hook-form';
@@ -15,7 +17,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 export default function CustomComboBox({
-  options,
+  options: allOptions,
   control,
   name,
   label,
@@ -52,6 +54,14 @@ export default function CustomComboBox({
 }) {
   const [open, setOpen] = useState(false);
 
+  const [options, setOptions] = useState(allOptions);
+
+  const searchOptions = (value: string) => {
+    setOptions(
+      allOptions.filter((option) => option.label.toLowerCase().includes(value.toLowerCase()))
+    );
+  };
+
   return (
     <FormField
       control={control}
@@ -61,7 +71,14 @@ export default function CustomComboBox({
           <FormLabel className={cn(labelClassname)}>
             {label} {required && <span className='text-red-500'>*</span>}
           </FormLabel>
-          <Popover open={open} onOpenChange={setOpen} modal={true}>
+          <Popover
+            open={open}
+            onOpenChange={() => {
+              setOpen(!open);
+              setOptions(allOptions);
+            }}
+            modal={true}
+          >
             <PopoverTrigger asChild>
               <FormControl>
                 <Button
@@ -92,6 +109,7 @@ export default function CustomComboBox({
                   value={inputValue}
                   onChange={(e) => {
                     onInputChange && onInputChange(e.target.value);
+                    searchOptions(e.target.value);
                   }}
                 />
                 <div>

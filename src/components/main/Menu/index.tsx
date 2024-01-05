@@ -58,12 +58,15 @@ function MiddlePart({ className = '', user }: { className?: string; user: GetUse
     [Roles.STAFF]: staffSidebarNavigation,
   }[user.role];
 
+  const isCollectionPointStaff =
+    user.role === Roles.STAFF && user.branch?.type === BranchTypes.COLLECTION_POINT;
+
   return (
     <>
       <ProfileMenu />
       <div className={cn('flex flex-col space-y-4', className)}>
         {sidebarNavigation.map((group, index) => (
-          <NavigationGroup key={index} {...group} />
+          <NavigationGroup key={index} isCollectionPointStaff={isCollectionPointStaff} {...group} />
         ))}
       </div>
     </>

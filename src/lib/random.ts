@@ -1,10 +1,8 @@
-import { v4 } from 'uuid';
+import Sqids from 'sqids';
+
+const sqids = new Sqids();
+const numbers = [129, 465, 453, 594, 492];
 
 export const getRandomBase64Id = () => {
-  const hexString = v4();
-
-  const nonHyphenHexString = hexString.replace(/-/g, '');
-
-  const base64String = Buffer.from(nonHyphenHexString, 'hex').toString('base64');
-  return base64String;
+  return sqids.encode(numbers);
 };
