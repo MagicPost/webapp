@@ -2,14 +2,13 @@
 
 import dbConnect from '@/db/dbConnect';
 import { AccountModel, PackageModel } from '@/db/models';
-import { CreateOrderDto } from '@/dtos/order/order.dto';
 import { transformObjectIdFromLeanedDoc } from '@/lib/mongo';
 import { catchAsync } from '../_helpers/catchAsync';
 import { ActionResponse } from '../_helpers/types';
 import { auth } from '@/lib/auth';
-import { GetPackageDTO } from '@/dtos/package/package.dto';
+import { CreatePackageDTO, GetPackageDTO } from '@/dtos/package/package.dto';
 
-export const createPackage = catchAsync(async (createOrder: CreateOrderDto) => {
+export const createPackage = catchAsync(async (createPackageDTO: CreatePackageDTO) => {
   await dbConnect();
 
   const session = await auth();
@@ -35,7 +34,7 @@ export const createPackage = catchAsync(async (createOrder: CreateOrderDto) => {
   }
 
   let newOrder = await PackageModel.create({
-    ...createOrder,
+    ...createPackageDTO,
     creator: account._id.toString(),
     receivedAt: account._id.toString(),
     sentAt: account._id.toString(),
