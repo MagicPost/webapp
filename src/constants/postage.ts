@@ -1,13 +1,13 @@
 import { TransitServiceTypes } from '.';
 
-export enum WeightClasses {
+export enum WeightTypes {
   NOT_OVER_2KG = '<=2kg',
   OVER_2KG = '>2kg',
 }
 
 export const WeightPostages: {
   [key in TransitServiceTypes]: {
-    [key in WeightClasses]: {
+    [key in WeightTypes]: {
       weight: string;
       local: number;
       to100km: number;
@@ -17,7 +17,7 @@ export const WeightPostages: {
   };
 } = {
   [TransitServiceTypes.ECONOMICAL]: {
-    [WeightClasses.NOT_OVER_2KG]: [
+    [WeightTypes.NOT_OVER_2KG]: [
       {
         weight: '< 100g',
         local: 5000,
@@ -61,7 +61,7 @@ export const WeightPostages: {
         over400km: 22000,
       },
     ],
-    [WeightClasses.OVER_2KG]: [
+    [WeightTypes.OVER_2KG]: [
       {
         weight: '> 2kg',
         local: 2000,
@@ -73,7 +73,7 @@ export const WeightPostages: {
   },
 
   [TransitServiceTypes.STANDARD]: {
-    [WeightClasses.NOT_OVER_2KG]: [
+    [WeightTypes.NOT_OVER_2KG]: [
       {
         weight: '< 100g',
         local: 8000,
@@ -117,7 +117,7 @@ export const WeightPostages: {
         over400km: 24000,
       },
     ],
-    [WeightClasses.OVER_2KG]: [
+    [WeightTypes.OVER_2KG]: [
       {
         weight: '> 2kg',
         local: 2500,
@@ -128,7 +128,7 @@ export const WeightPostages: {
     ],
   },
   [TransitServiceTypes.EXPRESS]: {
-    [WeightClasses.NOT_OVER_2KG]: [
+    [WeightTypes.NOT_OVER_2KG]: [
       {
         weight: '< 100g',
         local: 15000,
@@ -172,7 +172,7 @@ export const WeightPostages: {
         over400km: 30000,
       },
     ],
-    [WeightClasses.OVER_2KG]: [
+    [WeightTypes.OVER_2KG]: [
       {
         weight: '> 2kg',
         local: 3000,

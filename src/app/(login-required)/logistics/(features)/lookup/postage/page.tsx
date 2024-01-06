@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { TransitServiceTypes } from '@/constants';
-import { WeightClasses, WeightPostages } from '@/constants/postage';
+import { WeightTypes, WeightPostages } from '@/constants/postage';
 
 export default function PostagePage() {
   return (
@@ -70,7 +70,7 @@ function WeightTableTemplate({ type }: { type: TransitServiceTypes }) {
           </TableRow>
         </TableHeader>
         <TableBody className='text-center'>
-          {postages[WeightClasses.NOT_OVER_2KG].map((postage, index) => (
+          {postages[WeightTypes.NOT_OVER_2KG].map((postage, index) => (
             <TableRow key={postage.weight}>
               <TableCell className='border'>{postage.weight}</TableCell>
               <TableCell className='border'>{postage.local.toLocaleString('vi-VN')}</TableCell>
@@ -79,7 +79,7 @@ function WeightTableTemplate({ type }: { type: TransitServiceTypes }) {
               <TableCell className='border'>{postage.over400km.toLocaleString('vi-VN')}</TableCell>
               {index === 0 && (
                 <TableCell
-                  rowSpan={postages[WeightClasses.NOT_OVER_2KG].length}
+                  rowSpan={postages[WeightTypes.NOT_OVER_2KG].length}
                   className='border hover:bg-white'
                 >
                   đồng/bưu gửi
@@ -92,7 +92,7 @@ function WeightTableTemplate({ type }: { type: TransitServiceTypes }) {
             <TableCell colSpan={5}>Mỗi kg tiếp theo</TableCell>
           </TableRow>
 
-          {postages[WeightClasses.OVER_2KG].map((postage, index) => (
+          {postages[WeightTypes.OVER_2KG].map((postage, index) => (
             <TableRow key={postage.weight}>
               <TableCell className='border'>{postage.weight}</TableCell>
               <TableCell className='border'>+{postage.local.toLocaleString('vi-VN')}</TableCell>
@@ -101,7 +101,7 @@ function WeightTableTemplate({ type }: { type: TransitServiceTypes }) {
               <TableCell className='border'>+{postage.over400km.toLocaleString('vi-VN')}</TableCell>
               {index === 0 && (
                 <TableCell
-                  rowSpan={postages[WeightClasses.OVER_2KG].length}
+                  rowSpan={postages[WeightTypes.OVER_2KG].length}
                   className='border hover:bg-white'
                 >
                   đồng/kg

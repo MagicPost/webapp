@@ -26,6 +26,9 @@ abstract class AbstractBranch extends TimeStamps {
   public address!: string;
 
   @prop({ required: true })
+  public ward!: string;
+
+  @prop({ required: true })
   public district!: string;
 
   @prop({ required: true })

@@ -18,7 +18,7 @@ import { Account } from './Account';
     allowMixed: 0,
   },
 })
-class Client {
+export class Client {
   @prop({ required: true })
   public fullname!: string;
 

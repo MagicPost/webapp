@@ -96,7 +96,15 @@ export default function ServiceForm({
 
                 <div className='mt-2 flex items-center gap-2 italic'>
                   <span className='text-sm'>Thời gian giao hàng dự kiến:</span>
-                  <span className='font-medium'> 2 - 3 ngày</span>
+                  <span className='font-medium'>
+                    {
+                      {
+                        [TransitServiceTypes.ECONOMICAL]: '3 - 5 ngày',
+                        [TransitServiceTypes.STANDARD]: '2 - 3 ngày',
+                        [TransitServiceTypes.EXPRESS]: '1 - 2 ngày',
+                      }[field.value]
+                    }
+                  </span>
                 </div>
               </FormItem>
             )}

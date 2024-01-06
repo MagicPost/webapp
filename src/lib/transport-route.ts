@@ -1,3 +1,4 @@
+import { provinces } from '@/constants/geography';
 import { WeightedGraph } from './dijkstra';
 
 const provinceAdjacency: {
@@ -147,3 +148,36 @@ function makeGraph() {
 
   return graph;
 }
+
+const getGeolocation = (provinceName: string, reverseFormat?: boolean) => {
+  // format: [latitude, longtitude]
+  const geolocation = provinces.find((p) => p.name === provinceName)?.geolocation;
+
+  // if (reverseFormat == true) -> convert to format: [longtitude,latitude]
+  return reverseFormat ? geolocation?.split(',').reverse().join(',') : geolocation;
+};
+
+export const measureDistance = async ({
+  sourceProvince,
+  destProvince,
+}: {
+  sourceProvince: string;
+  destProvince: string;
+}) => {
+  const sourceGeolocation = getGeolocation(sourceProvince, true);
+  const destGeolocation = getGeolocation(destProvince, true);
+
+  const url = `https://router.project-osrm.org/route/v1/car/${sourceGeolocation};${destGeolocation}?alternatives=false&steps=false&overview=false&annotations=false`;
+
+  const res = await fetch(url);
+  const data = await res.json();
+  if (data.code === 'Ok') return data?.routes[0].legs[0].distance;
+  else return 0;
+};
+
+export const formatDistance = (distance: number) => {
+  // distance in meter
+  if (distance < 1000) return `${distance}m`;
+  // distance in kilometer
+  return `${(distance / 1000).toFixed(3)}km`;
+};

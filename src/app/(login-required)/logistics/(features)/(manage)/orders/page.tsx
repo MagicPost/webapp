@@ -5,20 +5,22 @@ import {
   PackageTypes,
   Payer,
   PickupTime,
+  PlusServiceTypes,
   SpecialProperties,
   TransitServiceTypes,
 } from '@/constants';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { number, z } from 'zod';
 import ClientForm from './ClientForm';
 import PackageForm from './PackageForm';
 import ServiceForm from './ServiceForm';
 import { clientFormSchema, packageFormSchema, serviceFormSchema } from './schema';
 import { createPackage } from '@/actions/package/createPackage';
 import { numberToVnd } from '@/lib/currency';
-import { getTransportRoutes } from '@/lib/transport-route';
+import { formatDistance, getTransportRoutes, measureDistance } from '@/lib/transport-route';
+import { getBasicPostages, getPlusPostage } from '@/lib/postage';
 
 export default function OrdersPage() {
   const senderForm = useForm<z.infer<typeof clientFormSchema>>({
@@ -103,12 +105,52 @@ export default function OrdersPage() {
     );
   }, [JSON.stringify(packageForm.watch('items'))]);
 
-  const postages = useMemo(() => {
-    return Math.max(
-      0,
-      packageForm.watch('items').reduce((acc, item) => acc + item.quantity, 0)
+  const plusServicePostage = useMemo(() => {
+    const { insurance, refund } = serviceForm.watch('plus');
+    return getPlusPostage({
+      value: totalPackagePrice,
+      services: {
+        insurance,
+        refund,
+      },
+    });
+  }, [totalPackagePrice, serviceForm.watch('plus').insurance, serviceForm.watch('plus').refund]);
+
+  const [distance, setDistance] = useState(0);
+  useEffect(() => {
+    let active = true;
+    load();
+    return () => {
+      active = false;
+    };
+
+    async function load() {
+      const { province: senderProvince } = senderForm.watch();
+      const { province: receiverProvince } = receiverForm.watch();
+      const _distance = await measureDistance({
+        sourceProvince: senderProvince,
+        destProvince: receiverProvince,
+      });
+      if (active) {
+        setDistance(_distance);
+      }
+    }
+  }, [senderForm.watch('province'), receiverForm.watch('province')]);
+
+  const totalPostages = useMemo(() => {
+    const { transit } = serviceForm.watch();
+    return (
+      getBasicPostages({
+        distance,
+        weight: totalPackageWeight,
+        transit,
+        province: {
+          sender: senderForm.watch('province'),
+          receiver: receiverForm.watch('province'),
+        },
+      }) + plusServicePostage
     );
-  }, []);
+  }, [distance, totalPackageWeight, plusServicePostage, serviceForm.watch('transit')]);
 
   const onSubmit = async () => {
     console.log(serviceForm.getValues());
@@ -199,20 +241,32 @@ export default function OrdersPage() {
       </div>
 
       <div className='item-center sticky bottom-0 z-10 flex h-24 flex-row items-center justify-between gap-2 overflow-auto border bg-white px-4 py-2 lg:px-20'>
-        <div className='flex h-full max-w-[600px] flex-1 flex-row flex-wrap items-center justify-between gap-1  text-xs lg:p-2 lg:text-sm'>
+        <div className='flex h-full max-w-[800px] flex-1 flex-row flex-wrap items-center justify-between gap-1  text-xs lg:p-2 lg:text-sm'>
+          <div className='flex basis-[4rem] flex-col min-[400px]:basis-[8rem]'>
+            <span>Khoảng cách:</span>
+            <span className='text-sm font-semibold sm:text-base'>{formatDistance(distance)}</span>
+          </div>
+
           <div className='flex basis-[4rem] flex-col min-[400px]:basis-[8rem]'>
             <span>Tổng cước:</span>
-            <span className='text-sm font-semibold sm:text-base'>30000đ</span>
+            <span className='text-sm font-semibold sm:text-base'>{numberToVnd(totalPostages)}</span>
           </div>
 
           <div className='flex basis-[4rem] flex-col min-[400px]:basis-[8rem]'>
             <span>Tiền thu người gửi:</span>
-            <span className='text-sm font-semibold sm:text-base'>30000đ</span>
+            <span className='text-sm font-semibold sm:text-base'>
+              {numberToVnd(serviceForm.watch('payer') === Payer.SENDER ? totalPostages : 0)}
+            </span>
           </div>
 
           <div className='flex basis-[4rem] flex-col max-[335px]:basis-[18rem] min-[400px]:basis-[14rem]'>
             <span>Tiền thu người nhận (+ Thu hộ)</span>
-            <span className='text-sm font-semibold sm:text-base'>30000đ</span>
+            <span className='text-sm font-semibold sm:text-base'>
+              {numberToVnd(
+                serviceForm.watch('COD') +
+                  (serviceForm.watch('payer') === Payer.RECEIVER ? totalPostages : 0)
+              )}
+            </span>
           </div>
         </div>
 
