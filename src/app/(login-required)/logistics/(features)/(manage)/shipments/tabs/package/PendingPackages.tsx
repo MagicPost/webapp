@@ -3,13 +3,14 @@
 import { GetBasicBranchDTO } from '@/dtos/branches/branch.dto';
 import TableTemplate from '../../tables/TableTemplate';
 import { getColumns } from '../../tables/package-columns';
+import { PackageStates } from '@/constants';
 import { Button } from '@/components/ui/button';
 import { ETabValue } from '../../@types/tab';
 import { usePackages } from '../../context';
 import { Row } from '@tanstack/react-table';
 import { GetPackageDTO } from '@/dtos/package/package.dto';
 
-export default function DeliveringPackages({}: {
+export default function PendingPackages({}: {
   branch: Omit<GetBasicBranchDTO, 'address' | 'manager'>;
 }) {
   const columns = getColumns({
@@ -19,36 +20,36 @@ export default function DeliveringPackages({}: {
   });
 
   const { packagesMap, setPackagesMap } = usePackages();
-  const deliveringPackages = packagesMap?.[ETabValue.DELIVERING] || [];
+  const pendingPackages = packagesMap?.[ETabValue.PENDING] || [];
 
-  const onConfirmDelivered = (selectedRows: Row<GetPackageDTO>[]) => {
-    const updatedDeliveringPackages = deliveringPackages.filter(
+  const onForward = (selectedRows: Row<GetPackageDTO>[]) => {
+    const updatedPendingPackages = pendingPackages.filter(
       (item) => !selectedRows.some((row) => row.original._id === item._id)
     );
-    const updatedDeliveredPackages = [
-      ...packagesMap[ETabValue.DELIVERED]!,
-      ...selectedRows.map((row) => row.original),
-    ];
-    setPackagesMap({
-      ...packagesMap,
-      [ETabValue.DELIVERING]: updatedDeliveringPackages,
-      [ETabValue.DELIVERED]: updatedDeliveredPackages,
-    });
+    // const updatedForwardingPackages = [
+    //   ...packagesMap[ETabValue.FORWARDING]!,
+    //   ...selectedRows.map((row) => row.original),
+    // ];
+    // setPackagesMap({
+    //   ...packagesMap,
+    //   [ETabValue.PENDING]: updatedPendingPackages,
+    //   [ETabValue.FORWARDING]: updatedForwardingPackages,
+    // });
   };
 
-  const onConfirmResent = (selectedRows: Row<GetPackageDTO>[]) => {
-    const updatedDeliveringPackages = deliveringPackages.filter(
+  const onDeliver = (selectedRows: Row<GetPackageDTO>[]) => {
+    const updatedPendingPackages = pendingPackages.filter(
       (item) => !selectedRows.some((row) => row.original._id === item._id)
     );
-    const updatedResentPackages = [
-      ...packagesMap[ETabValue.RESENT]!,
+    const updatedDeliveringPackages = [
+      ...packagesMap[ETabValue.DELIVERING]!,
       ...selectedRows.map((row) => row.original),
     ];
 
     setPackagesMap({
       ...packagesMap,
+      [ETabValue.PENDING]: updatedPendingPackages,
       [ETabValue.DELIVERING]: updatedDeliveringPackages,
-      [ETabValue.RESENT]: updatedResentPackages,
     });
   };
 
@@ -57,31 +58,41 @@ export default function DeliveringPackages({}: {
       <TableTemplate
         tableProps={{
           columns,
-          data: deliveringPackages,
+          data: pendingPackages,
         }}
         include={{
           select: true,
         }}
         produceCustomComponent={({ table }) => {
           const selectedRows = table.getFilteredSelectedRowModel().rows;
+          const canTransfer = selectedRows.every(
+            (row) => row.original.state === PackageStates.PENDING__READY_TO_TRANSER
+          );
+          const canDeliver = selectedRows.every(
+            (row) => row.original.state === PackageStates.PENDING__READY_TO_DELIVER
+          );
 
           return (
             <div className='flex justify-end'>
               <Button
                 className='mr-2'
+                disabled={!canTransfer || selectedRows.length === 0}
                 onClick={() => {
-                  onConfirmDelivered(selectedRows);
+                  if (!canTransfer || selectedRows.length === 0) return;
+                  onForward(selectedRows);
                 }}
               >
-                Giao hàng thành công
+                Chuyển tiếp
               </Button>
               <Button
                 variant='default'
+                disabled={!canDeliver || selectedRows.length === 0}
                 onClick={() => {
-                  onConfirmResent(selectedRows);
+                  if (!canDeliver || selectedRows.length === 0) return;
+                  onDeliver(selectedRows);
                 }}
               >
-                Xác nhận trả hàng
+                Giao hàng
               </Button>
             </div>
           );

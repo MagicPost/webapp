@@ -15,10 +15,12 @@ export enum BranchTypes {
 }
 
 export enum PackageStates {
-  PENDING = 'pending',
+  PENDING__READY_TO_DELIVER = 'pending_delivery',
+  PENDING__READY_TO_TRANSER = 'pending_transfer',
   IN_TRANSIT = 'in_transit',
+  DELIVERING = 'delivering',
   DELIVERED = 'delivered',
-  RETURNED = 'returned',
+  RESENT = 'resent',
 }
 
 export enum PackageTrackingActions {
@@ -28,7 +30,7 @@ export enum PackageTrackingActions {
   DEPARTED = 'departed',
   DELIVERING = 'delivering',
   DELIVERED = 'delivered',
-  RETURNED = 'returned',
+  RESENT = 'resent',
 }
 
 export const PackageTrackingActionsMap = {
@@ -38,7 +40,7 @@ export const PackageTrackingActionsMap = {
   [PackageTrackingActions.DEPARTED]: 'Đã rời kho',
   [PackageTrackingActions.DELIVERING]: 'Đang giao hàng',
   [PackageTrackingActions.DELIVERED]: 'Đã giao hàng',
-  [PackageTrackingActions.RETURNED]: 'Người nhận đã trả hàng',
+  [PackageTrackingActions.RESENT]: 'Người nhận đã trả hàng',
 };
 
 export enum PackageTypes {

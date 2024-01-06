@@ -12,6 +12,9 @@ export class Batch extends TimeStamps {
   public _id: mongoose.Schema.Types.ObjectId;
 
   @prop({ required: true })
+  public truckId!: string;
+
+  @prop({ required: true })
   public from: {
     type: BranchTypes;
     name: string;
@@ -31,5 +34,5 @@ export class Batch extends TimeStamps {
     enum: BatchStates,
     default: BatchStates.IN_TRANSIT,
   })
-  public state: string;
+  public state: BatchStates;
 }

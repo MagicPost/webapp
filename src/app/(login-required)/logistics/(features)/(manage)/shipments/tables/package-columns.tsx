@@ -1,12 +1,11 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { GetPackageDTO } from '@/dtos/package/package.dto';
@@ -18,6 +17,7 @@ export const getColumns = ({
   include,
 }: {
   include: {
+    select?: boolean;
     sentBranch?: boolean;
     receivedBranch?: boolean;
     receivedTime?: boolean;
@@ -25,28 +25,56 @@ export const getColumns = ({
 }) => {
   const cols: ColumnDef<GetPackageDTO>[] = [
     {
-      accessorKey: '',
+      id: 'select',
+      accessorKey: 'select',
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && 'indeterminate')
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label='Chọn tất cả'
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label='Chọn hàng'
+        />
+      ),
+      meta: {
+        hidden: !include.select,
+      },
+    },
+    {
+      accessorKey: '_id',
       header: 'Mã đơn hàng',
-      // cell: ({ row }) => row.original._id,
+      cell: ({ row }) => row.original._id,
     },
     {
-      accessorKey: '',
+      accessorKey: 'senderAddress',
       header: 'Địa chỉ gửi',
+      cell: ({ row }) => row.original.sender.address,
     },
     {
-      accessorKey: '',
+      accessorKey: 'receiverAddress',
       header: 'Địa chỉ nhận',
+      cell: ({ row }) => row.original.receiver.address,
     },
     {
-      accessorKey: '',
+      accessorKey: 'itemLength',
       header: 'Số lượng hàng',
-      // cell: ({ row }) => {},
+      cell: ({ row }) => {
+        return row.original.items.length;
+      },
     },
     {
-      accessorKey: '',
-      // cell: ({ row }) => {
-      //   return getViLocaleDateString(row.original.createdAt);
-      // },
+      accessorKey: 'createdAt',
+      cell: ({ row }) => {
+        return getViLocaleDateString(row.original.createdAt);
+      },
       header: ({ column }) => {
         return (
           <Button
@@ -61,34 +89,29 @@ export const getColumns = ({
       },
     },
     {
-      accessorKey: '',
+      accessorKey: 'state',
       header: 'Trạng thái',
-      // cell: ({ row }) => {
-      //   return row.original.active ? (
-      //     <Badge className='select-none bg-lime-600 hover:bg-lime-500'>Đã kích hoạt</Badge>
-      //   ) : (
-      //     <Badge className=' select-none bg-red-600 hover:bg-red-500'>Chưa kích hoạt</Badge>
-      //   );
-      // },
+      cell: ({ row }) => {
+        return row.original.state;
+        // <Badge className='select-none bg-lime-600 hover:bg-lime-500'>Đã kích hoạt</Badge>
+      },
     },
     {
       accessorKey: 'actions',
       header: '',
       cell: ({ row }) => {
-        // const user = row.original;
-
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant='ghost' className='h-8 w-8 p-0'>
-                <span className='sr-only'>Thao tác</span>
+                <span className='sr-only'>...</span>
                 <MoreHorizontal className='h-4 w-4' />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end'>
-              <DropdownMenuLabel>Thao tác</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => {}}>Xem chi tiết</DropdownMenuItem>
+              <DropdownMenuItem>
+                <Button variant={'ghost'}>Xem chi tiết</Button>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         );

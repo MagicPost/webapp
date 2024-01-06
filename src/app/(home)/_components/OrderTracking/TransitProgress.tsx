@@ -14,7 +14,7 @@ export default function TransitProgress() {
         title='Điểm tập kết C1. Hà Nội'
         actions={[
           {
-            type: PackageTrackingActions.RETURNED,
+            type: PackageTrackingActions.RESENT,
             timestamp: '10:20:23 12/12/2021',
           },
           {
@@ -93,7 +93,7 @@ function Timeline({
 }) {
   const isDelivered = actions.some((action) => action.type === PackageTrackingActions.DELIVERED);
   const isCancelled = actions.some((action) => action.type === PackageTrackingActions.CANCELLED);
-  const isReturned = actions.some((action) => action.type === PackageTrackingActions.RETURNED);
+  const isResent = actions.some((action) => action.type === PackageTrackingActions.RESENT);
 
   return (
     <li className={isStart ? 'border-l-0' : 'border-l-2'}>
@@ -106,7 +106,7 @@ function Timeline({
               'dark:bg-primary-500 bg-primary': type === TimelineType.FUTURE,
               'bg-lime-400': type === TimelineType.CURRENT,
               'bg-green-600': isDelivered,
-              'bg-red-600': isCancelled || isReturned,
+              'bg-red-600': isCancelled || isResent,
             }
           )}
         ></div>

@@ -33,20 +33,31 @@ class Client {
 }
 
 @modelOptions({
+  schemaOptions: { versionKey: false, timestamps: false, _id: false },
+  options: {
+    allowMixed: 0,
+  },
+})
+class BranchInfo {
+  @prop({ required: true, enum: BranchTypes, type: () => String })
+  public type: BranchTypes;
+
+  @prop({ required: true })
+  public name: string;
+
+  @prop({ required: true })
+  public ref: string;
+}
+
+@modelOptions({
   schemaOptions: { versionKey: false, timestamps: true, _id: false },
   options: {
     allowMixed: 0,
   },
 })
-class Tracking {
-  @prop({ required: true, enum: BranchTypes, type: () => String })
-  public branchType: BranchTypes;
-
-  @prop({ required: true })
-  public branchName: string;
-
-  @prop({ required: true })
-  public branchId: string;
+class Log extends TimeStamps {
+  @prop({ required: true, type: () => BranchInfo, _id: false })
+  public branch: BranchInfo;
 
   @prop({ required: true })
   public actions: Action[];
@@ -61,6 +72,20 @@ class Tracking {
 class Action extends TimeStamps {
   @prop({ required: true, enum: PackageTrackingActions, type: () => String })
   public type: PackageTrackingActions;
+}
+
+@modelOptions({
+  schemaOptions: { versionKey: false, timestamps: false, _id: false },
+  options: {
+    allowMixed: 0,
+  },
+})
+class Tracking {
+  @prop({ required: true, type: () => BranchInfo, _id: false })
+  public current: BranchInfo;
+
+  @prop({ required: true, type: () => [Log], _id: false })
+  public logs: Log[];
 }
 
 @modelOptions({
@@ -118,9 +143,18 @@ export class Package extends TimeStamps {
     },
   ];
 
-  @prop({ required: true, enum: PackageStates, default: PackageStates.PENDING, type: () => String })
+  @prop({
+    required: true,
+    enum: PackageStates,
+    default: PackageStates.PENDING__READY_TO_TRANSER,
+    type: () => String,
+  })
   public state: PackageStates;
 
-  @prop({ required: true, type: () => [Tracking], _id: false })
-  public tracking!: Tracking[];
+  @prop({
+    required: true,
+    type: () => Tracking,
+    _id: false,
+  })
+  public tracking!: Tracking;
 }

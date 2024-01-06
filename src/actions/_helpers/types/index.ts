@@ -1,6 +1,6 @@
 export type ActionResponse = {
   ok: boolean;
   message: string;
-  status: number;
+  status?: number;
   data?: any;
 };

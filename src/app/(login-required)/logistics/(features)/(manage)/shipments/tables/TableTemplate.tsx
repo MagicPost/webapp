@@ -2,7 +2,6 @@
 
 import Empty from '@/components/main/Empty';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
   Pagination,
   PaginationContent,
@@ -27,8 +26,9 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
+  Table as TTable,
 } from '@tanstack/react-table';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { GetBasicBranchDTO } from '@/dtos/branches/branch.dto';
 
 interface DataTableProps<TData, TValue> {
@@ -38,13 +38,19 @@ interface DataTableProps<TData, TValue> {
 
 export default function TableTemplate<TData, TValue>({
   tableProps: { columns, data },
-  branchInfo,
+  include,
+  produceCustomComponent,
 }: {
   tableProps: DataTableProps<TData, TValue>;
+  include?: {
+    select?: boolean;
+  };
   branchInfo?: Omit<GetBasicBranchDTO, 'address' | 'manager'>;
+  produceCustomComponent?: ({ table }: { table: TTable<TData> }) => ReactNode;
 }) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [rowSelection, setRowSelection] = useState({});
 
   const table = useReactTable({
     data,
@@ -55,31 +61,40 @@ export default function TableTemplate<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    onRowSelectionChange: setRowSelection,
     initialState: {
       pagination: {
         pageIndex: 0,
         pageSize: 6,
       },
-      columnVisibility: columns.reduce((acc: Record<string, boolean>, item: any) => {
-        acc[item.accessorKey!] = !item.meta?.hidden;
-        return acc;
+      columnVisibility: columns.reduce((accumulator: Record<string, boolean>, item: any) => {
+        accumulator[item.accessorKey!] = !item.meta?.hidden;
+        return accumulator;
       }, {}),
     },
     state: {
       sorting,
       columnFilters,
+      rowSelection,
     },
   });
 
   return (
     <div>
       <div className='flex flex-col-reverse items-center justify-between gap-2 py-4 sm:flex-row'>
+        {include?.select && (
+          <div className='flex-1 text-sm text-muted-foreground'>
+            {table.getFilteredSelectedRowModel().rows.length} trên{' '}
+            {table.getFilteredRowModel().rows.length} hàng được chọn.
+          </div>
+        )}
         {/* <Input
           placeholder='Tìm kiếm theo email...'
           value={(table.getColumn('email')?.getFilterValue() as string) ?? ''}
           onChange={(event) => table.getColumn('email')?.setFilterValue(event.target.value)}
           className='w-full sm:max-w-sm'
         /> */}
+        {produceCustomComponent && produceCustomComponent({ table })}
       </div>
       <div className='rounded-md border'>
         <Table>

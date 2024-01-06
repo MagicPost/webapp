@@ -1,54 +1,46 @@
+'use client';
+
 import { BranchTypes } from '@/constants';
 import { CircleOff, Loader, Package, PackageCheck, Truck } from 'lucide-react';
 import AwaitingBatches from './tabs/batch/AwaitingBatches';
-import { GetBasicBranchDTO } from '@/dtos/branches/branch.dto';
 import InTransitBatches from './tabs/batch/InTransitBatches';
 import TransferredBatches from './tabs/batch/TransferredBatches';
-import UnhandledPackages from './tabs/package/UnhandledPackages';
+import PendingPackages from './tabs/package/PendingPackages';
+import { ETabValue, TTab } from './@types/tab';
+import DeliveringPackages from './tabs/package/DeliveringPackages';
+import DeliveredPackages from './tabs/package/DeliveredPackages';
+import ResentPackages from './tabs/package/ResentPackages';
 
 const commonStyles = `border-2 border-amber-400`;
 
-export type Tab = {
-  label: string;
-  value: string;
-  total?: number;
-  icon: JSX.Element;
-  iconContainerClassname?: string;
-  produceComponent?: ({
-    branch,
-  }: {
-    branch: Omit<GetBasicBranchDTO, 'address' | 'manager'>;
-  }) => JSX.Element;
-};
-
 export const tabs: {
-  [key in BranchTypes]: Tab[];
+  [key in BranchTypes]: TTab[];
 } = {
   [BranchTypes.COLLECTION_POINT]: [
     {
       label: 'Lô hàng chờ tiếp nhận',
-      value: 'gonna-receive',
+      value: ETabValue.GONNA_RECEIVE,
       icon: <Loader className='h-6 w-6 text-black' />,
       iconContainerClassname: `bg-amber-400 ${commonStyles}`,
       produceComponent: (props) => <AwaitingBatches {...props} />,
     },
     {
       label: 'Đơn hàng chưa xử lý',
-      value: 'pending',
+      value: ETabValue.PENDING,
       icon: <Package className='h-5 w-5 text-black' />,
       iconContainerClassname: `bg-amber-300 ${commonStyles}`,
-      produceComponent: (props) => <UnhandledPackages {...props} />,
+      produceComponent: (props) => <PendingPackages {...props} />,
     },
     {
       label: 'Lô hàng đang chuyển tiếp',
-      value: 'forwarding',
+      value: ETabValue.FORWARDING,
       icon: <Truck className='h-6 w-6 text-black' />,
       iconContainerClassname: `bg-amber-400 ${commonStyles}`,
       produceComponent: (props) => <InTransitBatches {...props} />,
     },
     {
       label: 'Lô hàng đã chuyển tiếp',
-      value: 'forwarded',
+      value: ETabValue.FORWARDED,
       icon: <PackageCheck className='h-6 w-6 text-black' />,
       iconContainerClassname: `bg-amber-400 ${commonStyles}`,
       produceComponent: (props) => <TransferredBatches {...props} />,
@@ -57,43 +49,46 @@ export const tabs: {
   [BranchTypes.TRANSACTION_POINT]: [
     {
       label: 'Lô hàng chờ tiếp nhận',
-      value: 'gonna-receive',
+      value: ETabValue.GONNA_RECEIVE,
       icon: <Loader className='h-6 w-6 text-black' />,
       iconContainerClassname: `bg-amber-400 ${commonStyles}`,
       produceComponent: (props) => <AwaitingBatches {...props} />,
     },
     {
       label: 'Lô hàng đang chuyển tiếp',
-      value: 'forwarding',
+      value: ETabValue.FORWARDING,
       icon: <Loader className='h-6 w-6 text-black' />,
       iconContainerClassname: `bg-amber-400 ${commonStyles}`,
       produceComponent: (props) => <InTransitBatches {...props} />,
     },
     {
       label: 'Đơn hàng chưa xử lý',
-      value: 'pending',
+      value: ETabValue.PENDING,
       icon: <Package className='h-5 w-5 text-black' />,
       iconContainerClassname: `bg-amber-300 ${commonStyles}`,
-      produceComponent: (props) => <UnhandledPackages {...props} />,
+      produceComponent: (props) => <PendingPackages {...props} />,
     },
     {
       label: 'Đơn hàng đang giao',
-      value: 'delivering',
+      value: ETabValue.DELIVERING,
       icon: <Truck className='h-6 w-6 text-black' />,
       iconContainerClassname: `bg-amber-400 ${commonStyles}`,
+      produceComponent: (props) => <DeliveringPackages {...props} />,
     },
     {
       label: 'Đơn đã giao',
-      value: 'delivered',
+      value: ETabValue.DELIVERED,
       icon: <PackageCheck className='h-6 w-6 text-black' />,
       iconContainerClassname: `bg-amber-400 ${commonStyles}`,
+      produceComponent: (props) => <DeliveredPackages {...props} />,
     },
     {
       label: 'Đơn hủy lấy',
-      value: 'cancelled',
+      value: ETabValue.RESENT,
       total: 100,
       icon: <CircleOff className='h-6 w-6 text-black' />,
       iconContainerClassname: `bg-amber-300 ${commonStyles}`,
+      produceComponent: (props) => <ResentPackages {...props} />,
     },
   ],
 };
