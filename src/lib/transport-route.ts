@@ -72,8 +72,8 @@ const provinceAdjacency: {
 ];
 
 type TransportRouteNode = {
-  district: string;
-  province?: string;
+  district?: string;
+  province: string;
 };
 
 export const getTransportRoutes = (
@@ -119,7 +119,7 @@ export const getTransportRoutes = (
     const province = provinceAdjacency.find((province) => province.id === id);
     if (province) {
       result.push({
-        district: province.name,
+        province: province.name,
       });
     }
   }

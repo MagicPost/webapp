@@ -2,10 +2,56 @@
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { HelpCircle } from 'lucide-react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import TransitProgress from './TransitProgress';
+import { GetPackageDTO } from '@/dtos/package/package.dto';
+import { getPackageById } from '@/actions/package/getPackageById';
+import Loading from '@/components/main/Loading';
+import Empty from '@/components/main/Empty';
 
-export default function SearchResult() {
+export default function SearchResult({ packageId }: { packageId: string }) {
+  const [packageData, setPackageData] = useState<GetPackageDTO | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    if (!packageId) return;
+    let active = true;
+    load();
+    return () => {
+      active = false;
+    };
+    async function load() {
+      setLoading(true);
+      if (!active) return;
+      const res = await getPackageById({
+        _id: packageId,
+        include: {
+          sentAt: true,
+          receivedAt: true,
+          creator: false,
+          tracking: false,
+        },
+      });
+      if (!res.ok) setError(true);
+      setPackageData(res.data);
+      console.log(res.data);
+      setLoading(false);
+    }
+  }, [packageId]);
+
+  if (loading) {
+    return <Loading text={'Đang tải...'} className='mt-12' />;
+  }
+
+  if (error) {
+    return <Empty message={'Có lỗi xảy ra!'} className='mt-12' />;
+  }
+
+  if (!packageData) {
+    return <Empty message={'Không tìm thấy đơn hàng!'} className='mt-12' />;
+  }
+
   return (
     <div className='w-full gap-4 space-y-8'>
       <div className='w-full flex-1 space-y-4'>

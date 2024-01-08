@@ -8,8 +8,10 @@ import {
   PackageTypes,
   PackageTrackingActions,
   BranchTypes,
+  TransitServiceTypes,
+  PickupTime,
 } from '@/constants';
-import { getRandomBase64Id } from '@/lib/random';
+import { getRandomBase64Id, getRandomIdWithPrefix } from '@/lib/random';
 import { Account } from './Account';
 
 @modelOptions({
@@ -38,7 +40,7 @@ export class Client {
     allowMixed: 0,
   },
 })
-class BranchInfo {
+export class BranchInfo {
   @prop({ required: true, enum: BranchTypes, type: () => String })
   public type: BranchTypes;
 
@@ -50,12 +52,12 @@ class BranchInfo {
 }
 
 @modelOptions({
-  schemaOptions: { versionKey: false, timestamps: true, _id: false },
+  schemaOptions: { versionKey: false, timestamps: false, _id: false },
   options: {
     allowMixed: 0,
   },
 })
-class Log extends TimeStamps {
+class Log {
   @prop({ required: true, type: () => BranchInfo, _id: false })
   public branch: BranchInfo;
 
@@ -80,12 +82,38 @@ class Action extends TimeStamps {
     allowMixed: 0,
   },
 })
-class Tracking {
-  @prop({ required: true, type: () => BranchInfo, _id: false })
-  public current: BranchInfo;
+class Postages {
+  @prop({ required: true, enum: Payer, type: () => String })
+  public payer: Payer;
 
-  @prop({ required: true, type: () => [Log], _id: false })
-  public logs: Log[];
+  @prop({ required: true, default: 0 })
+  public main: number;
+
+  @prop({ required: true, default: 0 })
+  public plus: number;
+}
+
+@modelOptions({
+  schemaOptions: { versionKey: false, timestamps: false, _id: false },
+  options: {
+    allowMixed: 0,
+  },
+})
+class Services {
+  @prop({ required: true, enum: TransitServiceTypes, type: () => String })
+  public transit: TransitServiceTypes;
+
+  @prop({ required: false, default: '' })
+  public note: string;
+
+  @prop({ required: true, default: 0 })
+  public COD: number;
+
+  @prop({ required: true, enum: Payer, type: () => String, default: Payer.SENDER })
+  public payer: Payer;
+
+  @prop({ required: true, enum: PickupTime, type: () => String, default: PickupTime.ALL_DAY })
+  public pickupTime: PickupTime;
 }
 
 @modelOptions({
@@ -95,7 +123,7 @@ class Tracking {
   },
 })
 export class Package extends TimeStamps {
-  @prop({ required: true, default: () => `MP-${getRandomBase64Id()}` })
+  @prop({ required: true, default: () => getRandomIdWithPrefix('MP-') })
   public _id: string;
 
   @prop({ required: true, enum: PackageTypes, type: () => String })
@@ -110,28 +138,20 @@ export class Package extends TimeStamps {
   @prop({ required: true, ref: () => TransactionPoint })
   public receivedAt!: Ref<TransactionPoint>;
 
+  @prop({ required: false })
+  public distance?: number;
+
   @prop({ required: true, type: () => Client, _id: false })
   public sender!: Client;
 
   @prop({ required: true, type: () => Client, _id: false })
   public receiver!: Client;
 
-  @prop({ required: false })
-  public description?: string;
+  @prop({ required: true, type: () => Postages, _id: false })
+  public postages: Postages;
 
-  @prop({ required: true, enum: Payer, type: () => String })
-  public payer: Payer;
-
-  @prop({ required: true })
-  public postages: [
-    {
-      service: string;
-      cost: number;
-    },
-  ];
-
-  @prop({ required: false })
-  public COD?: number;
+  @prop({ required: true, type: () => Services, _id: false })
+  public services: Services;
 
   @prop({ required: true })
   public items: [
@@ -153,8 +173,8 @@ export class Package extends TimeStamps {
 
   @prop({
     required: true,
-    type: () => Tracking,
+    type: () => [Log],
     _id: false,
   })
-  public tracking!: Tracking;
+  public tracking!: Log[];
 }

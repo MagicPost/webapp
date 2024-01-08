@@ -4,7 +4,7 @@ import React from 'react';
 import { IoIosSearch } from 'react-icons/io';
 
 const SearchBar = React.forwardRef<HTMLInputElement, InputProps>(function SearchBar(
-  { className = '', placeholder = '', onKeyDown },
+  { className = '', placeholder = '', onKeyDown, defaultValue = '' },
   ref
 ) {
   return (
@@ -12,7 +12,14 @@ const SearchBar = React.forwardRef<HTMLInputElement, InputProps>(function Search
       <div className='absolute top-3 ps-4 text-lg text-gray-500'>
         <IoIosSearch />
       </div>
-      <Input ref={ref} placeholder={placeholder} className='ps-12' onKeyDown={onKeyDown} />
+      <Input
+        ref={ref}
+        placeholder={placeholder}
+        defaultValue={defaultValue}
+        className='ps-12'
+        onKeyDown={onKeyDown}
+        spellCheck={false}
+      />
     </div>
   );
 });

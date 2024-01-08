@@ -1,7 +1,7 @@
 import { Form } from '@/components/ui/form';
 import { UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
-import { clientFormSchema } from './schema';
+import { clientFormSchema } from '../../../../../../../dtos/package/schema';
 import CustomComboBox from '@/components/main/CustomCombobox';
 import { provinces } from '@/constants/geography';
 import { useEffect, useMemo } from 'react';

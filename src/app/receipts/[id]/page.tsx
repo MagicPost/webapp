@@ -91,7 +91,7 @@ function Header({ packageData }: { packageData: GetPackageDetailsDTO }) {
       <div className='flex w-1/3 flex-col items-center justify-center pt-4'>
         <div className='flex flex-1 flex-col items-center justify-center self-center'>
           <Canvas
-            text={`${process.env.NEXT_PUBLIC_SERVER_URL}/?package=${packageData._id}}`}
+            text={`${process.env.NEXT_PUBLIC_SERVER_URL}/?package=${packageData._id}`}
             options={{
               errorCorrectionLevel: 'M',
               margin: 3,
@@ -107,12 +107,9 @@ function Header({ packageData }: { packageData: GetPackageDetailsDTO }) {
 }
 
 function Body({ packageData }: { packageData: GetPackageDetailsDTO }) {
-  const totalPostages = packageData.postages.reduce((sum, item) => {
-    sum += item.cost;
-    return sum;
-  }, 0);
+  const totalPostages = packageData.postages.main + packageData.postages.plus;
 
-  const receiverPostages = packageData.payer === Payer.SENDER ? 0 : totalPostages;
+  const receiverPostages = packageData.postages.payer === Payer.SENDER ? 0 : totalPostages;
 
   return (
     <div className='flex h-[480px] w-full flex-1 flex-row border border-black'>
@@ -212,7 +209,9 @@ function Body({ packageData }: { packageData: GetPackageDetailsDTO }) {
                 <tbody>
                   <tr className='text-sm'>
                     <td className='w-1/2'>COD</td>
-                    <td className='w-1/2 text-right'>{numberToVnd(packageData.COD || 0)}</td>
+                    <td className='w-1/2 text-right'>
+                      {numberToVnd(packageData.services.COD || 0)}
+                    </td>
                   </tr>
                   <tr className='text-sm'>
                     <td className='w-1/2'>Thu khác</td>
@@ -223,7 +222,7 @@ function Body({ packageData }: { packageData: GetPackageDetailsDTO }) {
                   <tr className='text-sm font-semibold'>
                     <td className='w-1/2'>Tổng</td>
                     <td className='w-1/2 text-right'>
-                      {numberToVnd(packageData.COD || 0 + receiverPostages)}
+                      {numberToVnd(packageData.services.COD || 0 + receiverPostages)}
                     </td>
                   </tr>
                 </tfoot>

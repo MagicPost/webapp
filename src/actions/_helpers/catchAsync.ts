@@ -9,8 +9,7 @@ export const catchAsync =
       console.error(error);
       return {
         ok: false,
-        status: 500,
-        message: 'Có lỗi xảy ra, vui lòng thử lại sau!',
+        message: error?.message || 'Có lỗi xảy ra, vui lòng thử lại sau!',
       } satisfies ActionResponse;
     }
   };

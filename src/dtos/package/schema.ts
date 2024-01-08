@@ -32,7 +32,7 @@ export const packageFormSchema = z.object({
       name: z.string().min(1, 'Không được để trống!'),
       quantity: z.number().positive('Phải lớn hơn 0!'),
       weight: z.number().positive('Phải lớn hơn 0!'),
-      price: z.number().positive('Phải lớn hơn 0!'),
+      value: z.number().positive('Phải lớn hơn 0!'),
     })
   ),
 });

@@ -1,6 +1,5 @@
-import { PlusServiceTypes, TransitServiceTypes } from '@/constants';
+import { TransitServiceTypes } from '@/constants';
 import { WeightPostages, WeightTypes } from '@/constants/postage';
-import { measureDistance } from './transport-route';
 
 export const getTransitPostage = (type: TransitServiceTypes) => {
   switch (type) {
@@ -13,7 +12,7 @@ export const getTransitPostage = (type: TransitServiceTypes) => {
   }
 };
 
-export const getBasicPostages = ({
+export const getMainPostages = ({
   weight,
   transit,
   province,
@@ -22,18 +21,18 @@ export const getBasicPostages = ({
   weight: number;
   transit: TransitServiceTypes;
   province: {
-    sender: string;
-    receiver: string;
+    source: string;
+    destination: string;
   };
   distance: number;
 }) => {
   if (weight <= 0) return 0;
-  if (!province.sender || !province.receiver) return 0;
+  if (!province.source || !province.destination) return 0;
 
   const weightType = weight < 2000 ? WeightTypes.NOT_OVER_2KG : WeightTypes.OVER_2KG;
 
   let distanceKey;
-  if (province.receiver === province.sender) distanceKey = 'local';
+  if (province.destination === province.source) distanceKey = 'local';
   else {
     if (distance === 0) return 0;
     if (distance <= 100000) distanceKey = 'to100km';

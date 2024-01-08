@@ -23,11 +23,13 @@ interface FlattenBranch {
 export const getBranchOf = catchAsync(
   async ({
     user,
+    customSelect,
   }: {
     user: {
       _id?: string;
       email?: string;
     };
+    customSelect?: string;
   }) => {
     await dbConnect();
 
@@ -43,14 +45,16 @@ export const getBranchOf = catchAsync(
       ...(user._id && { _id: user._id }),
     };
 
+    const select = customSelect || '_id name';
+
     const query = AccountModel.findOne(filter)
       .populate({
         path: 'branch.collectionPoint',
-        select: '_id name',
+        select,
       })
       .populate({
         path: 'branch.transactionPoint',
-        select: '_id name',
+        select,
       })
       .select('branch');
 
@@ -65,8 +69,7 @@ export const getBranchOf = catchAsync(
 
     return {
       ok: true,
-      message: 'Successfully get branch',
-      status: 200,
+      message: '',
       data: {
         type: flattenBranch.type,
         ...branchInfo!,

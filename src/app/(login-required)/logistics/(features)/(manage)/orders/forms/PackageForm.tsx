@@ -7,7 +7,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { UseFormReturn } from 'react-hook-form';
-import { packageFormSchema } from './schema';
+import { packageFormSchema } from '../../../../../../../dtos/package/schema';
 import { z } from 'zod';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
@@ -163,7 +163,7 @@ export default function PackageForm({
                         Đơn giá (VNĐ) <span className='text-red-500'>*</span>
                       </>
                     }
-                    fieldName='price'
+                    fieldName='value'
                     type='number'
                   />
                 </div>
@@ -196,7 +196,7 @@ export default function PackageForm({
                   name: '',
                   quantity: 0,
                   weight: 0,
-                  price: 0,
+                  value: 0,
                 },
               ]);
             }}

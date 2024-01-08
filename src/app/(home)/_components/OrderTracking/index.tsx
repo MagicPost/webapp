@@ -5,15 +5,21 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { PackageSearch, SearchCheck } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import SearchResult from './SearchResult';
 
-export default function OrderTrackingDialog() {
-  const [open, setOpen] = useState(false);
+export default function OrderTrackingDialog({
+  packageId: _packageId,
+}: {
+  packageId: string | null;
+}) {
+  const [open, setOpen] = useState(!!_packageId);
+  const [packageId, setPackageId] = useState<string | null>(_packageId);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const onSearch = (value: string) => {
-    alert('search: ' + value);
+    if (!value) return;
+    setPackageId(value);
   };
 
   return (
@@ -46,6 +52,7 @@ export default function OrderTrackingDialog() {
             <SearchBar
               className='w-full flex-1'
               ref={inputRef}
+              defaultValue={packageId || ''}
               placeholder='Nhập mã đơn hàng'
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
@@ -58,7 +65,7 @@ export default function OrderTrackingDialog() {
               <span className='text-base'>Tra cứu</span>
             </Button>
           </div>
-          <SearchResult />
+          {packageId && <SearchResult packageId={packageId} />}
         </div>
       </DialogContent>
     </Dialog>

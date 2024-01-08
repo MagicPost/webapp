@@ -4,11 +4,18 @@ import { useState, useEffect } from 'react';
 import { Link as LinkScroll } from 'react-scroll';
 import Logo from '@/components/main/Logo';
 import { cn } from '@/lib/utils';
-import OrderTrackingDialog from './OrderTracking';
+import { useSearchParams } from 'next/navigation';
+import dynamic from 'next/dynamic';
+
+const OrderTrackingDialog = dynamic(() => import('./OrderTracking'), { ssr: false });
 
 const Header = () => {
   const [activeLink, setActiveLink] = useState<string | null>(null);
   const [scrollActive, setScrollActive] = useState(false);
+
+  const searchParams = useSearchParams();
+  const packageId = searchParams.get('package') || null;
+
   useEffect(() => {
     window.addEventListener('scroll', () => {
       setScrollActive(window.scrollY > 20);
@@ -84,7 +91,7 @@ const Header = () => {
           </ul>
           <div className='col-start-10 col-end-12 flex items-center justify-end font-medium'>
             <span className='text-black-600 mx-2 capitalize tracking-wide transition-all hover:text-orange-500 sm:mx-4'>
-              <OrderTrackingDialog />
+              <OrderTrackingDialog packageId={packageId} />
             </span>
           </div>
         </nav>

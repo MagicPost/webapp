@@ -1,5 +1,5 @@
 import { UseFormReturn } from 'react-hook-form';
-import { serviceFormSchema } from './schema';
+import { serviceFormSchema } from '../../../../../../../dtos/package/schema';
 import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -59,10 +59,10 @@ const pickupTimes = [
 
 export default function ServiceForm({
   form,
-  totalPackagePrice,
+  totalPackageValues: totalPackageValues,
 }: {
   form: UseFormReturn<z.infer<typeof serviceFormSchema>>;
-  totalPackagePrice: number;
+  totalPackageValues: number;
 }) {
   return (
     <Form {...form}>
@@ -194,7 +194,7 @@ export default function ServiceForm({
                   <Checkbox
                     id='terms'
                     onCheckedChange={(checked) =>
-                      checked ? form.setValue('COD', totalPackagePrice) : form.setValue('COD', 0)
+                      checked ? form.setValue('COD', totalPackageValues) : form.setValue('COD', 0)
                     }
                   />
                   <label
