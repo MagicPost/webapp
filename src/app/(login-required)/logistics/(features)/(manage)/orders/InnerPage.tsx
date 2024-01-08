@@ -25,6 +25,7 @@ import { CreatePackageDTO } from '@/dtos/package/package.dto';
 import { RefreshCcw } from 'lucide-react';
 import CompleteButton from './CompleteButton';
 import { ActionResponse } from '@/actions/_helpers/types';
+import { promisify } from './promisify';
 
 export default function InnerPage({
   branch,
@@ -140,6 +141,7 @@ export default function InnerPage({
 
     async function load() {
       const { province: receiverProvince } = receiverForm.watch();
+      if (!receiverProvince) return;
       const _distance = await measureDistance({
         sourceProvince: branch.province,
         destProvince: receiverProvince,
@@ -163,40 +165,38 @@ export default function InnerPage({
     });
   }, [distance, totalPackageWeight, serviceForm.watch('transit'), receiverForm.watch('province')]);
 
-  const onSubmit = useCallback<() => Promise<ActionResponse>>(() => {
-    return new Promise((resolve, _) => {
-      senderForm.handleSubmit((senderFormData) => {
-        receiverForm.handleSubmit((receiverFormData) => {
-          packageForm.handleSubmit((packageFormData) => {
-            serviceForm.handleSubmit(async (serviceFormData) => {
-              const res = await createPackage({
-                receiver: receiverFormData,
-                sender: senderFormData,
-                package: packageFormData,
-                service: serviceFormData,
-                distance,
-                postages: {
-                  main: mainPostages,
-                  plus: plusServicePostages,
-                },
-                branch,
-              } satisfies CreatePackageDTO);
+  const [refresh, setRefresh] = useState(false);
 
-              // const res = {
-              //   ok: true,
-              //   message: 'Tạo đơn hàng thành công',
-              //   data: {
-              //     _id: '123456789',
-              //   },
-              // };
+  const onSubmit = useCallback<() => Promise<ActionResponse>>(async () => {
+    try {
+      const senderFormData = await promisify(senderForm.handleSubmit);
+      const receiverFormData = await promisify(receiverForm.handleSubmit);
+      const packageFormData = await promisify(packageForm.handleSubmit);
+      const serviceFormData = await promisify(serviceForm.handleSubmit);
 
-              return resolve(res);
-            })();
-          })();
-        })();
-      })();
-    });
+      const res = await createPackage({
+        sender: senderFormData,
+        receiver: receiverFormData,
+        package: packageFormData,
+        service: serviceFormData,
+        distance,
+        postages: {
+          main: mainPostages,
+          plus: plusServicePostages,
+        },
+        branch,
+      } satisfies CreatePackageDTO);
+
+      return res;
+    } catch (err) {
+      return {
+        ok: false,
+        message: 'Thông tin không hợp lệ',
+      };
+    }
   }, []);
+
+  // console.log('Reset ' + reset, onSubmit);
 
   return (
     <>
@@ -211,6 +211,8 @@ export default function InnerPage({
               receiverForm.reset();
               packageForm.reset();
               serviceForm.reset();
+              setDistance(0);
+              setRefresh(!refresh);
             }}
           >
             <RefreshCcw className='h-4 w-4' /> <span>Làm mới</span>
@@ -296,7 +298,7 @@ export default function InnerPage({
           </div>
         </div>
 
-        <div>{<CompleteButton onSubmit={onSubmit} />}</div>
+        <div>{<CompleteButton onSubmit={onSubmit} refresh={refresh} />}</div>
       </div>
     </>
   );

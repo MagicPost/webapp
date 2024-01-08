@@ -8,21 +8,27 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Loader2 } from 'lucide-react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 
-const CompleleButton = React.memo(function CompleleButton({
-  onSubmit,
-}: {
+type Props = {
   onSubmit: () => Promise<ActionResponse>;
-}) {
-  const [open, setOpen] = useState(false);
+  refresh: boolean;
+};
 
+const arePropsEqual = (prev: Props, next: Props) => {
+  return prev.refresh === next.refresh;
+};
+
+const CompleteButton = React.memo(function CompleleButton({ onSubmit, refresh }: Props) {
+  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [packageId, setPackageId] = useState<string | null>(null);
 
-  console.log(packageId, loading);
+  useEffect(() => {
+    setPackageId(null);
+  }, [refresh]);
 
   return (
     <Dialog open={open} onOpenChange={(open) => (!open ? setOpen(open) : open)} defaultOpen={false}>
@@ -43,10 +49,8 @@ const CompleleButton = React.memo(function CompleleButton({
             } else {
               toast.success(res.message);
               setOpen(true);
-              console.log(res.data);
               setPackageId(res.data._id);
             }
-            console.log('Hello');
             setLoading(false);
           }}
           type='button'
@@ -89,6 +93,6 @@ const CompleleButton = React.memo(function CompleleButton({
       </DialogContent>
     </Dialog>
   );
-});
+}, arePropsEqual);
 
-export default CompleleButton;
+export default CompleteButton;

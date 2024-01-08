@@ -41,8 +41,6 @@ export const createPackage = catchAsync(async (createPackageDTO: CreatePackageDT
 
   const tracking = await getEmptyLogs(routes, createPackageDTO);
 
-  // console.log(JSON.stringify(tracking, null, 2));
-
   const payload = {
     type: createPackageDTO.package.type,
     creator: account._id,
@@ -76,16 +74,15 @@ export const createPackage = catchAsync(async (createPackageDTO: CreatePackageDT
     tracking,
   };
 
-  console.log(payload);
   let newPackage = await PackageModel.create(payload);
   newPackage = transformObjectIdFromLeanedDoc(newPackage.toObject()) as GetPackageDTO;
-
-  // console.log(newPackage);
 
   return {
     ok: true,
     message: 'Tạo đơn hàng thành công',
-    data: newPackage._id,
+    data: {
+      _id: newPackage._id,
+    },
   } satisfies ActionResponse;
 });
 
@@ -94,8 +91,6 @@ function getFullAddress(client: CreatePackageDTO['sender' | 'receiver']) {
 }
 
 async function getEmptyLogs(routes: any[], createPackageDTO: CreatePackageDTO) {
-  console.log(routes.filter((route) => !!route));
-
   const mapping = routes.map(async (route) => {
     const type = !route?.district ? BranchTypes.COLLECTION_POINT : BranchTypes.TRANSACTION_POINT;
     const model = !route?.district ? CollectionPointModel : TransactionPointModel;

@@ -4,9 +4,9 @@ import { GetBatchDTO } from '@/dtos/batch/batch.dto';
 import { GetBasicBranchDTO } from '@/dtos/branches/branch.dto';
 import { getAllPackagesOfBranch } from '@/actions/package/getPackages';
 import { GetPackageDTO } from '@/dtos/package/package.dto';
-import { PackageStates } from '@/constants';
+import { BatchStates, PackageStates } from '@/constants';
 import InnerPage from './InnerPage';
-import { ETabValue, TPackagesMap } from './@types/tab';
+import { ETabValue } from './@types/tab';
 
 export default async function ShipmentManagement() {
   const session = await auth();
@@ -20,11 +20,13 @@ export default async function ShipmentManagement() {
   const packagesMap = getPackagesMap(packageRes.data as GetPackageDTO[]);
   const batchesMap = getBatchesMap([] as GetBatchDTO[]);
 
+  // console.log(packagesMap);
+
   return (
     <div className='mt-12 w-full p-4 lg:mt-0'>
       <h1 className='mb-8 text-2xl font-bold'>Quản lý vận đơn</h1>
 
-      <InnerPage branch={branch} packagesMap={packagesMap} />
+      <InnerPage branch={branch} packagesMap={packagesMap} batchesMap={batchesMap} />
     </div>
   );
 }
@@ -48,4 +50,13 @@ function getPackagesMap(packages: GetPackageDTO[]) {
   };
 }
 
-function getBatchesMap(batches: GetBatchDTO[]) {}
+function getBatchesMap(batches: GetBatchDTO[]) {
+  return {
+    [ETabValue.GONNA_RECEIVE]:
+      batches.filter((batch: GetBatchDTO) => batch.state === BatchStates.IN_TRANSIT) || [],
+    [ETabValue.FORWARDING]:
+      batches.filter((batch: GetBatchDTO) => batch.state === BatchStates.IN_TRANSIT) || [],
+    [ETabValue.FORWARDED]:
+      batches.filter((batch: GetBatchDTO) => batch.state === BatchStates.ARRIVED) || [],
+  };
+}

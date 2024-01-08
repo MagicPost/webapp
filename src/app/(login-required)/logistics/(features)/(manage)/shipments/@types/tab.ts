@@ -1,3 +1,4 @@
+import { GetBatchDTO } from '@/dtos/batch/batch.dto';
 import { GetBasicBranchDTO } from '@/dtos/branches/branch.dto';
 import { GetPackageDTO } from '@/dtos/package/package.dto';
 
@@ -34,5 +35,5 @@ export type TBatchesMap = {
   [key in Extract<
     ETabValue,
     ETabValue.GONNA_RECEIVE | ETabValue.FORWARDED | ETabValue.FORWARDING
-  >]?: TTab;
+  >]?: GetBatchDTO[];
 };

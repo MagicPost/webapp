@@ -30,8 +30,8 @@ export const getAllPackagesOfBranch = catchAsync(
     filter: any;
   }) => {
     return await getPackages({
-      'tracking.current.ref': branch._id,
-      'tracking.current.type': branch.type,
+      'tracking.0.branch.ref': branch._id,
+      'tracking.0.branch.type': branch.type,
       ...filter,
     });
   }
