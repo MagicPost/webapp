@@ -45,7 +45,10 @@ export default function InnerPage({
             <span className='font-semibold'>{provincesNumber}/63</span>
           </div>
         </div>
-        <AddCollectionPointDialog setSavedCollectionPoints={setSavedCollectionPoints} />
+        <AddCollectionPointDialog
+          savedCollectionPoints={savedCollectionPoints}
+          setSavedCollectionPoints={setSavedCollectionPoints}
+        />
       </div>
 
       <div className='my-4 flex flex-row items-center justify-between'>

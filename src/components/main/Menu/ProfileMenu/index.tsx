@@ -76,7 +76,7 @@ function NavMenu({
       </div>
 
       <div className='absolute right-2 top-0 hidden w-full pt-[calc(3rem+14px)] opacity-0 transition-all duration-200 group-hover/nav:block group-hover/nav:opacity-100'>
-        <div className='relative whitespace-nowrap border-t-2 border-t-amber-700 bg-white text-left shadow-lg'>
+        <div className='relative whitespace-nowrap border-t-2 border-t-amber-700 bg-background text-left shadow-lg'>
           {list?.map((item, index) => (
             <Link href={item.href || '#'} key={index}>
               <div className='cursor-pointer px-4 py-2 hover:bg-gray-100'>{item.name}</div>

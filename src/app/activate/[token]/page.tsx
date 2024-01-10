@@ -78,7 +78,7 @@ export default function ActivateToken() {
         .then((res) => {
           setIsSubmitting(false);
           toast[res.ok ? 'success' : 'error'](res.message);
-          router.push('/admin/login');
+          router.push('/logistics/login');
         })
         .catch((err) => {
           toast.error(err.message);

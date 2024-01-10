@@ -9,7 +9,7 @@ export default function FeatureLayout({ children }: { children: React.ReactNode 
   return (
     <div className={cn('h-screen w-screen lg:overflow-hidden lg:pl-64', 'overflow-y-auto')}>
       <Sidebar />
-      <div className='flex h-full w-full flex-col overflow-y-scroll'>
+      <div className='flex h-full w-full flex-col overflow-y-auto'>
         <Topbar />
         <main className='h-full flex-1'>{children}</main>
       </div>
@@ -21,7 +21,7 @@ function Sidebar() {
   return (
     <aside
       className={cn(
-        'block h-full w-64 border-r bg-white px-6',
+        'block h-full w-64 border-r px-6',
         'hidden h-screen lg:fixed lg:left-0 lg:top-0 lg:block'
       )}
       aria-label='sidebar'
@@ -36,7 +36,7 @@ function Topbar() {
     <div
       className={cn(
         'block lg:hidden',
-        'h-18 fixed z-10 flex w-screen flex-row justify-between bg-white px-4 py-2 shadow-sm'
+        'h-18 fixed z-10 flex w-screen flex-row justify-between bg-background px-4 py-2 shadow-sm'
       )}
     >
       <Logo />

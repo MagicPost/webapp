@@ -56,7 +56,7 @@ export const Filter = () => {
             control={form.control}
             options={provinceOptions}
             placeholder='Tỉnh/Thành phố'
-            selectClassname='w-full border-orange-300'
+            selectClassname='w-full border-orange-600'
           />
         </div>
         <div>
@@ -65,13 +65,13 @@ export const Filter = () => {
             control={form.control}
             options={districtOptions}
             placeholder='Quận/Huyện'
-            selectClassname='w-full border-orange-300'
+            selectClassname='w-full border-orange-600'
           />
         </div>
 
         <Label
           htmlFor='branchAddress'
-          className='flex w-full items-center gap-2 rounded-md border border-orange-600 bg-white px-2 md:ml-auto md:w-[300px]'
+          className='flex w-full items-center gap-2 rounded-md border border-orange-600 bg-background px-2 md:ml-auto md:w-[300px]'
         >
           <CustomInput
             name='branchAddress'

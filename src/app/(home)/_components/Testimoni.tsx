@@ -119,13 +119,13 @@ export default function Testimoni() {
           <div className='flex w-full items-center justify-end'>
             <div className='mt-14 flex w-auto flex-none justify-between'>
               <div
-                className='hover:text-white-500 mx-4 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border border-primary bg-white text-primary transition-all hover:bg-orange-500'
+                className='hover:text-white-500 mx-4 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border border-primary text-primary transition-all hover:bg-orange-500'
                 onClick={sliderRef?.slickPrev}
               >
                 <ArrowLeft className='h-6 w-6 ' />
               </div>
               <div
-                className='hover:text-white-500 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border border-primary bg-white text-primary transition-all hover:bg-orange-500'
+                className='hover:text-white-500 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border border-primary text-primary transition-all hover:bg-orange-500'
                 onClick={sliderRef?.slickNext}
               >
                 <ArrowRight className='h-6 w-6' />

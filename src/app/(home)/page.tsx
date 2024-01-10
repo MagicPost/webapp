@@ -7,7 +7,7 @@ import Testimoni from './_components/Testimoni';
 
 export default function HomePage() {
   return (
-    <main className='h-screen overflow-y-scroll'>
+    <main className='h-screen overflow-y-auto'>
       <Header />
       <Hero />
       <Testimoni />

@@ -5,22 +5,24 @@ import CustomComboBox from '@/components/main/CustomCombobox';
 import CustomInputField from '@/components/main/CustomInputField';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
+import { Label } from '@/components/ui/label';
 import { provinces } from '@/constants/geography';
 import { GetCollectionPointDTO } from '@/dtos/branches/collection-point.dto';
 import {
   CreateTransactionPointDTO,
   GetTransactionPointDTO,
 } from '@/dtos/branches/transaction-point.dto';
+import { getShortProvinceName } from '@/lib/geography';
 import { postalCodeRegex } from '@/lib/regex';
+import { getNumberWithLeadingZero } from '@/lib/text';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { z } from 'zod';
 
 const formSchema = z.object({
-  name: z.string().min(1, 'Không được để trống!'),
   address: z.string().min(1, 'Không được để trống!'),
   district: z.string().min(1, 'Không được để trống!'),
   ward: z.string().min(1, 'Không được để trống!'),
@@ -29,8 +31,10 @@ const formSchema = z.object({
 
 export default function AddTransactionPointForm({
   collectionPoint,
+  transactionPoints,
 }: {
   collectionPoint: GetCollectionPointDTO;
+  transactionPoints: GetTransactionPointDTO[];
 }) {
   const [showForm, setShowForm] = useState(false);
   const queryClient = useQueryClient();
@@ -38,7 +42,6 @@ export default function AddTransactionPointForm({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
       address: '',
       district: '',
       postalCode: '',
@@ -74,8 +77,11 @@ export default function AddTransactionPointForm({
     );
   }, [province, form.watch('district')]);
 
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const payload: CreateTransactionPointDTO = {
+      name: inputRef.current?.value || '',
       ...data,
       province: collectionPoint.province,
       collectionPoint: collectionPoint._id,
@@ -110,14 +116,23 @@ export default function AddTransactionPointForm({
           <form className='flex flex-col gap-0 space-y-8' onSubmit={form.handleSubmit(onSubmit)}>
             <div className='max-h-[22rem] overflow-auto'>
               <div className='flex-1'>
-                <CustomInputField
-                  form={form}
-                  name='name'
-                  label='Tên'
-                  placeholder='Nhập tên điểm tập kết'
-                  type='text'
-                  required
-                />
+                <div className='flex flex-row items-center justify-between gap-4'>
+                  <Label className='w-1/4'>Tên</Label>
+                  <input
+                    ref={inputRef}
+                    className='focus:ring-primary-500 mt-2 w-3/4 rounded-md border border-gray-300 bg-gray-200 px-4 py-2 focus:outline-none focus:ring-2'
+                    placeholder='Nhập tên điểm giao dịch'
+                    type='text'
+                    required
+                    readOnly
+                    disabled
+                    value={
+                      `Điểm giao dịch T${getNumberWithLeadingZero(
+                        transactionPoints.length + 1
+                      )} - ${getShortProvinceName(form.watch('district'))}` || ``
+                    }
+                  />
+                </div>
 
                 <CustomInputField
                   form={form}

@@ -8,7 +8,7 @@ export default function LoginLayout({ children }: { children: React.ReactNode })
         ' bg-orange-700 bg-opacity-70'
       )}
     >
-      <div className='w-[480px] rounded-sm bg-white p-12'>{children}</div>
+      <div className='w-[480px] rounded-sm bg-background p-12'>{children}</div>
     </main>
   );
 }

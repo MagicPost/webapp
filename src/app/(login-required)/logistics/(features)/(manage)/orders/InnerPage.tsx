@@ -262,7 +262,7 @@ export default function InnerPage({
         </div>
       </div>
 
-      <div className='item-center sticky bottom-0 z-10 flex h-24 flex-row items-center justify-between gap-2 overflow-auto border bg-white px-4 py-2 lg:px-20'>
+      <div className='item-center sticky bottom-0 z-10 flex h-24 flex-row items-center justify-between gap-2 overflow-auto border px-4 py-2 lg:px-20'>
         <div className='flex h-full max-w-[800px] flex-1 flex-row flex-wrap items-center justify-between gap-1  text-xs lg:p-2 lg:text-sm'>
           <div className='flex basis-[4rem] flex-col min-[400px]:basis-[8rem]'>
             <span>Khoảng cách:</span>

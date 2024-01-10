@@ -26,7 +26,7 @@ export default function CollectionPointDialog({
   return (
     <Dialog onOpenChange={() => setVersion(version + 1)}>
       <DialogTrigger>
-        <div className='max-w-sm overflow-hidden rounded bg-white shadow-lg'>
+        <div className='max-w-sm overflow-hidden rounded shadow-lg'>
           <Image
             src='/building.jpg'
             alt=''
@@ -53,7 +53,7 @@ export default function CollectionPointDialog({
           </div>
         </div>
       </DialogTrigger>
-      <DialogContent className='h-[94vh] max-h-[1000px] w-full max-w-[1400px] overflow-y-scroll py-8 sm:w-[80vw]'>
+      <DialogContent className='h-[94vh] max-h-[1000px] w-full max-w-[1400px] overflow-y-auto py-8 sm:w-[80vw]'>
         <DialogInnerContent
           version={version}
           setVersion={setVersion}
@@ -129,7 +129,10 @@ function DialogInnerContent({
         </div>
 
         <div>
-          <AddTransactionPointForm collectionPoint={collectionPoint} />
+          <AddTransactionPointForm
+            collectionPoint={collectionPoint}
+            transactionPoints={transactionPoints}
+          />
         </div>
       </div>
       <div className='mt-4 w-full lg:mt-0 lg:w-3/5'>
@@ -146,7 +149,7 @@ function DialogInnerContent({
           />
         </div>
 
-        <div className='h-[28rem] space-y-2 overflow-y-scroll'>
+        <div className='h-[28rem] space-y-2 overflow-y-auto'>
           {isLoading ? (
             <div className='flex flex-col items-center justify-center'>
               <Loader2 size={24} className='animate-spin' />

@@ -41,10 +41,16 @@ function TopPart({ className = '', user }: { className?: string; user: GetUserDT
       </div>
       <Badge
         variant={'default'}
-        className='flex w-full flex-row items-center justify-center rounded-full py-2'
+        className='flex w-full flex-row items-center justify-center rounded-sm py-2 text-center'
       >
         <p className='text-sm font-semibold'>
-          {user.role === Roles.ADMIN ? 'Ban quản lý' : user.branch?.name}
+          {user.role === Roles.ADMIN ? (
+            'Ban quản lý'
+          ) : (
+            <span className='mx-auto text-center'>
+              {user.branch?.name.split(' - ')[0]} <br /> {user.branch?.name.split(' - ')[1]}
+            </span>
+          )}
         </p>
       </Badge>
     </div>

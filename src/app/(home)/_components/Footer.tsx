@@ -5,7 +5,7 @@ import { BiLogoGmail } from 'react-icons/bi';
 
 export default function Footer() {
   return (
-    <div className='bg-white-300 pt-18 pb-24'>
+    <div className='pt-18 pb-24'>
       <div className='mx-auto flex w-full max-w-screen-xl flex-col-reverse gap-4 px-6 sm:flex-row sm:justify-between sm:px-8 lg:px-16'>
         <div className='flex flex-col items-start sm:w-1/2'>
           <Logo />
@@ -17,10 +17,10 @@ export default function Footer() {
           </p>
 
           <div className='mb-4 flex flex-row'>
-            <div className='bg-white-500 mx-2 flex items-center justify-center rounded-full p-2 shadow-md'>
+            <div className=' mx-2 flex items-center justify-center rounded-full p-2 shadow-md'>
               <Facebook className='h-6 w-6' />
             </div>
-            <div className='bg-white-500 mx-2 flex items-center justify-center rounded-full p-2 shadow-md'>
+            <div className='mx-2 flex items-center justify-center rounded-full p-2 shadow-md'>
               <BiLogoGmail className='h-6 w-6' />
             </div>
           </div>

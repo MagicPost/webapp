@@ -48,7 +48,7 @@ function WeightTableTemplate({ type }: { type: TransitServiceTypes }) {
   return (
     <div className='mx-auto max-w-[900px] space-y-6 text-center'>
       <Table>
-        <TableHeader className='bg-white text-center'>
+        <TableHeader className='bg-background text-center'>
           <TableRow className='hover:opacity-100'>
             <TableHead rowSpan={2} className='border text-center'>
               Trọng lượng
@@ -80,7 +80,7 @@ function WeightTableTemplate({ type }: { type: TransitServiceTypes }) {
               {index === 0 && (
                 <TableCell
                   rowSpan={postages[WeightTypes.NOT_OVER_2KG].length}
-                  className='border hover:bg-white'
+                  className='border hover:bg-background'
                 >
                   đồng/bưu gửi
                 </TableCell>
@@ -102,7 +102,7 @@ function WeightTableTemplate({ type }: { type: TransitServiceTypes }) {
               {index === 0 && (
                 <TableCell
                   rowSpan={postages[WeightTypes.OVER_2KG].length}
-                  className='border hover:bg-white'
+                  className='border hover:bg-background'
                 >
                   đồng/kg
                 </TableCell>

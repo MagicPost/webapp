@@ -7,6 +7,7 @@ import ScrollAnimationWrapper from '../ScrollAnimationWrapper';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { MapPin, TruckIcon, Users2 } from 'lucide-react';
+import DeliveryMan from './DeliveryMan';
 
 const infoList = [
   {
@@ -48,20 +49,21 @@ export default function Hero() {
           </div>
           <div className='flex w-full'>
             <motion.div className='h-full w-full' variants={scrollAnimation}>
-              <Image
+              {/* <Image
                 src='/landing/delivery_man.svg'
                 alt='magicpost-banner'
                 quality={100}
                 width={612}
                 height={383}
                 sizes='100vw'
-              />
+              /> */}
+              <DeliveryMan fill='black' />
             </motion.div>
           </div>
         </motion.div>
       </ScrollAnimationWrapper>
       <div className='relative flex w-full'>
-        <ScrollAnimationWrapper className='bg-white-500 z-10 grid w-full grid-flow-row grid-cols-1 divide-y-2 divide-gray-100 rounded-lg py-9 sm:grid-flow-row sm:grid-cols-3 sm:divide-x-2 sm:divide-y-0'>
+        <ScrollAnimationWrapper className='z-10 grid w-full grid-flow-row grid-cols-1 divide-y-2 divide-gray-100 rounded-lg py-9 sm:grid-flow-row sm:grid-cols-3 sm:divide-x-2 sm:divide-y-0'>
           {infoList.map((info, index) => (
             <motion.div
               className='mx-auto flex w-full items-center justify-start px-4 py-4 sm:mx-0 sm:w-full sm:justify-center sm:py-6 md:w-8/12'
@@ -74,8 +76,8 @@ export default function Hero() {
                   <span>{info.icon}</span>
                 </div>
                 <div className='flex flex-col'>
-                  <p className='text-black-600 text-xl font-bold'>{info.number}</p>
-                  <p className='text-black-500 text-lg'>{info.name}</p>
+                  <p className='text-xl font-bold'>{info.number}</p>
+                  <p className='text-lg'>{info.name}</p>
                 </div>
               </div>
             </motion.div>

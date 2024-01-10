@@ -13,12 +13,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Plus } from 'lucide-react';
 import { provinces } from '@/constants/geography';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { z } from 'zod';
 import CustomInputField from '@/components/main/CustomInputField';
 import CustomComboBox from '@/components/main/CustomCombobox';
+import { getNumberWithLeadingZero } from '@/lib/text';
+import { getShortProvinceName } from '@/lib/geography';
+import { Label } from '@/components/ui/label';
 
 export default function AddCollectionPointDialog(props: any) {
   const [open, setOpen] = useState(false);
@@ -46,7 +49,6 @@ export default function AddCollectionPointDialog(props: any) {
 }
 
 const formSchema = z.object({
-  name: z.string().min(1, 'Không được để trống!'),
   address: z.string().min(1, 'Không được để trống!'),
   district: z.string().min(1, 'Không được để trống!'),
   province: z.string().min(1, 'Không được để trống!'),
@@ -55,14 +57,15 @@ const formSchema = z.object({
 });
 
 function NewBranchForm({
+  savedCollectionPoints,
   setSavedCollectionPoints,
 }: {
+  savedCollectionPoints: GetCollectionPointDTO[];
   setSavedCollectionPoints: React.Dispatch<React.SetStateAction<GetCollectionPointDTO[]>>;
 }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
       address: '',
       district: '',
       province: '',
@@ -109,8 +112,14 @@ function NewBranchForm({
     );
   }, [form.watch('province'), form.watch('district')]);
 
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    const payload: CreateCollectionPointDTO = data;
+    const payload: CreateCollectionPointDTO = {
+      name: inputRef.current?.value || '',
+      ...data,
+    };
+
     const res = await createCollectionPoint(payload);
     if (!res?.ok) {
       toast.error(res?.message);
@@ -123,16 +132,25 @@ function NewBranchForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col gap-0 space-y-8'>
+      <form onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col gap-0 space-y-2'>
         <div className='flex-1'>
-          <CustomInputField
-            form={form}
-            name='name'
-            label='Tên'
-            placeholder='Nhập tên điểm tập kết'
-            type='text'
-            required
-          />
+          <div className='flex flex-row items-center justify-between gap-4'>
+            <Label className='w-1/4'>Tên</Label>
+            <input
+              ref={inputRef}
+              className='focus:ring-primary-500 mt-2 w-3/4 rounded-md border border-gray-300 bg-gray-200 px-4 py-2 focus:outline-none focus:ring-2'
+              placeholder='Nhập tên điểm tập kết'
+              type='text'
+              required
+              readOnly
+              disabled
+              value={
+                `Điểm tập kết C${getNumberWithLeadingZero(
+                  savedCollectionPoints.length + 1
+                )} - ${getShortProvinceName(form.watch('province'))}` || ``
+              }
+            />
+          </div>
 
           <CustomInputField
             form={form}

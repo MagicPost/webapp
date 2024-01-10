@@ -22,7 +22,7 @@ export const NextAuthProvider = ({ children }: { children: React.ReactNode }) =>
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider refetchOnWindowFocus={false}>{children}</SessionProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {process.env.NODE_ENV === 'development' && <ReactQueryDevtools initialIsOpen={false} />}
     </QueryClientProvider>
   );
 };
