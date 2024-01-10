@@ -71,6 +71,7 @@ export default function DeliveringPackages({}: {
                 className='mr-2'
                 onClick={() => {
                   onConfirmDelivered(selectedRows);
+                  table.toggleAllRowsSelected(false);
                 }}
               >
                 Giao hàng thành công
@@ -79,6 +80,7 @@ export default function DeliveringPackages({}: {
                 variant='default'
                 onClick={() => {
                   onConfirmResent(selectedRows);
+                  table.toggleAllRowsSelected(false);
                 }}
               >
                 Xác nhận trả hàng

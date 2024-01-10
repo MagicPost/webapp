@@ -34,7 +34,14 @@ export default function InnerPage({
         <TabsList className='flex h-full w-full flex-row items-center justify-between space-x-2 overflow-x-auto px-4 py-3'>
           {tabs.map((tab, index) => (
             <TabsTrigger value={tab.value} key={index}>
-              <CustomTabs {...tab} total={packagesMap[tab.value as keyof TPackagesMap]?.length} />
+              <CustomTabs
+                {...tab}
+                total={
+                  tab.entity === 'batch'
+                    ? batchesMap[tab.value as keyof TBatchesMap]?.length
+                    : packagesMap[tab.value as keyof TPackagesMap]?.length
+                }
+              />
             </TabsTrigger>
           ))}
         </TabsList>

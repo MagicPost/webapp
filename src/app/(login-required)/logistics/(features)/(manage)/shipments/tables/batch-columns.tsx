@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,12 +19,39 @@ export const getColumns = ({
   include,
 }: {
   include: {
+    select?: boolean;
     sentBranch?: boolean;
     receivedBranch?: boolean;
+    createdTime?: boolean;
+    sentTime?: boolean;
     receivedTime?: boolean;
   };
 }) => {
   const cols: ColumnDef<GetBatchDTO>[] = [
+    {
+      id: 'select',
+      accessorKey: 'select',
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && 'indeterminate')
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label='Chọn tất cả'
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label='Chọn hàng'
+        />
+      ),
+      meta: {
+        hidden: !include.select,
+      },
+    },
     {
       accessorKey: 'batchId',
       header: 'Mã lô hàng',
@@ -62,12 +90,25 @@ export const getColumns = ({
       cell: ({ row }) => {
         return getViLocaleDateString(row.original.createdAt);
       },
-      header: 'Thời gian gửi',
+      header: 'Thời gian tạo',
+      meta: {
+        hidden: !include.sentTime,
+      },
     },
     {
-      accessorKey: 'arrivedAt',
+      accessorKey: 'sentTime',
       cell: ({ row }) => {
-        return getViLocaleDateString(row.original.createdAt);
+        return getViLocaleDateString(row.original.sentTime);
+      },
+      header: 'Thời gian gửi',
+      meta: {
+        hidden: !include.sentTime,
+      },
+    },
+    {
+      accessorKey: 'receivedTime',
+      cell: ({ row }) => {
+        return getViLocaleDateString(row.original.receivedTime);
       },
       header: 'Thời gian nhận',
       meta: {

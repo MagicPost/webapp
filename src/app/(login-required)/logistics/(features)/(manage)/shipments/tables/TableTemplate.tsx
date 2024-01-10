@@ -144,7 +144,7 @@ export default function TableTemplate<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className='h-60 text-center'>
-                  <Empty message='Chưa thêm tài khoản nào' />
+                  <Empty message='Chưa thêm đơn/lô hàng nào' />
                 </TableCell>
               </TableRow>
             )}

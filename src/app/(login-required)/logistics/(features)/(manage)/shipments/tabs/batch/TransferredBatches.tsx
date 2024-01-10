@@ -4,6 +4,8 @@ import { GetBasicBranchDTO } from '@/dtos/branches/branch.dto';
 import TableTemplate from '../../tables/TableTemplate';
 import { getColumns } from '../../tables/batch-columns';
 import { BatchStates, BranchTypes } from '@/constants';
+import { useBatches } from '../../context';
+import { ETabValue } from '../../@types/tab';
 
 export default function TransferredBatches({
   branch,
@@ -16,6 +18,9 @@ export default function TransferredBatches({
       receivedTime: true,
     },
   });
+
+  const { batchesMap } = useBatches();
+  const transferredBatches = batchesMap?.[ETabValue.FORWARDED] || [];
 
   return (
     <div>

@@ -68,6 +68,7 @@ export enum SpecialProperties {
 }
 
 export enum BatchStates {
+  PENDING = 'pending',
   IN_TRANSIT = 'in_transit',
   ARRIVED = 'arrived',
 }

@@ -4,7 +4,8 @@ import { GetPackageDTO } from '@/dtos/package/package.dto';
 
 export enum ETabValue {
   GONNA_RECEIVE = 'gonna-receive',
-  PENDING = 'pending',
+  PENDING_PACKAGE = 'pending-package',
+  PENDING_BATCH = 'pending-batch',
   FORWARDING = 'forwarding',
   FORWARDED = 'forwarded',
   DELIVERING = 'delivering',
@@ -13,6 +14,7 @@ export enum ETabValue {
 }
 
 export type TTab = {
+  entity: 'batch' | 'package';
   label: string;
   value: ETabValue;
   total?: number;
@@ -28,12 +30,12 @@ export type TTab = {
 export type TPackagesMap = {
   [key in Extract<
     ETabValue,
-    ETabValue.PENDING | ETabValue.DELIVERING | ETabValue.DELIVERED | ETabValue.RESENT
+    ETabValue.PENDING_PACKAGE | ETabValue.DELIVERING | ETabValue.DELIVERED | ETabValue.RESENT
   >]?: GetPackageDTO[];
 };
 export type TBatchesMap = {
   [key in Extract<
     ETabValue,
-    ETabValue.GONNA_RECEIVE | ETabValue.FORWARDED | ETabValue.FORWARDING
+    ETabValue.GONNA_RECEIVE | ETabValue.FORWARDED | ETabValue.FORWARDING | ETabValue.PENDING_BATCH
   >]?: GetBatchDTO[];
 };

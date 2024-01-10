@@ -7,6 +7,7 @@ import { GetPackageDTO } from '@/dtos/package/package.dto';
 import { BatchStates, PackageStates } from '@/constants';
 import InnerPage from './InnerPage';
 import { ETabValue } from './@types/tab';
+import { getAllBatchesOfBranch } from '@/actions/batch/getBatches';
 
 export default async function ShipmentManagement() {
   const session = await auth();
@@ -15,10 +16,13 @@ export default async function ShipmentManagement() {
   });
   const branch: Omit<GetBasicBranchDTO, 'address' | 'manager'> = res.data;
 
-  const [packageRes] = await Promise.all([getAllPackagesOfBranch({ branch })]);
+  const [packagesRes, batchesRes] = await Promise.all([
+    getAllPackagesOfBranch({ branch }),
+    getAllBatchesOfBranch({ branch }),
+  ]);
 
-  const packagesMap = getPackagesMap(packageRes.data as GetPackageDTO[]);
-  const batchesMap = getBatchesMap([] as GetBatchDTO[]);
+  const packagesMap = getPackagesMap(packagesRes.data as GetPackageDTO[]);
+  const batchesMap = getBatchesMap(batchesRes.data as GetBatchDTO[]);
 
   // console.log(packagesMap);
 
@@ -33,7 +37,7 @@ export default async function ShipmentManagement() {
 
 function getPackagesMap(packages: GetPackageDTO[]) {
   return {
-    [ETabValue.PENDING]:
+    [ETabValue.PENDING_PACKAGE]:
       packages.filter(
         (_package: GetPackageDTO) =>
           _package.state === PackageStates.PENDING__READY_TO_DELIVER ||
@@ -52,6 +56,8 @@ function getPackagesMap(packages: GetPackageDTO[]) {
 
 function getBatchesMap(batches: GetBatchDTO[]) {
   return {
+    [ETabValue.PENDING_BATCH]:
+      batches.filter((batch: GetBatchDTO) => batch.state === BatchStates.PENDING) || [],
     [ETabValue.GONNA_RECEIVE]:
       batches.filter((batch: GetBatchDTO) => batch.state === BatchStates.IN_TRANSIT) || [],
     [ETabValue.FORWARDING]:

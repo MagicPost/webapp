@@ -16,7 +16,11 @@ const ShipmentContext = React.createContext<{
 export const ShipmentProvider = ShipmentContext.Provider;
 
 export const usePackages = () => {
-  const { packagesMap, setPackagesMap, batchesMap, setBatchesMap } =
-    React.useContext(ShipmentContext);
-  return { packagesMap, setPackagesMap, batchesMap, setBatchesMap };
+  const { packagesMap, setPackagesMap } = React.useContext(ShipmentContext);
+  return { packagesMap, setPackagesMap };
+};
+
+export const useBatches = () => {
+  const { batchesMap, setBatchesMap } = React.useContext(ShipmentContext);
+  return { batchesMap, setBatchesMap };
 };

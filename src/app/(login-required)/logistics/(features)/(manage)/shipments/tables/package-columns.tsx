@@ -90,10 +90,21 @@ export const getColumns = ({
     },
     {
       accessorKey: 'state',
-      header: 'Trạng thái',
       cell: ({ row }) => {
         return row.original.state;
         // <Badge className='select-none bg-lime-600 hover:bg-lime-500'>Đã kích hoạt</Badge>
+      },
+      header: ({ column }) => {
+        return (
+          <Button
+            variant='ghost'
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+            className='-ml-4'
+          >
+            Trạng thái
+            <ArrowUpDown className='ml-2 h-4 w-4' />
+          </Button>
+        );
       },
     },
     {
