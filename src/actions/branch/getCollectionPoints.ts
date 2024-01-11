@@ -8,11 +8,22 @@ import { transformObjectIdFromLeanedDoc } from '@/lib/mongo';
 import { catchAsync } from '../_helpers/catchAsync';
 
 export const getCollectionPoints = catchAsync(
-  async ({ withTransactionPoints = false }: { withTransactionPoints?: boolean }) => {
+  async ({
+    withTransactionPoints = false,
+    withManager = false,
+  }: {
+    withTransactionPoints?: boolean;
+    withManager?: boolean;
+  }) => {
     await dbConnect();
 
     let query = CollectionPointModel.find({});
     if (withTransactionPoints) query.populate('transactionPoints');
+    if (withManager)
+      query.populate({
+        path: 'manager',
+        select: '_id firstName lastName',
+      });
 
     let collectionPoints = await query.lean().exec();
     collectionPoints = collectionPoints.map((item) => transformObjectIdFromLeanedDoc(item));

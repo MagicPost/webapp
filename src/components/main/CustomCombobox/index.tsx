@@ -37,6 +37,7 @@ export default function CustomComboBox({
   options: {
     label: string;
     value: string;
+    disabled?: boolean;
   }[];
   name: string;
   label: string;
@@ -116,6 +117,7 @@ export default function CustomComboBox({
                   {options.map((option) => (
                     <Button
                       type='button'
+                      disabled={option.disabled}
                       value={option.label}
                       key={option.value}
                       onClick={() => {

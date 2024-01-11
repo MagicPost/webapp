@@ -77,7 +77,11 @@ function DialogInnerContent({
     queryKey: ['collectionPoint', collectionPoint._id],
     queryFn: () =>
       new Promise((resolve, reject) => {
-        getTransactionPointsOf(collectionPoint._id)
+        getTransactionPointsOf(collectionPoint._id, {
+          include: {
+            manager: true,
+          },
+        })
           .then((res) => {
             if (!res.ok) throw new Error(res.message);
             else resolve(res.data);
@@ -112,7 +116,11 @@ function DialogInnerContent({
               <AvatarImage src='' />
               <AvatarFallback className='bg-orange-200' />
             </Avatar>
-            Nguyễn Văn A
+            <span className='font-semibold'>
+              {collectionPoint?.manager
+                ? collectionPoint?.manager.firstName + ' ' + collectionPoint?.manager.lastName
+                : '(Chưa có)'}
+            </span>
           </div>
           <div className=' col-span-1'>Địa chỉ</div>
           <div className=' col-span-2'>

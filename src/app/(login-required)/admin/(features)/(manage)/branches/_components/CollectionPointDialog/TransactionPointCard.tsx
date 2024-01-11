@@ -22,7 +22,14 @@ export default function TransactionPointCard({
 
       <div className='flex flex-col items-start justify-center gap-2 p-2 px-3'>
         <p className=' text-base font-semibold'>{transactionPoint.name}</p>
-        <p>Trưởng điểm: Nguyễn Văn A</p>
+        <p>
+          Trưởng điểm:{' '}
+          <span className='font-semibold'>
+            {transactionPoint?.manager
+              ? transactionPoint.manager?.firstName + ' ' + transactionPoint.manager?.lastName
+              : '(Chưa có)'}
+          </span>
+        </p>
         <p>
           Địa chỉ:{' '}
           {getFullAddress({

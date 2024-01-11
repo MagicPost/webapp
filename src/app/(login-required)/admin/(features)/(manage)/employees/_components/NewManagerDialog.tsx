@@ -21,6 +21,7 @@ import { Label } from '@/components/ui/label';
 import CustomComboBox from '@/components/main/CustomCombobox';
 import { DisplayCollectionPointDTO } from '@/dtos/branches/collection-point.dto';
 import { DisplayTransactionPointDTO } from '@/dtos/branches/transaction-point.dto';
+import { updateCollectionPoint, updateTransactionPoint } from '@/actions/branch/updateBranch';
 
 export default function NewManagerDialog(props: any) {
   const [open, setOpen] = useState(false);
@@ -94,8 +95,9 @@ function NewManagerForm({
       branches.collectionPoints.map((cp) => ({
         label: cp.name,
         value: cp._id,
+        disabled: !!cp.manager && form.watch('branchType') === BranchTypes.COLLECTION_POINT,
       })),
-    []
+    [form.watch('branchType')]
   );
 
   const transactionPointOptions = useMemo(() => {
@@ -108,6 +110,7 @@ function NewManagerForm({
       .map((tp) => ({
         label: tp.name,
         value: tp._id,
+        disabled: !!tp.manager,
       }));
   }, [form.watch('branchType'), form.watch('collectionPointId')]);
 
@@ -130,6 +133,17 @@ function NewManagerForm({
     try {
       setLoading(true);
       const res = await createEmployeeAccount(payload);
+
+      if (data.branchType === BranchTypes.COLLECTION_POINT) {
+        await updateCollectionPoint(data.collectionPointId, {
+          manager: res?.data._id,
+        });
+      } else {
+        await updateTransactionPoint(data.transactionPointId, {
+          manager: res?.data._id,
+        });
+      }
+
       if (!res?.ok) throw res?.message as string;
       else {
         toast.success(res?.message);

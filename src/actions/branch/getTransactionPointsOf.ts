@@ -7,23 +7,40 @@ import { transformObjectIdFromLeanedDoc } from '@/lib/mongo';
 import { GetTransactionPointDTO } from '@/dtos/branches/transaction-point.dto';
 import { catchAsync } from '../_helpers/catchAsync';
 
-export const getTransactionPointsOf = catchAsync(async (collectionPointId: string) => {
-  await dbConnect();
+export const getTransactionPointsOf = catchAsync(
+  async (
+    collectionPointId: string,
+    {
+      include,
+    }: {
+      include?: {
+        manager?: boolean;
+      };
+    }
+  ) => {
+    await dbConnect();
 
-  let transactionPoints = await TransactionPointModel.find({
-    collectionPoint: collectionPointId,
-  })
-    .lean()
-    .exec();
+    let query = TransactionPointModel.find({
+      collectionPoint: collectionPointId,
+    });
 
-  transactionPoints = transformObjectIdFromLeanedDoc(transactionPoints as any);
+    if (include?.manager) {
+      query = query.populate({
+        path: 'manager',
+        select: '_id firstName lastName',
+      });
+    }
 
-  if (!Array.isArray(transactionPoints)) transactionPoints = [transactionPoints];
+    let transactionPoints = await query.lean().exec();
+    transactionPoints = transformObjectIdFromLeanedDoc(transactionPoints);
 
-  return {
-    ok: true,
-    message: 'Lấy danh sách điểm giao dịch thành công!',
-    status: 200,
-    data: transactionPoints as GetTransactionPointDTO[],
-  } satisfies ActionResponse;
-});
+    if (!Array.isArray(transactionPoints)) transactionPoints = [transactionPoints];
+
+    return {
+      ok: true,
+      message: 'Lấy danh sách điểm giao dịch thành công!',
+      status: 200,
+      data: transactionPoints as GetTransactionPointDTO[],
+    } satisfies ActionResponse;
+  }
+);

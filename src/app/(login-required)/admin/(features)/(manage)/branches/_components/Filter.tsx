@@ -8,21 +8,58 @@ import { Label } from '@/components/ui/label';
 import CustomSelect from '@/components/main/CustomSelect';
 import CustomInput from '@/components/main/CustomInput';
 import { provinces } from '@/constants/geography';
-import { useEffect, useMemo } from 'react';
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo } from 'react';
+import { GetCollectionPointDTO } from '@/dtos/branches/collection-point.dto';
 
 const formSchema = z.object({
   province: z.string().optional(),
   district: z.string().optional(),
-  branchAddress: z.string().optional(),
+  searchInput: z.string().optional(),
 });
 
-export const Filter = () => {
-  const form = useForm<z.infer<typeof formSchema>>();
-  const onSubmit = (data: z.infer<typeof formSchema>) => console.log(data);
+export const Filter = ({
+  savedCollectionPoints,
+  setFilteredCollectionPoints,
+}: {
+  savedCollectionPoints: GetCollectionPointDTO[];
+  setFilteredCollectionPoints: Dispatch<SetStateAction<GetCollectionPointDTO[]>>;
+}) => {
+  const form = useForm<z.infer<typeof formSchema>>({
+    defaultValues: {
+      province: undefined,
+      district: undefined,
+      searchInput: '',
+    },
+  });
+
+  const doFilter = useCallback(() => {
+    const filter = form.watch();
+
+    const filtered = filter.province
+      ? savedCollectionPoints.filter((item) => {
+          const matchProvince = item.province === filter.province;
+          const matchDistrict = !filter.district ? true : item.district === filter.district;
+          const matchAddress = !filter.searchInput
+            ? true
+            : item.address.includes(filter.searchInput!);
+          const matchName = !filter.searchInput ? true : item.name.includes(filter.searchInput!);
+          const matchPostalCode = !filter.searchInput
+            ? true
+            : item.postalCode.includes(filter.searchInput!);
+
+          return matchProvince && matchDistrict && (matchAddress || matchName || matchPostalCode);
+        })
+      : savedCollectionPoints;
+    setFilteredCollectionPoints(filtered);
+  }, []);
 
   useEffect(() => {
     form.setValue('district', undefined);
+    doFilter();
   }, [form.watch('province')]);
+
+  useEffect(() => void doFilter(), [form.watch('district')]);
+  useEffect(() => void doFilter(), [form.watch('searchInput')]);
 
   const provinceOptions = useMemo(() => {
     return provinces.map((province) => {
@@ -70,11 +107,11 @@ export const Filter = () => {
         </div>
 
         <Label
-          htmlFor='branchAddress'
+          htmlFor='searchInput'
           className='flex w-full items-center gap-2 rounded-md border border-orange-600 bg-background px-2 md:ml-auto md:w-[300px]'
         >
           <CustomInput
-            name='branchAddress'
+            name='searchInput'
             control={form.control}
             placeholder='Tên, địa chỉ, mã bưu chính'
             containerClassname='w-full'

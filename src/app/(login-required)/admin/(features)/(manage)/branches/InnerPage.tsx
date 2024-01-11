@@ -13,6 +13,7 @@ export default function InnerPage({
   collectionPoints: GetCollectionPointDTO[];
 }) {
   const [savedCollectionPoints, setSavedCollectionPoints] = useState(collectionPointsInput);
+  const [filteredCollectionPoints, setFilteredCollectionPoints] = useState(savedCollectionPoints);
 
   const totalTransactionPointNumber = useMemo(
     () =>
@@ -52,15 +53,28 @@ export default function InnerPage({
       </div>
 
       <div className='my-4 flex flex-row items-center justify-between'>
-        <Filter />
+        <Filter
+          savedCollectionPoints={savedCollectionPoints}
+          setFilteredCollectionPoints={setFilteredCollectionPoints}
+        />
+      </div>
+
+      <div className='w-full text-right'>
+        <span className='text-sm font-semibold'>{filteredCollectionPoints.length} kết quả</span>
       </div>
 
       {savedCollectionPoints && savedCollectionPoints?.length > 0 ? (
-        <div className='grid grid-cols-1 justify-center gap-4 py-4 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'>
-          {savedCollectionPoints?.map((collectionPoint, index) => (
-            <CollectionPointDialog key={index} collectionPoint={collectionPoint} />
-          ))}
-        </div>
+        filteredCollectionPoints && filteredCollectionPoints?.length > 0 ? (
+          <div className='grid grid-cols-1 justify-center gap-4 py-4 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'>
+            {filteredCollectionPoints?.map((collectionPoint, index) => (
+              <CollectionPointDialog key={index} collectionPoint={collectionPoint} />
+            ))}
+          </div>
+        ) : (
+          <div className='mt-12'>
+            <Empty message='Không có kết quả' />
+          </div>
+        )
       ) : (
         <div className='mt-12'>
           <Empty message='Chưa có điểm tập kết' />

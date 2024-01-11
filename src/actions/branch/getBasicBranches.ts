@@ -23,7 +23,11 @@ export const getBasicBranches = catchAsync(
     let collectionPoints = [];
     if (withCollectionPoints) {
       collectionPoints = await CollectionPointModel.find({})
-        .select('_id name transactionPoints')
+        .select('_id name transactionPoints manager')
+        .populate({
+          path: 'manager',
+          select: '_id firstName lastName',
+        })
         .lean()
         .exec();
       collectionPoints = collectionPoints.map((item) => transformObjectIdFromLeanedDoc(item));
@@ -32,7 +36,11 @@ export const getBasicBranches = catchAsync(
     let transactionPoints = [];
     if (withTransactionPoints) {
       transactionPoints = await TransactionPointModel.find({})
-        .select('_id name collectionPoint')
+        .select('_id name collectionPoint manager')
+        .populate({
+          path: 'manager',
+          select: '_id firstName lastName',
+        })
         .lean()
         .exec();
       transactionPoints = transactionPoints.map((item) => transformObjectIdFromLeanedDoc(item));
