@@ -1,5 +1,6 @@
 'use client';
 
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -8,6 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { PackageStates } from '@/constants';
 import { GetPackageDTO } from '@/dtos/package/package.dto';
 import { getViLocaleDateString } from '@/lib/time';
 import { ColumnDef } from '@tanstack/react-table';
@@ -90,20 +92,26 @@ export const getColumns = ({
     },
     {
       accessorKey: 'state',
-      cell: ({ row }) => {
-        return row.original.state;
-        // <Badge className='select-none bg-lime-600 hover:bg-lime-500'>Đã kích hoạt</Badge>
-      },
       header: ({ column }) => {
         return (
           <Button
             variant='ghost'
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-            className='-ml-4'
           >
             Trạng thái
             <ArrowUpDown className='ml-2 h-4 w-4' />
           </Button>
+        );
+      },
+      cell: ({ row }) => {
+        return (
+          <div className='ml-0 w-32 pl-0 text-center'>
+            {row.original.state === PackageStates.PENDING__READY_TO_DELIVER ? (
+              <Badge className='select-none bg-lime-700 hover:bg-lime-600'>Sẵn sàng giao</Badge>
+            ) : (
+              <Badge className='select-none bg-blue-600 hover:bg-blue-500'>Sẵn sàng chuyển</Badge>
+            )}
+          </div>
         );
       },
     },

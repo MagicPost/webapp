@@ -26,10 +26,10 @@ const Header = () => {
       <header
         className={cn(
           'fixed top-0 z-30 w-full bg-background transition-all',
-          scrollActive ? ' pt-0 shadow-md' : ' pt-4'
+          scrollActive ? 'pt-0 shadow-md' : 'pt-4'
         )}
       >
-        <nav className='mx-auto grid max-w-screen-xl grid-flow-col px-6 py-3 sm:px-8 sm:py-4 lg:px-16'>
+        <nav className='mx-auto grid max-w-screen-xl grid-flow-col px-6 py-3 sm:px-8 sm:py-4'>
           <div className='col-start-1 col-end-2 flex items-center'>
             <Logo />
           </div>

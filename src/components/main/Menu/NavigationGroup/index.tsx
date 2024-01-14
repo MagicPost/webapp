@@ -44,7 +44,7 @@ function NavigationItem({ label, icon, href = '#' }: TNavigationItem) {
       variant={'ghost'}
       className={cn('flex flex-row justify-start border-2 px-3', {
         'border-transparent': pathname !== href,
-        'border-orange-300 bg-orange-100': pathname === href,
+        'border-orange-600 border-opacity-70 bg-orange-100': pathname === href,
       })}
       asChild
     >

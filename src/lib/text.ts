@@ -34,3 +34,27 @@ export const roleToText = (role: Roles): string => {
 export const getNumberWithLeadingZero = (number: number): string => {
   return number < 10 ? `0${number}` : `${number}`;
 };
+
+export const hideInfo = (input: string, type: 'fullname' | 'phone' | 'address') => {
+  if (!input) return '';
+  switch (type) {
+    case 'fullname': {
+      const segments = input.split(' ');
+      const firstPart = segments.slice(0, segments.length - 1).join(' ');
+      const lastSegment = segments[segments.length - 1];
+      return `${firstPart} ${'*'.repeat(lastSegment.length)}`;
+    }
+    case 'phone':
+      return `${'*'.repeat(input.length - 4)}${input.slice(input.length - 4)}`;
+    case 'address': {
+      const [firstPart, rest] = input.split(/, (.*)/s);
+      const maskedFirstPart = firstPart
+        .split(' ')
+        .map((segment) => '*'.repeat(segment.length))
+        .join(' ');
+      return `${maskedFirstPart}, ${rest || ''}`;
+    }
+    default:
+      return input;
+  }
+};

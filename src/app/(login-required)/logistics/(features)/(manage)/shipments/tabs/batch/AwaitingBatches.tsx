@@ -19,11 +19,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 
-export default function AwaitingBatches({
-  branch,
-}: {
-  branch: Omit<GetBasicBranchDTO, 'address' | 'manager'>;
-}) {
+export default function AwaitingBatches() {
   const columns = getColumns({
     include: {
       sentBranch: true,

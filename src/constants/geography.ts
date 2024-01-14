@@ -14765,7 +14765,7 @@ export const provinces: Province[] = [
     geolocation: '21.7000,104.8667',
   },
   {
-    name: 'Tỉnh Hoà Bình',
+    name: 'Tỉnh Hòa Bình',
     code: 17,
     codename: 'tinh_hoa_binh',
     division_type: 'tỉnh',

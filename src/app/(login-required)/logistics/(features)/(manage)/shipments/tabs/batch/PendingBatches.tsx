@@ -19,9 +19,7 @@ import { GetBatchDTO } from '@/dtos/batch/batch.dto';
 import { Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-export default function PendingBatches({}: {
-  branch: Omit<GetBasicBranchDTO, 'address' | 'manager'>;
-}) {
+export default function PendingBatches() {
   const columns = getColumns({
     include: {
       select: true,

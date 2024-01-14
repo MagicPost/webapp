@@ -6,7 +6,7 @@ import { getColumns } from '../../tables/package-columns';
 import { BatchStates, BranchTypes, PackageStates } from '@/constants';
 import { Button } from '@/components/ui/button';
 import { ETabValue } from '../../@types/tab';
-import { useBatches, usePackages } from '../../context';
+import { useBatches, useBranch, usePackages } from '../../context';
 import { Row } from '@tanstack/react-table';
 import { GetPackageDTO } from '@/dtos/package/package.dto';
 import { useState } from 'react';
@@ -19,7 +19,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import toast from 'react-hot-toast';
-import { GetBatchDTO } from '@/dtos/batch/batch.dto';
+import { CreateBatchDTO, GetBatchDTO } from '@/dtos/batch/batch.dto';
 import {
   Select,
   SelectContent,
@@ -29,9 +29,7 @@ import {
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 
-export default function PendingPackages({}: {
-  branch: Omit<GetBasicBranchDTO, 'address' | 'manager'>;
-}) {
+export default function PendingPackages() {
   const columns = getColumns({
     include: {
       select: true,
@@ -94,6 +92,7 @@ function CreateBatchDialog({
   pendingPackages: GetPackageDTO[];
   toggleAllRowsSelected: (value?: boolean) => void;
 }) {
+  const { branch } = useBranch();
   const { packagesMap, setPackagesMap } = usePackages();
   const { batchesMap, setBatchesMap } = useBatches();
 
@@ -103,14 +102,15 @@ function CreateBatchDialog({
   const [batchId, setBatchId] = useState('');
   const [truckId, setTruckId] = useState('');
 
+  const branchCode = branch && branch.name.replace('Điểm giao dịch ', '').split(' ')[0];
+
   const onCreateBatch = () => {
     const updatedPendingPackages = pendingPackages.filter(
       (item) => !selectedRows.some((row) => row.original._id === item._id)
     );
 
-    const newBatch: GetBatchDTO = {
-      _id: 'new-batch',
-      truckId: 'truck-id',
+    const newBatch: CreateBatchDTO = {
+      truckId,
       packages: selectedRows.map((row) => row.original),
       from: {
         type: BranchTypes.TRANSACTION_POINT,
@@ -122,21 +122,22 @@ function CreateBatchDialog({
         ref: 'to',
         name: 'Chi nhánh nhận',
       },
-      createdAt: new Date().toISOString(),
       state: BatchStates.PENDING,
     };
 
     const updatedPendingBatches = [...(batchesMap[ETabValue.PENDING_BATCH] || []), newBatch];
 
+    console.log(newBatch);
+
     setLoading(true);
-    setPackagesMap({
-      ...packagesMap,
-      [ETabValue.PENDING_PACKAGE]: updatedPendingPackages,
-    });
-    setBatchesMap({
-      ...batchesMap,
-      [ETabValue.PENDING_BATCH]: updatedPendingBatches,
-    });
+    // setPackagesMap({
+    //   ...packagesMap,
+    //   [ETabValue.PENDING_PACKAGE]: updatedPendingPackages,
+    // });
+    // setBatchesMap({
+    //   ...batchesMap,
+    //   [ETabValue.PENDING_BATCH]: updatedPendingBatches,
+    // });
     setTimeout(() => {
       setLoading(false);
       setOpen(false);
@@ -186,9 +187,9 @@ function CreateBatchDialog({
                   <SelectValue placeholder='Chọn xe' />
                 </SelectTrigger>
                 <SelectContent side='right'>
-                  <SelectItem value='truck1'>Xe 1</SelectItem>
-                  <SelectItem value='truck2'>Xe 2</SelectItem>
-                  <SelectItem value='truck3'>Xe 3</SelectItem>
+                  <SelectItem value='truck-1'>Xe {branchCode}-1</SelectItem>
+                  <SelectItem value='truck-2'>Xe {branchCode}-2</SelectItem>
+                  <SelectItem value='truck-3'>Xe {branchCode}-3</SelectItem>
                 </SelectContent>
               </Select>
             </div>

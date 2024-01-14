@@ -2,12 +2,16 @@
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { HelpCircle } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import TransitProgress from './TransitProgress';
 import { GetPackageDTO } from '@/dtos/package/package.dto';
 import { getPackageById } from '@/actions/package/getPackageById';
 import Loading from '@/components/main/Loading';
 import Empty from '@/components/main/Empty';
+import { getTimeString, getViLocaleDateString } from '@/lib/time';
+import { hideInfo } from '@/lib/text';
+import { PackageTrackingActions, PackageTrackingActionsMap } from '@/constants';
+import { cn } from '@/lib/utils';
 
 export default function SearchResult({ packageId }: { packageId: string }) {
   const [packageData, setPackageData] = useState<GetPackageDTO | null>(null);
@@ -30,15 +34,48 @@ export default function SearchResult({ packageId }: { packageId: string }) {
           sentAt: true,
           receivedAt: true,
           creator: false,
-          tracking: false,
+          tracking: true,
         },
       });
       if (!res.ok) setError(true);
       setPackageData(res.data);
-      console.log(res.data);
       setLoading(false);
     }
   }, [packageId]);
+
+  const packageName = useMemo(() => {
+    return packageData?.items.reduce((acc, item) => {
+      if (acc) return acc + ', ' + item.name;
+      return item.name as string;
+    }, '' as string);
+  }, [packageData, packageId]);
+
+  const packageStatus:
+    | PackageTrackingActions.CREATED
+    | PackageTrackingActions.CANCELLED
+    | PackageTrackingActions.DELIVERING
+    | PackageTrackingActions.DELIVERED
+    | PackageTrackingActions.RESENT = useMemo(() => {
+    let status = PackageTrackingActions.DELIVERING;
+    for (const log of packageData?.tracking || []) {
+      for (const action of log.actions) {
+        if (
+          action.type === PackageTrackingActions.CREATED ||
+          action.type === PackageTrackingActions.CANCELLED ||
+          action.type === PackageTrackingActions.DELIVERING ||
+          action.type === PackageTrackingActions.DELIVERED ||
+          action.type === PackageTrackingActions.RESENT
+        )
+          status = action.type;
+        else if (
+          action.type === PackageTrackingActions.ARRIVED ||
+          action.type === PackageTrackingActions.DEPARTED
+        )
+          status = PackageTrackingActions.DELIVERING;
+      }
+    }
+    return status;
+  }, [packageData, packageId]);
 
   if (loading) {
     return <Loading text={'Đang tải...'} className='mt-12' />;
@@ -60,36 +97,58 @@ export default function SearchResult({ packageId }: { packageId: string }) {
           tooltip={{
             trigger: <HelpCircle className='h-4 w-4' />,
             content: (
-              <p className='sm:w-84 w-40 bg-gray-100 text-sm'>
+              <span className='sm:w-84 block w-40 bg-gray-100 text-sm'>
                 Vì lý do bảo mật, thông tin khách hàng sẽ không hiển thị đầy đủ. <br />
                 Vui lòng tự xác nhận đơn hàng thuộc về bạn.
-              </p>
+              </span>
             ),
           }}
         />
 
         <div className='flex flex-col gap-6 md:flex-row md:justify-between'>
           <div className='space-y-2 md:w-1/2 md:flex-1'>
-            <FieldRow label='Mã đơn hàng:' value='123456789' />
-            <FieldRow label='Tên đơn hàng' value='Máy đọc sách Kindle' />
-            <FieldRow label='Ngày giờ gửi:' value='10:20:23 12/12/2021' />
+            <FieldRow label='Mã đơn hàng:' value={packageData._id} />
+            <FieldRow label='Tên đơn hàng' value={packageName} />
+            <FieldRow
+              label='Ngày giờ gửi:'
+              value={`${getViLocaleDateString(packageData.createdAt)} ${getTimeString(
+                packageData.createdAt
+              )}`}
+            />
             <FieldRow
               label='Trạng thái:'
               value={
-                <span className='py-0.9 select-none rounded-full bg-green-300 px-4 text-sm font-semibold text-green-800'>
-                  Đã giao
+                <span
+                  className={cn('py-0.9 select-none rounded-full px-4 text-sm font-semibold', {
+                    'bg-yellow-200 text-yellow-700':
+                      packageStatus === PackageTrackingActions.CREATED,
+                    'bg-red-200 text-red-600': packageStatus === PackageTrackingActions.CANCELLED,
+                    'bg-yellow-200 text-yellow-800':
+                      packageStatus === PackageTrackingActions.RESENT,
+                    'bg-sky-200 text-sky-700': packageStatus === PackageTrackingActions.DELIVERING,
+                    'bg-green-200 text-green-900':
+                      packageStatus === PackageTrackingActions.DELIVERED,
+                  })}
+                >
+                  {PackageTrackingActionsMap[packageStatus]}
                 </span>
               }
             />
           </div>
 
           <div className='space-y-2 md:w-1/2 md:flex-1'>
-            <FieldRow label='Người gửi:' value='Lê Quang ****' />
-            <FieldRow label='SĐT:' value='******7789' />
-            <FieldRow label='Địa chỉ:' value='123 Đường ****, Quận XYZ, TP. HCM' />
-            <FieldRow label='Người nhận:' value='Nguyễn Văn ****' />
-            <FieldRow label='SĐT:' value='******7789' />
-            <FieldRow label='Địa chỉ:' value='123 Đường ****, Quận XYZ, TP. HCM' />
+            <FieldRow
+              label='Người gửi:'
+              value={hideInfo(packageData.sender.fullname, 'fullname')}
+            />
+            <FieldRow label='SĐT:' value={hideInfo(packageData.sender.phone, 'phone')} />
+            <FieldRow label='Địa chỉ:' value={hideInfo(packageData.sender.address, 'address')} />
+            <FieldRow
+              label='Người nhận:'
+              value={hideInfo(packageData.receiver.fullname, 'fullname')}
+            />
+            <FieldRow label='SĐT:' value={hideInfo(packageData.receiver.phone, 'phone')} />
+            <FieldRow label='Địa chỉ:' value={hideInfo(packageData.receiver.address, 'address')} />
           </div>
         </div>
       </div>
@@ -98,7 +157,7 @@ export default function SearchResult({ packageId }: { packageId: string }) {
         <SearchResultHeading name='Tiến trình chuyển phát:' />
 
         <div className='mx-auto flex w-full items-center justify-center'>
-          <TransitProgress />
+          <TransitProgress tracking={packageData.tracking} />
         </div>
       </div>
     </div>

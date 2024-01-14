@@ -1,17 +1,12 @@
 'use client';
 
-import { GetBasicBranchDTO } from '@/dtos/branches/branch.dto';
 import TableTemplate from '../../tables/TableTemplate';
 import { getColumns } from '../../tables/batch-columns';
 import { BatchStates, BranchTypes } from '@/constants';
 import { useBatches } from '../../context';
 import { ETabValue } from '../../@types/tab';
 
-export default function TransferredBatches({
-  branch,
-}: {
-  branch: Omit<GetBasicBranchDTO, 'address' | 'manager'>;
-}) {
+export default function TransferredBatches() {
   const columns = getColumns({
     include: {
       receivedBranch: true,
@@ -42,6 +37,7 @@ export default function TransferredBatches({
                 name: 'Chi nhánh 2',
                 ref: '123',
               },
+              packages: [],
               state: BatchStates.ARRIVED,
             },
           ],

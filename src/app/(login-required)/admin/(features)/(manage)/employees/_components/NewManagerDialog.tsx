@@ -258,6 +258,7 @@ function NewManagerForm({
           name='collectionPointId'
           label='Chi nhánh'
           containerClassname='w-full flex flex-row items-center justify-between gap-4'
+          contentClassname='max-h-[200px] overflow-y-auto'
           labelClassname='w-1/4'
           selectClassname='w-3/4'
           options={collectionPointOptions}
@@ -271,6 +272,7 @@ function NewManagerForm({
             name='transactionPointId'
             label=''
             containerClassname='mt-0 w-full flex flex-row items-center justify-between gap-4'
+            contentClassname='max-h-[200px] overflow-y-auto'
             labelClassname='w-1/4'
             selectClassname='w-3/4'
             options={transactionPointOptions}

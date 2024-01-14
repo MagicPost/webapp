@@ -22,9 +22,9 @@ export interface DisplayCollectionPointDTO extends Pick<CollectionPoint, 'name'>
 }
 
 export interface CreateCollectionPointDTO
-  extends Omit<
+  extends Pick<
     CollectionPoint,
-    '_id' | 'manager' | 'staffs' | 'transactionPoints' | 'geolocation'
+    'address' | 'ward' | 'district' | 'province' | 'postalCode' | 'name' | 'createdAt'
   > {}
 
 export interface UpdateCollectionPointDTO

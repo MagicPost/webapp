@@ -1,6 +1,5 @@
 'use client';
 
-import { GetBasicBranchDTO } from '@/dtos/branches/branch.dto';
 import TableTemplate from '../../tables/TableTemplate';
 import { getColumns } from '../../tables/package-columns';
 import { Button } from '@/components/ui/button';
@@ -9,9 +8,7 @@ import { usePackages } from '../../context';
 import { Row } from '@tanstack/react-table';
 import { GetPackageDTO } from '@/dtos/package/package.dto';
 
-export default function DeliveringPackages({}: {
-  branch: Omit<GetBasicBranchDTO, 'address' | 'manager'>;
-}) {
+export default function DeliveringPackages() {
   const columns = getColumns({
     include: {
       select: true,

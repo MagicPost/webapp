@@ -37,8 +37,14 @@ export const Filter = ({
 
     const filtered = filter.province
       ? savedCollectionPoints.filter((item) => {
-          const matchProvince = item.province === filter.province;
-          const matchDistrict = !filter.district ? true : item.district === filter.district;
+          const matchProvince =
+            filter.province === 'ALL' ? true : item.province === filter.province;
+          const matchDistrict =
+            filter.province === 'ALL'
+              ? true
+              : !filter.district
+                ? true
+                : item.district === filter.district;
           const matchAddress = !filter.searchInput
             ? true
             : item.address.includes(filter.searchInput!);
@@ -62,20 +68,24 @@ export const Filter = ({
   useEffect(() => void doFilter(), [form.watch('searchInput')]);
 
   const provinceOptions = useMemo(() => {
-    return provinces.map((province) => {
-      return { label: province.name, value: province.name };
-    });
+    return [
+      { label: 'Tất cả', value: 'ALL' },
+      ...provinces.map((province) => {
+        return { label: province.name, value: province.name };
+      }),
+    ];
   }, []);
 
   const districtOptions = useMemo(() => {
     if (!form.watch('province')) return [];
-    return (
-      provinces
+    return [
+      { label: 'Tất cả', value: 'ALL' },
+      ...(provinces
         .filter((province) => province.name === form.watch('province'))[0]
         ?.districts.map((district) => {
           return { label: district.name, value: district.name };
-        }) || []
-    );
+        }) || []),
+    ];
   }, [form.watch('province')]);
 
   return (

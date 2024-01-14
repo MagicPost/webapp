@@ -24,6 +24,7 @@ export default function InnerPage({
   return (
     <ShipmentProvider
       value={{
+        branch,
         packagesMap,
         setPackagesMap,
         batchesMap,
@@ -47,7 +48,7 @@ export default function InnerPage({
         </TabsList>
         {tabs.map((tab, index) => (
           <TabsContent value={tab.value} key={index}>
-            {tab.produceComponent && tab.produceComponent({ branch })}
+            {tab.produceComponent && tab.produceComponent({})}
           </TabsContent>
         ))}
       </Tabs>

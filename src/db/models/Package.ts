@@ -11,7 +11,7 @@ import {
   TransitServiceTypes,
   PickupTime,
 } from '@/constants';
-import { getRandomBase64Id, getRandomIdWithPrefix } from '@/lib/random';
+import { getRandomIdWithPrefix } from '@/lib/random';
 import { Account } from './Account';
 
 @modelOptions({

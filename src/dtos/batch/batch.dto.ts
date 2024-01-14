@@ -8,3 +8,7 @@ export interface GetBatchDTO extends Pick<Batch, 'from' | 'to' | 'truckId' | 'st
   receivedTime?: string;
   packages: Pick<GetPackageDTO, '_id'>[];
 }
+
+export interface CreateBatchDTO extends Pick<Batch, 'from' | 'to' | 'truckId' | 'state'> {
+  packages: Pick<GetPackageDTO, '_id'>[];
+}

@@ -196,8 +196,6 @@ export default function InnerPage({
     }
   }, []);
 
-  // console.log('Reset ' + reset, onSubmit);
-
   return (
     <>
       <div className='mt-12 w-full p-4 lg:mt-0'>
@@ -262,7 +260,7 @@ export default function InnerPage({
         </div>
       </div>
 
-      <div className='item-center sticky bottom-0 z-10 flex h-24 flex-row items-center justify-between gap-2 overflow-auto border px-4 py-2 lg:px-20'>
+      <div className='item-center sticky bottom-0 z-10 flex h-24 flex-row items-center justify-between gap-2 overflow-auto border bg-background px-4 py-2 lg:px-20'>
         <div className='flex h-full max-w-[800px] flex-1 flex-row flex-wrap items-center justify-between gap-1  text-xs lg:p-2 lg:text-sm'>
           <div className='flex basis-[4rem] flex-col min-[400px]:basis-[8rem]'>
             <span>Khoảng cách:</span>
@@ -314,13 +312,19 @@ function SectionWrapper({
   footer?: React.ReactNode;
 }) {
   return (
-    <div className={`rounded-lg border border-red-500 ${footer ? 'pb-4' : 'pb-6'}`}>
-      <div className='border-b border-red-500 px-4 py-2'>
+    <div
+      className={`rounded-lg border border-orange-600 border-opacity-70 ${
+        footer ? 'pb-4' : 'pb-6'
+      }`}
+    >
+      <div className='border-b border-orange-600 border-opacity-70 px-4 py-2'>
         <h2 className='font-semibold uppercase'>{title}</h2>
       </div>
       {children}
 
-      {footer && <div className='mt-4 border-t border-red-500 px-4 py-2'>{footer}</div>}
+      {footer && (
+        <div className='mt-4 border-t border-orange-600 border-opacity-70 px-4 py-2'>{footer}</div>
+      )}
     </div>
   );
 }

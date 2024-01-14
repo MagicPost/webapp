@@ -20,11 +20,7 @@ export type TTab = {
   total?: number;
   icon: JSX.Element;
   iconContainerClassname?: string;
-  produceComponent?: ({
-    branch,
-  }: {
-    branch: Omit<GetBasicBranchDTO, 'address' | 'manager'>;
-  }) => JSX.Element;
+  produceComponent?: (props: any) => JSX.Element;
 };
 
 export type TPackagesMap = {

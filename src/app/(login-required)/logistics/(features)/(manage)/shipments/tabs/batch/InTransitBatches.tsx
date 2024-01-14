@@ -1,14 +1,11 @@
 'use client';
 
-import { GetBasicBranchDTO } from '@/dtos/branches/branch.dto';
 import TableTemplate from '../../tables/TableTemplate';
 import { getColumns } from '../../tables/batch-columns';
 import { useBatches } from '../../context';
 import { ETabValue } from '../../@types/tab';
 
-export default function InTransitBatches({}: {
-  branch: Omit<GetBasicBranchDTO, 'address' | 'manager'>;
-}) {
+export default function InTransitBatches() {
   const columns = getColumns({
     include: {
       receivedBranch: true,
