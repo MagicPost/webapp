@@ -39,8 +39,6 @@ async function getUser({
 
     const user = await AccountModel.findOne(filter).select('+password');
 
-    // console.log('filter', filter, 'user', user);
-
     if (!user) return null;
 
     const passwordsMatch = await bcrypt.compare(password, user.password);

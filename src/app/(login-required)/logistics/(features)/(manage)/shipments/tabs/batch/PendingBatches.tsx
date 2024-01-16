@@ -1,9 +1,8 @@
 'use client';
 
-import { GetBasicBranchDTO } from '@/dtos/branches/branch.dto';
 import TableTemplate from '../../tables/TableTemplate';
 import { getColumns } from '../../tables/batch-columns';
-import { useBatches, usePackages } from '../../context';
+import { useBatches } from '../../context';
 import { ETabValue } from '../../@types/tab';
 import {
   Dialog,
@@ -18,6 +17,8 @@ import { Row } from '@tanstack/react-table';
 import { GetBatchDTO } from '@/dtos/batch/batch.dto';
 import { Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { updateBatches } from '@/actions/batch/updateBatches';
+import { BatchStates } from '@/constants';
 
 export default function PendingBatches() {
   const columns = getColumns({
@@ -69,14 +70,26 @@ function ForwardDialog({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const onTransfer = () => {
+  const onTransfer = async () => {
     const updatedPendingBatches = pendingBatches.filter(
       (batch) => !selectedRows.some((row) => row.original._id === batch._id)
     );
 
+    await updateBatches(
+      selectedRows.map((row) => row.original._id),
+      {
+        state: BatchStates.IN_TRANSIT,
+        sentTime: new Date(),
+      }
+    );
+
     const updatedFowardingBatches = [
       ...(batchesMap[ETabValue.FORWARDING] || []),
-      ...selectedRows.map((row) => row.original),
+      ...selectedRows.map((row) => ({
+        ...row.original,
+        state: BatchStates.IN_TRANSIT,
+        sentTime: new Date().toISOString(),
+      })),
     ];
 
     setLoading(true);
@@ -90,12 +103,12 @@ function ForwardDialog({
       setOpen(false);
       toggleAllRowsSelected(false);
       toast.success('Xác nhận chuyển lô hàng thành công');
-    }, 1000);
+    }, 600);
   };
 
   return (
     <Dialog open={open} onOpenChange={(open) => setOpen(open)} defaultOpen={false}>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button variant='default' disabled={selectedRows.length === 0 || loading}>
           Chuyển tiếp
         </Button>

@@ -59,7 +59,6 @@ export default function ActivateToken() {
         setLoading(false);
       } catch (error) {
         setSuccess(false);
-        console.log(error);
         setLoading(false);
       }
     };

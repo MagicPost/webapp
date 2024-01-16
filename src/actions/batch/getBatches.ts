@@ -16,7 +16,7 @@ export const getBatches = catchAsync(async (filter) => {
   return {
     ok: true,
     message: 'Get batches successfully',
-    data: [],
+    data: batches,
   } satisfies ActionResponse;
 });
 

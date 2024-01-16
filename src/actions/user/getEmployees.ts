@@ -43,7 +43,6 @@ export const getEmployees = catchAsync(
       const temp = transformIntoGetUserDTO(employee as Account);
       return temp;
     });
-    // console.log(employees);
 
     return {
       ok: true,

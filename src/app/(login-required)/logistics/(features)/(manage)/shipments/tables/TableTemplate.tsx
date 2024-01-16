@@ -88,12 +88,6 @@ export default function TableTemplate<TData, TValue>({
             {table.getFilteredRowModel().rows.length} hàng được chọn.
           </div>
         )}
-        {/* <Input
-          placeholder='Tìm kiếm theo email...'
-          value={(table.getColumn('email')?.getFilterValue() as string) ?? ''}
-          onChange={(event) => table.getColumn('email')?.setFilterValue(event.target.value)}
-          className='w-full sm:max-w-sm'
-        /> */}
         {produceCustomComponent && produceCustomComponent({ table })}
       </div>
       <div className='rounded-md border'>

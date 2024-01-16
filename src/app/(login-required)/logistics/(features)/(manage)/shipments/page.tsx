@@ -22,9 +22,7 @@ export default async function ShipmentManagement() {
   ]);
 
   const packagesMap = getPackagesMap(packagesRes.data as GetPackageDTO[]);
-  const batchesMap = getBatchesMap(batchesRes.data as GetBatchDTO[]);
-
-  // console.log(packagesMap);
+  const batchesMap = getBatchesMap(batchesRes.data as GetBatchDTO[], branch);
 
   return (
     <div className='mt-12 w-full p-4 lg:mt-0'>
@@ -54,12 +52,20 @@ function getPackagesMap(packages: GetPackageDTO[]) {
   };
 }
 
-function getBatchesMap(batches: GetBatchDTO[]) {
+function getBatchesMap(
+  batches: GetBatchDTO[],
+  branch: Omit<GetBasicBranchDTO, 'address' | 'manager'>
+) {
   return {
     [ETabValue.PENDING_BATCH]:
       batches.filter((batch: GetBatchDTO) => batch.state === BatchStates.PENDING) || [],
     [ETabValue.GONNA_RECEIVE]:
-      batches.filter((batch: GetBatchDTO) => batch.state === BatchStates.IN_TRANSIT) || [],
+      batches.filter(
+        (batch: GetBatchDTO) =>
+          batch.state === BatchStates.IN_TRANSIT &&
+          batch.to.ref === branch._id &&
+          batch.to.type === branch.type
+      ) || [],
     [ETabValue.FORWARDING]:
       batches.filter((batch: GetBatchDTO) => batch.state === BatchStates.IN_TRANSIT) || [],
     [ETabValue.FORWARDED]:

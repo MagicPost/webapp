@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { PackageStates } from '@/constants';
 import { GetPackageDTO } from '@/dtos/package/package.dto';
-import { getViLocaleDateString } from '@/lib/time';
+import { getTimeString, getViLocaleDateString } from '@/lib/time';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
 
@@ -23,6 +23,7 @@ export const getColumns = ({
     sentBranch?: boolean;
     receivedBranch?: boolean;
     receivedTime?: boolean;
+    nextBranch?: boolean;
   };
 }) => {
   const cols: ColumnDef<GetPackageDTO>[] = [
@@ -58,12 +59,16 @@ export const getColumns = ({
     {
       accessorKey: 'senderAddress',
       header: 'Địa chỉ gửi',
-      cell: ({ row }) => row.original.sender.address,
+      cell: ({ row }) => (
+        <div className='min-w-[8rem] overflow-ellipsis'>{row.original.sender.address}</div>
+      ),
     },
     {
       accessorKey: 'receiverAddress',
       header: 'Địa chỉ nhận',
-      cell: ({ row }) => row.original.receiver.address,
+      cell: ({ row }) => (
+        <div className='min-w-[8rem] overflow-ellipsis'>{row.original.receiver.address}</div>
+      ),
     },
     {
       accessorKey: 'itemLength',
@@ -74,9 +79,6 @@ export const getColumns = ({
     },
     {
       accessorKey: 'createdAt',
-      cell: ({ row }) => {
-        return getViLocaleDateString(row.original.createdAt);
-      },
       header: ({ column }) => {
         return (
           <Button
@@ -84,10 +86,29 @@ export const getColumns = ({
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
             className='-ml-4'
           >
-            Ngày tạo
+            Thời gian tạo
             <ArrowUpDown className='ml-2 h-4 w-4' />
           </Button>
         );
+      },
+      cell: ({ row }) => {
+        return (
+          <span>
+            {getViLocaleDateString(row.original.createdAt)} {getTimeString(row.original.createdAt)}
+          </span>
+        );
+      },
+    },
+    {
+      accessorKey: 'nextBranch',
+      header: 'Điểm đến tiếp theo',
+      cell: ({ row }) => {
+        if (row.original.state !== PackageStates.PENDING__READY_TO_TRANSER) return 'N/A';
+        const nextBranch = row.original.tracking.find((log) => log.actions.length === 0);
+        return <div className='min-w-[6rem] overflow-ellipsis'>{nextBranch?.branch.name}</div>;
+      },
+      meta: {
+        hidden: !include.nextBranch,
       },
     },
     {

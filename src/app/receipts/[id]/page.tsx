@@ -36,7 +36,6 @@ export default function ReceiptPage({ params: { id } }: { params: { id: string }
       });
       if (!res.ok) setError(true);
       setPackageData(res.data);
-      console.log(res.data);
       setIsLoading(false);
     }
   }, []);

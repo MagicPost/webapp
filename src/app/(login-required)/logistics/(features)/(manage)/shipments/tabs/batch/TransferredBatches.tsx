@@ -26,7 +26,7 @@ export default function TransferredBatches() {
             {
               _id: '123',
               createdAt: '2021-09-09T00:00:00.000Z',
-              truckId: '123',
+              truckCode: '123',
               from: {
                 type: BranchTypes.COLLECTION_POINT,
                 name: 'Chi nhánh 1',

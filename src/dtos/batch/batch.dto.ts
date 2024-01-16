@@ -1,14 +1,13 @@
 import { Batch } from '@/db/models/Batch';
 import { GetPackageDTO } from '../package/package.dto';
 
-export interface GetBatchDTO extends Pick<Batch, 'from' | 'to' | 'truckId' | 'state'> {
-  _id: string;
+export interface GetBatchDTO extends Pick<Batch, '_id' | 'from' | 'to' | 'truckCode' | 'state'> {
   createdAt: string;
   sentTime?: string;
   receivedTime?: string;
-  packages: Pick<GetPackageDTO, '_id'>[];
+  packages: GetPackageDTO['_id'][];
 }
 
-export interface CreateBatchDTO extends Pick<Batch, 'from' | 'to' | 'truckId' | 'state'> {
-  packages: Pick<GetPackageDTO, '_id'>[];
+export interface CreateBatchDTO extends Pick<Batch, 'from' | 'to' | 'truckCode' | 'state'> {
+  packages: GetPackageDTO['_id'][];
 }

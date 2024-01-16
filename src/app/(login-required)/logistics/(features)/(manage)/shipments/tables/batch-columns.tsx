@@ -1,5 +1,6 @@
 'use client';
 
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -10,8 +11,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { BatchStates } from '@/constants';
 import { GetBatchDTO } from '@/dtos/batch/batch.dto';
-import { getViLocaleDateString } from '@/lib/time';
+import { getTimeString, getViLocaleDateString } from '@/lib/time';
+import { cn } from '@/lib/utils';
 import { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal } from 'lucide-react';
 
@@ -58,15 +61,16 @@ export const getColumns = ({
       cell: ({ row }) => row.original._id,
     },
     {
-      accessorKey: 'truckId',
+      accessorKey: 'truckCode',
       header: 'Mã xe tải',
+      cell: ({ row }) => row.original.truckCode,
     },
     {
       accessorKey: 'sentBranch',
       header: 'Chi nhánh gửi',
-      // cell: ({ row }) => {
-      //   return row.original.sentBranch.name;
-      // },
+      cell: ({ row }) => {
+        return row.original.from.name;
+      },
       meta: {
         hidden: !include.sentBranch,
       },
@@ -74,9 +78,9 @@ export const getColumns = ({
     {
       accessorKey: 'receivedBranch',
       header: 'Chi nhánh nhận',
-      // cell: ({ row }) => {
-      //   return row.original.receivedBranch.name;
-      // },
+      cell: ({ row }) => {
+        return row.original.to.name;
+      },
       meta: {
         hidden: !include.receivedBranch,
       },
@@ -84,33 +88,47 @@ export const getColumns = ({
     {
       accessorKey: 'packageNumber',
       header: 'Số lượng đơn hàng',
+      cell: ({ row }) => row.original.packages.length,
     },
     {
       accessorKey: 'createdAt',
-      cell: ({ row }) => {
-        return getViLocaleDateString(row.original.createdAt);
-      },
       header: 'Thời gian tạo',
+      cell: ({ row }) => {
+        return (
+          <span>
+            {getViLocaleDateString(row.original.createdAt)} {getTimeString(row.original.createdAt)}
+          </span>
+        );
+      },
       meta: {
         hidden: !include.sentTime,
       },
     },
     {
       accessorKey: 'sentTime',
-      cell: ({ row }) => {
-        return getViLocaleDateString(row.original.sentTime);
-      },
       header: 'Thời gian gửi',
+      cell: ({ row }) => {
+        return (
+          <span>
+            {getViLocaleDateString(row.original.sentTime)} {getTimeString(row.original.sentTime)}
+          </span>
+        );
+      },
       meta: {
         hidden: !include.sentTime,
       },
     },
     {
       accessorKey: 'receivedTime',
-      cell: ({ row }) => {
-        return getViLocaleDateString(row.original.receivedTime);
-      },
       header: 'Thời gian nhận',
+      cell: ({ row }) => {
+        return (
+          <span>
+            {getViLocaleDateString(row.original.receivedTime)}{' '}
+            {getTimeString(row.original.receivedTime)}
+          </span>
+        );
+      },
       meta: {
         hidden: !include.receivedTime,
       },
@@ -118,6 +136,27 @@ export const getColumns = ({
     {
       accessorKey: 'state',
       header: 'Trạng thái',
+      cell: ({ row }) => {
+        return (
+          <div className='w-32 text-left'>
+            <Badge
+              className={cn('select-none', {
+                'bg-gray-500 hover:bg-gray-400': row.original.state === BatchStates.PENDING,
+                'bg-blue-700 hover:bg-blue-600': row.original.state === BatchStates.IN_TRANSIT,
+                'bg-green-700 hover:bg-green-600': row.original.state === BatchStates.ARRIVED,
+              })}
+            >
+              {
+                {
+                  [BatchStates.PENDING]: 'Chưa xử lý',
+                  [BatchStates.IN_TRANSIT]: 'Đang vận chuyển',
+                  [BatchStates.ARRIVED]: 'Đã nhận',
+                }[row.original.state]
+              }
+            </Badge>
+          </div>
+        );
+      },
     },
     {
       accessorKey: 'actions',
@@ -134,8 +173,6 @@ export const getColumns = ({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end'>
-              <DropdownMenuLabel>Thao tác</DropdownMenuLabel>
-              <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => {}}>Xem chi tiết</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

@@ -11,11 +11,11 @@ import { getRandomIdWithPrefix } from '@/lib/random';
   },
 })
 export class Batch extends TimeStamps {
-  @prop({ required: true, default: () => getRandomIdWithPrefix('B-', 3) })
+  @prop({ required: true, type: () => String, default: () => getRandomIdWithPrefix('B-', 3) })
   public _id: string;
 
   @prop({ required: true })
-  public truckId!: string;
+  public truckCode!: string;
 
   @prop({ required: true })
   public from: {
@@ -31,8 +31,8 @@ export class Batch extends TimeStamps {
     ref: string;
   };
 
-  @prop({ required: true, ref: () => Package, default: [] })
-  public packages: Ref<Package>[];
+  @prop({ required: true, ref: () => Package, default: [], type: () => [String] })
+  public packages: Ref<Package, string>[];
 
   @prop({
     required: true,
@@ -42,9 +42,9 @@ export class Batch extends TimeStamps {
   })
   public state: BatchStates;
 
-  @prop({ required: false, default: () => new Date() })
+  @prop({ required: false })
   public sentTime: Date;
 
-  @prop({ required: false, default: () => new Date() })
+  @prop({ required: false })
   public receivedTime: Date;
 }

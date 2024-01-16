@@ -1,15 +1,14 @@
 'use client';
 
-import { GetBasicBranchDTO } from '@/dtos/branches/branch.dto';
 import TableTemplate from '../../tables/TableTemplate';
 import { getColumns } from '../../tables/package-columns';
-import { BatchStates, BranchTypes, PackageStates } from '@/constants';
+import { BatchStates, PackageStates } from '@/constants';
 import { Button } from '@/components/ui/button';
 import { ETabValue } from '../../@types/tab';
 import { useBatches, useBranch, usePackages } from '../../context';
 import { Row } from '@tanstack/react-table';
 import { GetPackageDTO } from '@/dtos/package/package.dto';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import {
   Dialog,
@@ -19,7 +18,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import toast from 'react-hot-toast';
-import { CreateBatchDTO, GetBatchDTO } from '@/dtos/batch/batch.dto';
+import { CreateBatchDTO } from '@/dtos/batch/batch.dto';
 import {
   Select,
   SelectContent,
@@ -28,11 +27,15 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
+import CustomAlert from '@/components/main/CustomAlert';
+import { createNewBatch } from '@/actions/batch/createNewBatch';
+import { updateBatch } from '@/actions/batch/updateBatch';
 
 export default function PendingPackages() {
   const columns = getColumns({
     include: {
       select: true,
+      nextBranch: true,
     },
   });
 
@@ -59,7 +62,7 @@ export default function PendingPackages() {
           );
 
           return (
-            <div className='flex justify-end gap-2'>
+            <div className='flex flex-col justify-end gap-2 sm:flex-row'>
               <CreateBatchDialog
                 canTransfer={canTransfer}
                 selectedRows={selectedRows}
@@ -100,50 +103,87 @@ function CreateBatchDialog({
   const [loading, setLoading] = useState(false);
 
   const [batchId, setBatchId] = useState('');
-  const [truckId, setTruckId] = useState('');
+  const [truckCode, setTruckCode] = useState('');
 
   const branchCode = branch && branch.name.replace('Điểm giao dịch ', '').split(' ')[0];
 
-  const onCreateBatch = () => {
+  const hasSameNextBranch = useMemo(() => {
+    const nextBranches = selectedRows.map((row) => {
+      const nextBranch = row.original.tracking.find((log) => log.actions.length === 0);
+      return nextBranch?.branch.ref;
+    });
+    return nextBranches.every((branch) => branch === nextBranches[0]);
+  }, [selectedRows]);
+
+  const onCreateBatch = async () => {
     const updatedPendingPackages = pendingPackages.filter(
       (item) => !selectedRows.some((row) => row.original._id === item._id)
     );
 
-    const newBatch: CreateBatchDTO = {
-      truckId,
-      packages: selectedRows.map((row) => row.original),
-      from: {
-        type: BranchTypes.TRANSACTION_POINT,
-        ref: 'from',
-        name: 'Chi nhánh gửi',
-      },
-      to: {
-        type: BranchTypes.TRANSACTION_POINT,
-        ref: 'to',
-        name: 'Chi nhánh nhận',
-      },
-      state: BatchStates.PENDING,
-    };
-
-    const updatedPendingBatches = [...(batchesMap[ETabValue.PENDING_BATCH] || []), newBatch];
-
-    console.log(newBatch);
+    const nextBranch = selectedRows[0].original.tracking.find((log) => log.actions.length === 0)
+      ?.branch;
 
     setLoading(true);
-    // setPackagesMap({
-    //   ...packagesMap,
-    //   [ETabValue.PENDING_PACKAGE]: updatedPendingPackages,
-    // });
-    // setBatchesMap({
-    //   ...batchesMap,
-    //   [ETabValue.PENDING_BATCH]: updatedPendingBatches,
-    // });
+
+    if (batchId === 'new') {
+      const payload: CreateBatchDTO = {
+        truckCode,
+        packages: selectedRows.map((row) => row.original._id),
+        from: {
+          type: branch?.type!,
+          ref: branch?._id || '',
+          name: branch?.name || '',
+        },
+        to: {
+          type: nextBranch?.type!,
+          ref: nextBranch?.ref || '',
+          name: nextBranch?.name || '',
+        },
+        state: BatchStates.PENDING,
+      };
+      const newBatch = (await createNewBatch(payload))?.data;
+
+      const updatedPendingBatches = [...(batchesMap[ETabValue.PENDING_BATCH] || []), newBatch];
+      setBatchesMap({
+        ...batchesMap,
+        [ETabValue.PENDING_BATCH]: updatedPendingBatches,
+      });
+    } else {
+      const updatingPromise = batchesMap[ETabValue.PENDING_BATCH]?.map(async (batch) => {
+        if (batch._id === batchId) {
+          await updateBatch(batchId, {
+            $push: {
+              packages: selectedRows.map((row) => row.original),
+            },
+          });
+          return {
+            ...batch,
+            packages: [...batch.packages, ...selectedRows.map((row) => row.original._id)],
+          };
+        }
+        return batch;
+      });
+
+      if (!updatingPromise) throw new Error('No batch to update');
+
+      const updatedPendingBatches = await Promise.all(updatingPromise);
+
+      setBatchesMap({
+        ...batchesMap,
+        [ETabValue.PENDING_BATCH]: updatedPendingBatches,
+      });
+    }
+
+    setPackagesMap({
+      ...packagesMap,
+      [ETabValue.PENDING_PACKAGE]: updatedPendingPackages,
+    });
     setTimeout(() => {
       setLoading(false);
       setOpen(false);
       toggleAllRowsSelected(false);
       toast.success('Thêm vào lô hàng thành công');
-    }, 1000);
+    }, 700);
   };
 
   return (
@@ -152,7 +192,7 @@ function CreateBatchDialog({
       onOpenChange={(open) => selectedRows.length !== 0 && setOpen(open)}
       defaultOpen={false}
     >
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button variant='default' disabled={!canTransfer || selectedRows.length === 0 || loading}>
           Thêm lô hàng chuyển tiếp
         </Button>
@@ -160,13 +200,20 @@ function CreateBatchDialog({
       <DialogContent className='flex flex-col items-center justify-center space-y-2'>
         <DialogHeader className='text-lg font-semibold'>Thêm vào lô hàng chuyển tiếp</DialogHeader>
 
+        {!hasSameNextBranch && (
+          <CustomAlert
+            variant='destructive'
+            title='Các đơn hàng đã chọn không cùng điểm đến tiếp theo'
+          />
+        )}
+
         <div className='space-y-2'>
           <div className='flex flex-row items-center justify-center gap-4'>
             <Label className='w-[6rem] text-right'>Chọn lô hàng:</Label>
             <Select
               onValueChange={(value) => {
                 setBatchId(value);
-                if (value !== 'new') setTruckId('');
+                if (value !== 'new') setTruckCode('');
               }}
             >
               <SelectTrigger className='w-[6rem] sm:w-[12rem]'>
@@ -174,7 +221,11 @@ function CreateBatchDialog({
               </SelectTrigger>
               <SelectContent side='right'>
                 <SelectItem value='new'>Tạo lô hàng mới</SelectItem>
-                <SelectItem value='1223'>B-32323</SelectItem>
+                {batchesMap[ETabValue.PENDING_BATCH]?.map((batch, index) => (
+                  <SelectItem key={index} value={batch._id}>
+                    {batch._id}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -182,14 +233,14 @@ function CreateBatchDialog({
           {batchId === 'new' && (
             <div className='flex flex-row items-center justify-center gap-4'>
               <Label className='w-[6rem] text-right'>Chọn xe tải:</Label>
-              <Select onValueChange={(value) => setTruckId(value)}>
+              <Select onValueChange={(value) => setTruckCode(value)}>
                 <SelectTrigger className='w-[6rem] sm:w-[12rem]'>
                   <SelectValue placeholder='Chọn xe' />
                 </SelectTrigger>
                 <SelectContent side='right'>
-                  <SelectItem value='truck-1'>Xe {branchCode}-1</SelectItem>
-                  <SelectItem value='truck-2'>Xe {branchCode}-2</SelectItem>
-                  <SelectItem value='truck-3'>Xe {branchCode}-3</SelectItem>
+                  <SelectItem value={`${branchCode}-1`}>Xe {branchCode}-1</SelectItem>
+                  <SelectItem value={`${branchCode}-2`}>Xe {branchCode}-2</SelectItem>
+                  <SelectItem value={`${branchCode}-3`}>Xe {branchCode}-3</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -204,7 +255,8 @@ function CreateBatchDialog({
               selectedRows.length === 0 ||
               loading ||
               !batchId ||
-              (batchId === 'new' && !truckId)
+              (batchId === 'new' && !truckCode) ||
+              !hasSameNextBranch
             }
             onClick={() => {
               if (!canTransfer || selectedRows.length === 0) return;
@@ -268,7 +320,7 @@ function DeliverDialog({
       onOpenChange={(open) => selectedRows.length !== 0 && setOpen(open)}
       defaultOpen={false}
     >
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button variant='default' disabled={!canDeliver || selectedRows.length === 0 || loading}>
           Giao hàng
         </Button>

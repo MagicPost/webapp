@@ -123,7 +123,7 @@ class Services {
   },
 })
 export class Package extends TimeStamps {
-  @prop({ required: true, default: () => getRandomIdWithPrefix('MP-') })
+  @prop({ required: true, type: () => String, default: () => getRandomIdWithPrefix('MP-') })
   public _id: string;
 
   @prop({ required: true, enum: PackageTypes, type: () => String })
