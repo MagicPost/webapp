@@ -28,7 +28,7 @@ const kpiCards: KpiCardProps[] = [
   },
 ];
 
-export default function CollectionPointPage() {
+export default function CollectionPointPage({ branchId }: { branchId: string }) {
   return (
     <div className='mt-4'>
       <div className='flex w-full flex-row flex-wrap items-stretch gap-2 md:flex-nowrap'>

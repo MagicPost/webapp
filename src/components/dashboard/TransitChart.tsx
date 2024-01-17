@@ -2,51 +2,81 @@
 
 import Chart from 'react-apexcharts';
 
-const data = {
-  series: [44, 55, 13, 43, 22],
-  chartOptions: {
-    chart: {
-      width: '300',
-      type: 'pie' as const,
-    },
-    legend: {
-      position: 'bottom' as const,
-    },
-    labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E'],
-    responsive: [
-      {
-        breakpoint: 480,
-        options: {
-          chart: {
-            width: 280,
-          },
-        },
-      },
-      {
-        breakpoint: 340,
-        options: {
-          chart: {
-            width: 200,
-          },
-        },
-      },
-    ],
-  },
-};
-
 export default function TransitChart({
   legend,
+  data,
 }: {
   legend: {
     title: string;
   };
+  data: {
+    series: number[];
+    labels: string[];
+  };
 }) {
+  const chartData = {
+    series: data.series,
+    chartOptions: {
+      chart: {
+        width: '300',
+        type: 'pie' as const,
+      },
+      legend: {
+        position: 'right' as const,
+      },
+      labels: data.labels,
+      responsive: [
+        {
+          breakpoint: 1300,
+          options: {
+            chart: {
+              width: 360,
+            },
+            legend: {
+              position: 'bottom' as const,
+            },
+          },
+        },
+        {
+          breakpoint: 780,
+          options: {
+            chart: {
+              width: 500,
+            },
+            legend: {
+              position: 'right' as const,
+            },
+          },
+        },
+        {
+          breakpoint: 560,
+          options: {
+            chart: {
+              width: 460,
+            },
+            legend: {
+              position: 'bottom' as const,
+            },
+          },
+        },
+        {
+          breakpoint: 360,
+          options: {
+            chart: {
+              width: 200,
+            },
+          },
+        },
+      ],
+    },
+  };
+
   return (
     <div>
       <p className='text-lg font-bold'>{legend.title}</p>
       <Chart
-        options={data.chartOptions}
-        series={data.series}
+        options={chartData.chartOptions}
+        series={chartData.series}
         type='pie'
         width='500'
         height={'400'}

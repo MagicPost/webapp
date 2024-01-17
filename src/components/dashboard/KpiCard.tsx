@@ -1,3 +1,5 @@
+import { formatRate } from '@/app/(login-required)/logistics/(features)/(home)/dashboard/utils';
+
 export type KpiCardProps = {
   title: string;
   value: number | string;
@@ -24,8 +26,12 @@ export default function KpiCard({
           {value} <span className='text-xl font-bold'>{valueUnit}</span>
         </span>
         <span className='text-sm font-light'>
-          {valueChange > 0 && '+'}
-          {valueChange}
+          {valueChange >= 0 && '+'}
+          {valueChange === Infinity ? (
+            <span className=' text-xl font-light'>{formatRate(valueChange)}</span>
+          ) : (
+            formatRate(valueChange)
+          )}
           {valueChangeUnit} so với tháng trước
         </span>
       </div>

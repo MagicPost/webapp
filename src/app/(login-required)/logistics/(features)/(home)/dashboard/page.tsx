@@ -24,9 +24,9 @@ export default async function DashboardPage() {
     <div className='mt-12 p-4 lg:mt-0'>
       <h1 className='mb-4 text-2xl font-bold'>Thống kê</h1>
       {branch.type === BranchTypes.COLLECTION_POINT ? (
-        <CollectionPointPage />
+        <CollectionPointPage branchId={branch._id} />
       ) : (
-        <TransactionPointPage />
+        <TransactionPointPage branchId={branch._id} />
       )}
     </div>
   );
