@@ -88,7 +88,13 @@ export const sendActivationMail = async ({
             `,
     };
 
-    await transporter.sendMail(mailOptions);
+    await new Promise((resolve, reject) => {
+      transporter.sendMail(mailOptions, (err, info) => {
+        if (err) reject(err);
+        else resolve(info);
+      });
+    });
+
     return {
       ok: true,
       message: 'Email xác thực đã được gửi!',
