@@ -17,6 +17,7 @@ const availableRoutes: { [key: string]: any } = {
 };
 
 export const authConfig = {
+  trustHost: true,
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;

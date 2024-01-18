@@ -48,7 +48,7 @@ export default function SearchResult({ packageId }: { packageId: string }) {
       if (acc) return acc + ', ' + item.name;
       return item.name as string;
     }, '' as string);
-  }, [packageData, packageId]);
+  }, [packageData]);
 
   const packageStatus:
     | PackageTrackingActions.CREATED
@@ -75,7 +75,7 @@ export default function SearchResult({ packageId }: { packageId: string }) {
       }
     }
     return status;
-  }, [packageData, packageId]);
+  }, [packageData]);
 
   if (loading) {
     return <Loading text={'Đang tải...'} className='mt-12' />;
