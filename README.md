@@ -77,3 +77,8 @@ Mẫu:
 ```bash
 feat(app): add login page
 ```
+
+```bash
+sudo docker build -t uet/magicpost .
+sudo docker run -p 3000:3000 uet/magicpost
+```

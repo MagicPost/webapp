@@ -4,7 +4,7 @@ import dbConnect from '@/db/dbConnect';
 import { AccountModel } from '@/db/models';
 import { GetUserDTO } from '@/dtos/user/user.dto';
 import { ActionResponse } from '../_helpers/types';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { AES, enc } from 'crypto-js';
 import { Account } from '@/db/models/Account';
 import { transformObjectIdFromLeanedDoc } from '@/lib/mongo';

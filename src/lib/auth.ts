@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { BranchTypes, Roles } from '@/constants';
 import dbConnect from '@/db/dbConnect';
 import { AccountModel } from '@/db/models';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { transformIntoGetUserDTO, GetUserDTO } from '@/dtos/user/user.dto';
 
 import NextAuth from 'next-auth';

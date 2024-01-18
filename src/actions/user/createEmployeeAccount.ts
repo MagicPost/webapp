@@ -5,7 +5,7 @@ import dbConnect from '@/db/dbConnect';
 import { AccountModel } from '@/db/models';
 import { CreateUserDTO } from '@/dtos/user/user.dto';
 import { ActionResponse } from '../_helpers/types';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { sendActivationMail } from '../mail';
 import { catchAsync } from '../_helpers/catchAsync';
 import { transformObjectIdFromLeanedDoc } from '@/lib/mongo';
