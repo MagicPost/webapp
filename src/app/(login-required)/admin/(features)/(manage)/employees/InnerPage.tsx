@@ -1,7 +1,7 @@
 'use client';
 
 import { GetUserDTO } from '@/dtos/user/user.dto';
-import { columns } from './_components/EmployeeColumns';
+import { columns } from './_components/columns';
 import EmployeeTable from './_components/EmployeeTable';
 import { DisplayCollectionPointDTO } from '@/dtos/branches/collection-point.dto';
 import { DisplayTransactionPointDTO } from '@/dtos/branches/transaction-point.dto';
