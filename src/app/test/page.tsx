@@ -2,7 +2,7 @@ import { sendActivationMail } from '@/actions/mail';
 import { BranchTypes, Roles } from '@/constants';
 
 export default async function TestPage() {
-  await sendActivationMail({
+  const res = await sendActivationMail({
     email: 'dat.roy.2003@gmail.com',
     role: Roles.STAFF,
     branch: {
@@ -10,6 +10,7 @@ export default async function TestPage() {
       _id: '659f65265213cf79ffc6bf33',
     },
   });
+  console.log(res);
   return (
     <div>
       <h1>Test Page</h1>
