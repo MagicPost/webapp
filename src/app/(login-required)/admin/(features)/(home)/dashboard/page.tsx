@@ -1,9 +1,24 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CountryTab from './tabs/country';
-import CollectionPointTab from './tabs/collection-point';
-import TransactionPointTab from './tabs/transaction-point';
+import CollectionPointTab from './tabs/collection_point';
+import TransactionPointTab from './tabs/transaction_point';
+import { getBasicBranches } from '@/actions/branch/getBasicBranches';
+import { DisplayCollectionPointDTO } from '@/dtos/branches/collection-point.dto';
+import { DisplayTransactionPointDTO } from '@/dtos/branches/transaction-point.dto';
 
-export default function DashboardPage() {
+type Branches = {
+  collectionPoints: DisplayCollectionPointDTO[];
+  transactionPoints: DisplayTransactionPointDTO[];
+};
+
+export default async function DashboardPage() {
+  const branches: Branches = (
+    await getBasicBranches({
+      withCollectionPoints: true,
+      withTransactionPoints: true,
+    })
+  )?.data;
+
   return (
     <div className='p-4'>
       <h1 className='mb-4 text-2xl font-bold'>Thống kê</h1>
@@ -24,10 +39,10 @@ export default function DashboardPage() {
           <CountryTab />
         </TabsContent>
         <TabsContent value='collection-points'>
-          <CollectionPointTab />
+          <CollectionPointTab collectionPoints={branches.collectionPoints} />
         </TabsContent>
         <TabsContent value='transaction-points'>
-          <TransactionPointTab />
+          <TransactionPointTab branches={branches} />
         </TabsContent>
       </Tabs>
     </div>

@@ -2,8 +2,8 @@ import { getBranchOf } from '@/actions/branch/getBranchOf';
 import { BranchTypes } from '@/constants';
 import { GetBasicBranchDTO } from '@/dtos/branches/branch.dto';
 import { auth } from '@/lib/auth';
-import CollectionPointPage from './pages/collection-point';
-import TransactionPointPage from './pages/transaction-point';
+import CollectionPointPage from './pages/collection_point';
+import TransactionPointPage from './pages/transaction_point';
 
 export default async function DashboardPage() {
   const session = await auth();

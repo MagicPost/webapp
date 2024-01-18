@@ -15,3 +15,9 @@ export const getLastMonth = () => {
     end: new Date(today.getFullYear(), today.getMonth(), 0),
   };
 };
+
+export const getThisDayLastYear = () => {
+  const today = new Date();
+  const lastYear = new Date(today.getFullYear(), today.getMonth() - 12, today.getDate());
+  return lastYear;
+};

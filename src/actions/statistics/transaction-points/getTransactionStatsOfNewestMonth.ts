@@ -5,6 +5,7 @@ import { catchAsync } from '../../_helpers/catchAsync';
 import { ActionResponse } from '../../_helpers/types';
 import { BatchModel, PackageModel } from '@/db/models';
 import { getLastMonth, getThisMonth } from '../../_helpers/time';
+import { getGrowRate } from '@/actions/_helpers/rate';
 
 type FieldProps = {
   newest: number;
@@ -146,12 +147,4 @@ async function calculatePostagesByMonth(branchId: string, month: { start: Date; 
     },
   }).select('postages');
   return postages.reduce((acc, curr) => acc + curr.postages.main + curr.postages.plus, 0);
-}
-
-/* =========================== */
-
-function getGrowRate(currentValue: number, previousValue: number) {
-  if (currentValue === 0 && previousValue === 0) return 0;
-  if (previousValue === 0) return Infinity;
-  return (currentValue - previousValue) / previousValue;
 }
