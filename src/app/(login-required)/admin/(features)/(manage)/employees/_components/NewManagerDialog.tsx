@@ -134,18 +134,18 @@ function NewManagerForm({
       setLoading(true);
       const res = await createEmployeeAccount(payload);
 
-      if (data.branchType === BranchTypes.COLLECTION_POINT) {
-        await updateCollectionPoint(data.collectionPointId, {
-          manager: res?.data._id,
-        });
-      } else {
-        await updateTransactionPoint(data.transactionPointId, {
-          manager: res?.data._id,
-        });
-      }
-
       if (!res?.ok) throw res?.message as string;
       else {
+        if (data.branchType === BranchTypes.COLLECTION_POINT) {
+          await updateCollectionPoint(data.collectionPointId, {
+            manager: res?.data._id,
+          });
+        } else {
+          await updateTransactionPoint(data.transactionPointId, {
+            manager: res?.data._id,
+          });
+        }
+
         toast.success(res?.message);
         const branchName =
           data.branchType === BranchTypes.COLLECTION_POINT

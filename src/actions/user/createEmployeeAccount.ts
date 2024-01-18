@@ -23,9 +23,8 @@ export const createEmployeeAccount = catchAsync(async (createUserDTO: CreateUser
   if (emailExists)
     return {
       ok: false,
-      status: 400,
       message: 'Email đã tồn tại!',
-    };
+    } satisfies ActionResponse;
 
   const password = bcrypt.hashSync(DEFAULT_PASSWORD, 12);
   const branch = {
