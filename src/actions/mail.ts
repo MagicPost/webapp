@@ -22,6 +22,8 @@ const transporter = nodemailer.createTransport({
     user: process.env.MAIL_USER,
     pass: process.env.MAIL_PASSWORD,
   },
+  port: 2003,
+  secure: true,
 });
 
 export const sendActivationMail = async ({
