@@ -5,6 +5,9 @@ import { auth } from '@/lib/auth';
 import CollectionPointPage from './pages/collection_point';
 import TransactionPointPage from './pages/transaction_point';
 
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+
 export default async function DashboardPage() {
   const session = await auth();
 

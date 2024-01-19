@@ -1,9 +1,8 @@
 'use client';
 
-import { GetBasicBranchDTO } from '@/dtos/branches/branch.dto';
 import TableTemplate from '../../tables/TableTemplate';
 import { getColumns } from '../../tables/batch-columns';
-import { useBatches } from '../../context';
+import { useBatches, useBranch, usePackages } from '../../context';
 import { ETabValue } from '../../@types/tab';
 import { Row } from '@tanstack/react-table';
 import { GetBatchDTO } from '@/dtos/batch/batch.dto';
@@ -18,10 +17,14 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
+import { addPackageTrackingAction } from '@/actions/package/addPackageTrackingAction';
+import { BatchStates, PackageTrackingActions } from '@/constants';
+import { updateBatches } from '@/actions/batch/updateBatches';
 
 export default function AwaitingBatches() {
   const columns = getColumns({
     include: {
+      select: true,
       sentBranch: true,
     },
   });
@@ -63,20 +66,60 @@ function ReceiveDialog({
   awaitingBatches: GetBatchDTO[];
   toggleAllRowsSelected: (isSelected: boolean) => void;
 }) {
+  const { branch } = useBranch();
+  const { batchesMap, setBatchesMap } = useBatches();
+  const { packagesMap, setPackagesMap } = usePackages();
+
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleReceive = async () => {
     setLoading(true);
-    try {
-      toggleAllRowsSelected(false);
-      toast.success('Tiếp nhận lô hàng thành công');
-    } catch (error) {
-      toast.error('Tiếp nhận lô hàng thất bại');
-    } finally {
+
+    const updatedAwaitingBatches = awaitingBatches.filter(
+      (batch) => !selectedRows.some((row) => row.original._id === batch._id)
+    );
+    setBatchesMap({
+      ...batchesMap,
+      [ETabValue.GONNA_RECEIVE]: updatedAwaitingBatches,
+    });
+
+    await Promise.all(
+      selectedRows.map((row) =>
+        updateBatches([row.original._id], {
+          state: BatchStates.ARRIVED,
+          receivedTime: new Date(),
+        })
+      )
+    );
+
+    for (const row of selectedRows) {
+      const res = await Promise.all(
+        row.original.packages.map((packageId) =>
+          addPackageTrackingAction({
+            _id: packageId,
+            branchId: branch?._id,
+            actionType: PackageTrackingActions.ARRIVED,
+          })
+        )
+      );
+      const packages = res.map((res) => res.data);
+
+      setPackagesMap({
+        ...packagesMap,
+        [ETabValue.PENDING_PACKAGE]: [
+          ...(packagesMap[ETabValue.PENDING_PACKAGE] || []),
+          ...packages,
+        ],
+      });
+    }
+
+    setTimeout(() => {
       setLoading(false);
       setOpen(false);
-    }
+      toggleAllRowsSelected(false);
+      toast.success('Tiếp nhận lô hàng thành công');
+    }, 200);
   };
 
   return (

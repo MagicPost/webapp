@@ -9,6 +9,9 @@ import InnerPage from './InnerPage';
 import { ETabValue } from './@types/tab';
 import { getAllBatchesOfBranch } from '@/actions/batch/getBatches';
 
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+
 export default async function ShipmentManagement() {
   const session = await auth();
   let res = await getBranchOf({
@@ -67,7 +70,12 @@ function getBatchesMap(
           batch.to.type === branch.type
       ) || [],
     [ETabValue.FORWARDING]:
-      batches.filter((batch: GetBatchDTO) => batch.state === BatchStates.IN_TRANSIT) || [],
+      batches.filter(
+        (batch: GetBatchDTO) =>
+          batch.state === BatchStates.IN_TRANSIT &&
+          batch.from.ref === branch._id &&
+          batch.from.type === branch.type
+      ) || [],
     [ETabValue.FORWARDED]:
       batches.filter((batch: GetBatchDTO) => batch.state === BatchStates.ARRIVED) || [],
   };

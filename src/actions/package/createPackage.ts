@@ -14,7 +14,7 @@ import { auth } from '@/lib/auth';
 import { CreatePackageDTO, GetPackageDTO } from '@/dtos/package/package.dto';
 import { GetUserDTO } from '@/dtos/user/user.dto';
 import { getTransportRoutes } from '@/lib/transport-route';
-import { BranchTypes, PackageTrackingActions } from '@/constants';
+import { BranchTypes, PackageStates, PackageTrackingActions } from '@/constants';
 import { BranchInfo } from '@/db/models/Package';
 
 export const createPackage = catchAsync(async (createPackageDTO: CreatePackageDTO) => {
@@ -71,6 +71,10 @@ export const createPackage = catchAsync(async (createPackageDTO: CreatePackageDT
       pickupTime: createPackageDTO.service?.pickupTime,
     },
     items: createPackageDTO.package?.items,
+    state:
+      tracking.length === 1
+        ? PackageStates.PENDING__READY_TO_DELIVER
+        : PackageStates.PENDING__READY_TO_TRANSER,
     tracking,
   };
 

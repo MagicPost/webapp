@@ -3,6 +3,8 @@ import LoginForm from '@/components/auth/LoginForm';
 import { Badge } from '@/components/ui/badge';
 import LoginLayout from '@/components/auth/LoginForm/LoginLayout';
 
+export const fetchCache = 'force-no-store';
+
 export default function LoginPage() {
   return (
     <LoginLayout>

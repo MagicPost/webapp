@@ -2,7 +2,7 @@
 
 import TableTemplate from '../../tables/TableTemplate';
 import { getColumns } from '../../tables/package-columns';
-import { BatchStates, PackageStates } from '@/constants';
+import { BatchStates, BranchTypes, PackageStates, PackageTrackingActions } from '@/constants';
 import { Button } from '@/components/ui/button';
 import { ETabValue } from '../../@types/tab';
 import { useBatches, useBranch, usePackages } from '../../context';
@@ -30,6 +30,7 @@ import { Label } from '@/components/ui/label';
 import CustomAlert from '@/components/main/CustomAlert';
 import { createNewBatch } from '@/actions/batch/createNewBatch';
 import { updateBatch } from '@/actions/batch/updateBatch';
+import { addPackageTrackingAction } from '@/actions/package/addPackageTrackingAction';
 
 export default function PendingPackages() {
   const columns = getColumns({
@@ -39,6 +40,7 @@ export default function PendingPackages() {
     },
   });
 
+  const { branch } = useBranch();
   const { packagesMap } = usePackages();
   const pendingPackages = packagesMap?.[ETabValue.PENDING_PACKAGE] || [];
 
@@ -70,12 +72,14 @@ export default function PendingPackages() {
                 toggleAllRowsSelected={table.toggleAllRowsSelected}
               />
 
-              <DeliverDialog
-                pendingPackages={pendingPackages}
-                canDeliver={canDeliver}
-                selectedRows={selectedRows}
-                toggleAllRowsSelected={table.toggleAllRowsSelected}
-              />
+              {branch?.type === BranchTypes.TRANSACTION_POINT && (
+                <DeliverDialog
+                  pendingPackages={pendingPackages}
+                  canDeliver={canDeliver}
+                  selectedRows={selectedRows}
+                  toggleAllRowsSelected={table.toggleAllRowsSelected}
+                />
+              )}
             </div>
           );
         }}
@@ -105,7 +109,8 @@ function CreateBatchDialog({
   const [batchId, setBatchId] = useState('');
   const [truckCode, setTruckCode] = useState('');
 
-  const branchCode = branch && branch.name.replace('Điểm giao dịch ', '').split(' ')[0];
+  const branchCode =
+    branch && branch.name.replace(/Điểm giao dịch |Điểm tập kết /, '').split(' ')[0];
 
   const hasSameNextBranch = useMemo(() => {
     const nextBranches = selectedRows.map((row) => {
@@ -183,13 +188,21 @@ function CreateBatchDialog({
       setOpen(false);
       toggleAllRowsSelected(false);
       toast.success('Thêm vào lô hàng thành công');
-    }, 700);
+    }, 200);
   };
 
   return (
     <Dialog
       open={open}
-      onOpenChange={(open) => selectedRows.length !== 0 && setOpen(open)}
+      onOpenChange={(open) => {
+        if (selectedRows.length !== 0) {
+          setOpen(open);
+          if (!open) {
+            setBatchId('');
+            setTruckCode('');
+          }
+        }
+      }}
       defaultOpen={false}
     >
       <DialogTrigger asChild>
@@ -286,18 +299,30 @@ function DeliverDialog({
   selectedRows: Row<GetPackageDTO>[];
   toggleAllRowsSelected: (value?: boolean) => void;
 }) {
+  const { branch } = useBranch();
   const { packagesMap, setPackagesMap } = usePackages();
 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const onDeliver = () => {
+  const onDeliver = async () => {
     const updatedPendingPackages = pendingPackages.filter(
       (item) => !selectedRows.some((row) => row.original._id === item._id)
     );
+
+    const updatedResults = await Promise.all(
+      selectedRows.map((row) =>
+        addPackageTrackingAction({
+          _id: row.original._id,
+          branchId: branch?._id,
+          actionType: PackageTrackingActions.DELIVERING,
+        })
+      )
+    );
+
     const updatedDeliveringPackages = [
       ...packagesMap[ETabValue.DELIVERING]!,
-      ...selectedRows.map((row) => row.original),
+      ...updatedResults.map((item) => item.data),
     ];
 
     setLoading(true);

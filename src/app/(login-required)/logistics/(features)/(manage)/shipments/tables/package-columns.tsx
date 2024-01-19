@@ -12,6 +12,7 @@ import {
 import { PackageStates } from '@/constants';
 import { GetPackageDTO } from '@/dtos/package/package.dto';
 import { getTimeString, getViLocaleDateString } from '@/lib/time';
+import { cn } from '@/lib/utils';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
 
@@ -127,11 +128,29 @@ export const getColumns = ({
       cell: ({ row }) => {
         return (
           <div className='ml-0 w-32 pl-0 text-center'>
-            {row.original.state === PackageStates.PENDING__READY_TO_DELIVER ? (
-              <Badge className='select-none bg-lime-700 hover:bg-lime-600'>Sẵn sàng giao</Badge>
-            ) : (
-              <Badge className='select-none bg-blue-600 hover:bg-blue-500'>Sẵn sàng chuyển</Badge>
-            )}
+            <Badge
+              className={cn('select-none', {
+                ' bg-lime-700 hover:bg-lime-600':
+                  row.original.state === PackageStates.PENDING__READY_TO_DELIVER,
+                ' bg-yellow-700 hover:bg-yellow-600':
+                  row.original.state === PackageStates.PENDING__READY_TO_TRANSER,
+                ' bg-blue-700 hover:bg-blue-600': row.original.state === PackageStates.IN_TRANSIT,
+                ' bg-green-700 hover:bg-green-600': row.original.state === PackageStates.DELIVERING,
+                ' bg-gray-700 hover:bg-gray-600': row.original.state === PackageStates.DELIVERED,
+                ' bg-red-700 hover:bg-red-600': row.original.state === PackageStates.RESENT,
+              })}
+            >
+              {
+                {
+                  [PackageStates.PENDING__READY_TO_DELIVER]: 'Sẵn sàng giao',
+                  [PackageStates.PENDING__READY_TO_TRANSER]: 'Chờ chuyển tiếp',
+                  [PackageStates.DELIVERING]: 'Đang giao',
+                  [PackageStates.DELIVERED]: 'Đã giao',
+                  [PackageStates.IN_TRANSIT]: 'Đang vận chuyển',
+                  [PackageStates.RESENT]: 'Hoàn trả',
+                }[row.original.state]
+              }
+            </Badge>
           </div>
         );
       },

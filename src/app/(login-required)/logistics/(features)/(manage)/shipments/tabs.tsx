@@ -4,7 +4,7 @@ import { BranchTypes } from '@/constants';
 import { CircleOff, Container, Loader, Package, PackageCheck, Truck } from 'lucide-react';
 import AwaitingBatches from './tabs/batch/AwaitingBatches';
 import InTransitBatches from './tabs/batch/InTransitBatches';
-import TransferredBatches from './tabs/batch/TransferredBatches';
+import ForwardedBatches from './tabs/batch/ForwardedBatches';
 import PendingPackages from './tabs/package/PendingPackages';
 import { ETabValue, TTab } from './@types/tab';
 import DeliveringPackages from './tabs/package/DeliveringPackages';
@@ -36,6 +36,14 @@ export const tabs: {
     },
     {
       entity: 'batch',
+      label: 'Lô hàng chưa xử lý',
+      value: ETabValue.PENDING_BATCH,
+      icon: <Container className='h-5 w-5 text-black' />,
+      iconContainerClassname: `bg-amber-300 ${commonStyles}`,
+      produceComponent: (props) => <PendingBatches {...props} />,
+    },
+    {
+      entity: 'batch',
       label: 'Lô hàng đang chuyển tiếp',
       value: ETabValue.FORWARDING,
       icon: <Truck className='h-6 w-6 text-black' />,
@@ -48,7 +56,7 @@ export const tabs: {
       value: ETabValue.FORWARDED,
       icon: <PackageCheck className='h-6 w-6 text-black' />,
       iconContainerClassname: `bg-amber-400 ${commonStyles}`,
-      produceComponent: (props) => <TransferredBatches {...props} />,
+      produceComponent: (props) => <ForwardedBatches {...props} />,
     },
   ],
   [BranchTypes.TRANSACTION_POINT]: [

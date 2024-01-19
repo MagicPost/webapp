@@ -23,6 +23,15 @@ export enum PackageStates {
   RESENT = 'resent',
 }
 
+export const PackageStatesMap = {
+  [PackageStates.PENDING__READY_TO_DELIVER]: 'Chờ giao hàng',
+  [PackageStates.PENDING__READY_TO_TRANSER]: 'Chờ vận chuyển',
+  [PackageStates.IN_TRANSIT]: 'Đang vận chuyển',
+  [PackageStates.DELIVERING]: 'Đang giao hàng',
+  [PackageStates.DELIVERED]: 'Đã giao hàng',
+  [PackageStates.RESENT]: 'Người nhận đã trả hàng',
+};
+
 export enum PackageTrackingActions {
   CREATED = 'created',
   CANCELLED = 'cancelled',

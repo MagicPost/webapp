@@ -2,7 +2,7 @@
 
 import TableTemplate from '../../tables/TableTemplate';
 import { getColumns } from '../../tables/batch-columns';
-import { useBatches } from '../../context';
+import { useBatches, useBranch } from '../../context';
 import { ETabValue } from '../../@types/tab';
 import {
   Dialog,
@@ -18,7 +18,8 @@ import { GetBatchDTO } from '@/dtos/batch/batch.dto';
 import { Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { updateBatches } from '@/actions/batch/updateBatches';
-import { BatchStates } from '@/constants';
+import { BatchStates, PackageTrackingActions } from '@/constants';
+import { addPackageTrackingAction } from '@/actions/package/addPackageTrackingAction';
 
 export default function PendingBatches() {
   const columns = getColumns({
@@ -65,6 +66,7 @@ function ForwardDialog({
   pendingBatches: GetBatchDTO[];
   toggleAllRowsSelected: (value?: boolean) => void;
 }) {
+  const { branch } = useBranch();
   const { batchesMap, setBatchesMap } = useBatches();
 
   const [open, setOpen] = useState(false);
@@ -82,6 +84,18 @@ function ForwardDialog({
         sentTime: new Date(),
       }
     );
+
+    for (const row of selectedRows) {
+      await Promise.all(
+        row.original.packages.map((packageId) =>
+          addPackageTrackingAction({
+            _id: packageId,
+            branchId: branch?._id,
+            actionType: PackageTrackingActions.DEPARTED,
+          })
+        )
+      );
+    }
 
     const updatedFowardingBatches = [
       ...(batchesMap[ETabValue.FORWARDING] || []),
@@ -103,7 +117,7 @@ function ForwardDialog({
       setOpen(false);
       toggleAllRowsSelected(false);
       toast.success('Xác nhận chuyển lô hàng thành công');
-    }, 600);
+    }, 200);
   };
 
   return (

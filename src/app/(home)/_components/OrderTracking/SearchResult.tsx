@@ -10,7 +10,7 @@ import Loading from '@/components/main/Loading';
 import Empty from '@/components/main/Empty';
 import { getTimeString, getViLocaleDateString } from '@/lib/time';
 import { hideInfo } from '@/lib/text';
-import { PackageTrackingActions, PackageTrackingActionsMap } from '@/constants';
+import { PackageStates, PackageStatesMap } from '@/constants';
 import { cn } from '@/lib/utils';
 
 export default function SearchResult({ packageId }: { packageId: string }) {
@@ -48,33 +48,6 @@ export default function SearchResult({ packageId }: { packageId: string }) {
       if (acc) return acc + ', ' + item.name;
       return item.name as string;
     }, '' as string);
-  }, [packageData]);
-
-  const packageStatus:
-    | PackageTrackingActions.CREATED
-    | PackageTrackingActions.CANCELLED
-    | PackageTrackingActions.DELIVERING
-    | PackageTrackingActions.DELIVERED
-    | PackageTrackingActions.RESENT = useMemo(() => {
-    let status = PackageTrackingActions.DELIVERING;
-    for (const log of packageData?.tracking || []) {
-      for (const action of log.actions) {
-        if (
-          action.type === PackageTrackingActions.CREATED ||
-          action.type === PackageTrackingActions.CANCELLED ||
-          action.type === PackageTrackingActions.DELIVERING ||
-          action.type === PackageTrackingActions.DELIVERED ||
-          action.type === PackageTrackingActions.RESENT
-        )
-          status = action.type;
-        else if (
-          action.type === PackageTrackingActions.ARRIVED ||
-          action.type === PackageTrackingActions.DEPARTED
-        )
-          status = PackageTrackingActions.DELIVERING;
-      }
-    }
-    return status;
   }, [packageData]);
 
   if (loading) {
@@ -121,16 +94,15 @@ export default function SearchResult({ packageId }: { packageId: string }) {
                 <span
                   className={cn('py-0.9 select-none rounded-full px-4 text-sm font-semibold', {
                     'bg-yellow-200 text-yellow-700':
-                      packageStatus === PackageTrackingActions.CREATED,
-                    'bg-red-200 text-red-600': packageStatus === PackageTrackingActions.CANCELLED,
-                    'bg-yellow-200 text-yellow-800':
-                      packageStatus === PackageTrackingActions.RESENT,
-                    'bg-sky-200 text-sky-700': packageStatus === PackageTrackingActions.DELIVERING,
-                    'bg-green-200 text-green-900':
-                      packageStatus === PackageTrackingActions.DELIVERED,
+                      packageData.state === PackageStates.PENDING__READY_TO_TRANSER ||
+                      packageData.state === PackageStates.PENDING__READY_TO_DELIVER,
+                    'bg-lime-200 text-lime-600': packageData.state === PackageStates.IN_TRANSIT,
+                    'bg-sky-200 text-sky-700': packageData.state === PackageStates.DELIVERING,
+                    'bg-green-200 text-green-900': packageData.state === PackageStates.DELIVERED,
+                    'bg-yellow-200 text-yellow-800': packageData.state === PackageStates.RESENT,
                   })}
                 >
-                  {PackageTrackingActionsMap[packageStatus]}
+                  {PackageStatesMap[packageData.state]}
                 </span>
               }
             />

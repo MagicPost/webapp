@@ -274,8 +274,7 @@ function ClientInfo({ role = 'sender', client }: { role?: 'sender' | 'receiver';
         <span className='text-sm'>SĐT: {client.phone}</span>
       </div>
       <span className='text-sm'>Địa chỉ: {client.address}</span>
-      <br />
-      <span className='text-sm'>Mã bưu chính: 100000</span>
+      <span className='w-full text-right text-sm'>Mã bưu chính: 100000</span>
     </div>
   );
 }
@@ -347,7 +346,7 @@ function formatWeight(weight: number) {
 function Footer() {
   return (
     <div className='mt-1 text-center text-xs font-semibold'>
-      Hotline: 1900 4546 - Website: www.magicpost.ninja - Email: uet.magicpost@gmail.com
+      Hotline: 1900 4546 - Website: www.magicpost.vn - Email: uet.magicpost@gmail.com
     </div>
   );
 }
