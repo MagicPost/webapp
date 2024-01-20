@@ -48,7 +48,7 @@ export const sendActivationMail = async ({
     query = query.select('name address province district ward');
 
     const branchInfo = (await query.exec()) as BranchInfo;
-    console.debug('branch:', branchInfo);
+    console.debug('branch:', branch, branchInfo);
 
     const fullAddress = getFullAddress({
       address: branchInfo?.address,
@@ -59,7 +59,7 @@ export const sendActivationMail = async ({
 
     const mailOptions = {
       from:
-        process.env.NODE_ENV === 'production'
+        process.env.NODE_ENV !== 'production'
           ? process.env.RESEND_MAIL_FROM!
           : process.env.MAIL_FROM!,
       to: email,
@@ -88,7 +88,7 @@ export const sendActivationMail = async ({
     };
 
     const result =
-      process.env.NODE_ENV === 'production'
+      process.env.NODE_ENV !== 'production'
         ? await sendWithResend(mailOptions)
         : await sendWithNodeMailer(mailOptions);
 
