@@ -7,6 +7,7 @@ import base64 from 'base-64';
 import dbConnect from '@/db/dbConnect';
 import { CollectionPointModel, TransactionPointModel } from '@/db/models';
 import { getFullAddress } from '@/lib/address';
+import { Resend } from 'resend';
 
 type BranchInfo = {
   name: string;
@@ -50,7 +51,10 @@ export const sendActivationMail = async ({
     const fullAddress = getFullAddress({ address, province, district, ward });
 
     const mailOptions = {
-      from: process.env.MAIL_FROM!,
+      from:
+        process.env.NODE_ENV === 'production'
+          ? process.env.RESEND_MAIL_FROM!
+          : process.env.MAIL_FROM!,
       to: email,
       subject: 'MagicPost - Kích hoạt tài khoản',
       html: `<div style="font-size: 16px;">
@@ -76,7 +80,10 @@ export const sendActivationMail = async ({
             `,
     };
 
-    const result = await sendMail(mailOptions);
+    const result =
+      process.env.NODE_ENV === 'production'
+        ? await sendWithResend(mailOptions)
+        : await sendWithNodeMailer(mailOptions);
 
     return {
       ok: true,
@@ -103,7 +110,24 @@ const transporter = nodemailer.createTransport({
   debug: true,
 });
 
-async function sendMail(mailOptions: { from: string; to: string; subject: string; html: string }) {
+async function sendWithNodeMailer(mailOptions: {
+  from: string;
+  to: string;
+  subject: string;
+  html: string;
+}) {
   const result = await transporter.sendMail(mailOptions);
+  return result;
+}
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+async function sendWithResend(mailOptions: {
+  from: string;
+  to: string;
+  subject: string;
+  html: string;
+}) {
+  const result = await resend.emails.send(mailOptions);
   return result;
 }
