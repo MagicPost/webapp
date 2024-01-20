@@ -91,26 +91,19 @@ export const sendActivationMail = async ({
   }
 };
 
-async function sendMail(mailOptions: { from: string; to: string; subject: string; html: string }) {
-  const transporter = nodemailer.createTransport({
-    service: process.env.MAIL_SERVICE,
-    auth: {
-      user: process.env.MAIL_USER,
-      pass: process.env.MAIL_PASSWORD,
-    },
-    port: 2003,
-    secure: false,
-    tls: { rejectUnauthorized: false },
-    debug: true,
-  });
+const transporter = nodemailer.createTransport({
+  service: process.env.MAIL_SERVICE,
+  auth: {
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASSWORD,
+  },
+  port: 465,
+  secure: true,
+  tls: { rejectUnauthorized: false },
+  debug: true,
+});
 
-  const result = await new Promise((resolve, reject) => {
-    transporter.sendMail(mailOptions, (err, info) => {
-      if (err) {
-        reject(err);
-        console.error(err);
-      } else resolve(info);
-    });
-  });
+async function sendMail(mailOptions: { from: string; to: string; subject: string; html: string }) {
+  const result = await transporter.sendMail(mailOptions);
   return result;
 }

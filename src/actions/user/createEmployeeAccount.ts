@@ -48,8 +48,6 @@ export const createEmployeeAccount = catchAsync(async (createUserDTO: CreateUser
     branch: createUserDTO.branch,
   });
 
-  console.log(resp.data);
-
   if (!resp.ok) throw new Error(resp.message);
 
   return {
