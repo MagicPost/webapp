@@ -4,6 +4,7 @@ import { catchAsync } from '@/actions/_helpers/catchAsync';
 import { getGrowRate } from '@/actions/_helpers/rate';
 import { getLastMonth, getThisMonth } from '@/actions/_helpers/time';
 import { ActionResponse } from '@/actions/_helpers/types';
+import { PackageStates } from '@/constants';
 import dbConnect from '@/db/dbConnect';
 import { PackageModel } from '@/db/models';
 
@@ -77,6 +78,7 @@ async function countResentPackages() {
 
 function countResentPackagesByMonth(month: { start: Date; end: Date }) {
   return PackageModel.find({
+    status: PackageStates.RESENT,
     updatedAt: {
       $gt: month.start.toISOString(),
       $lt: month.end.toISOString(),
