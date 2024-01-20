@@ -85,12 +85,21 @@ export const sendActivationMail = async ({
         ? await sendWithResend(mailOptions)
         : await sendWithNodeMailer(mailOptions);
 
+    console.debug(
+      'mail:success',
+      result,
+      ' mode:',
+      process.env.NODE_ENV,
+      ' mailOptions:',
+      mailOptions
+    );
     return {
       ok: true,
       message: 'Email xác thực đã được gửi!',
       data: result,
     };
   } catch (error) {
+    console.error('mail:error', error);
     return {
       ok: false,
       message: 'Email xác thực chưa được gửi!',
