@@ -16,18 +16,6 @@ type BranchInfo = {
   ward: string;
 };
 
-const transporter = nodemailer.createTransport({
-  service: process.env.MAIL_SERVICE,
-  auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASSWORD,
-  },
-  port: 2003,
-  secure: false,
-  tls: { rejectUnauthorized: false },
-  debug: true,
-});
-
 export const sendActivationMail = async ({
   email,
   role,
@@ -62,7 +50,7 @@ export const sendActivationMail = async ({
     const fullAddress = getFullAddress({ address, province, district, ward });
 
     const mailOptions = {
-      from: process.env.MAIL_FROM,
+      from: process.env.MAIL_FROM!,
       to: email,
       subject: 'MagicPost - Kích hoạt tài khoản',
       html: `<div style="font-size: 16px;">
@@ -88,14 +76,7 @@ export const sendActivationMail = async ({
             `,
     };
 
-    const result = await new Promise((resolve, reject) => {
-      transporter.sendMail(mailOptions, (err, info) => {
-        if (err) {
-          reject(err);
-          console.error(err);
-        } else resolve(info);
-      });
-    });
+    const result = await sendMail(mailOptions);
 
     return {
       ok: true,
@@ -103,10 +84,33 @@ export const sendActivationMail = async ({
       data: result,
     };
   } catch (error) {
-    // console.error(error);
     return {
       ok: false,
       message: 'Email xác thực chưa được gửi!',
     };
   }
 };
+
+async function sendMail(mailOptions: { from: string; to: string; subject: string; html: string }) {
+  const transporter = nodemailer.createTransport({
+    service: process.env.MAIL_SERVICE,
+    auth: {
+      user: process.env.MAIL_USER,
+      pass: process.env.MAIL_PASSWORD,
+    },
+    port: 2003,
+    secure: false,
+    tls: { rejectUnauthorized: false },
+    debug: true,
+  });
+
+  const result = await new Promise((resolve, reject) => {
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        reject(err);
+        console.error(err);
+      } else resolve(info);
+    });
+  });
+  return result;
+}
