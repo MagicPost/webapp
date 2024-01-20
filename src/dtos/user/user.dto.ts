@@ -1,4 +1,3 @@
-import { BranchTypes } from '@/constants';
 import { Account } from '@/db/models/Account';
 import { transformObjectIdFromLeanedDoc } from '@/lib/mongo';
 import { GetBasicBranchDTO } from '../branches/branch.dto';
@@ -15,19 +14,13 @@ export interface CreateUserDTO extends Omit<Account, '_id' | 'password' | 'activ
 export const transformIntoGetUserDTO = (account: Account) => {
   const { branch, ...rest } = transformObjectIdFromLeanedDoc(account);
 
-  const branchId =
-    branch?.type === BranchTypes.COLLECTION_POINT
-      ? branch?.collectionPoint
-      : branch?.transactionPoint;
-
   return {
-    ...(branch?.type &&
-      branchId && {
-        branch: {
-          _id: String(branchId),
-          type: branch?.type,
-        },
-      }),
+    ...(branch && {
+      branch: {
+        _id: String(branch?.ref),
+        type: branch?.type,
+      },
+    }),
     ...rest,
   } satisfies GetUserDTO;
 };

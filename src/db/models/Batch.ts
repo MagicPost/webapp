@@ -1,5 +1,5 @@
 import { BatchStates, BranchTypes } from '@/constants';
-import { Ref, modelOptions, mongoose, prop } from '@typegoose/typegoose';
+import { Ref, modelOptions, prop } from '@typegoose/typegoose';
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 import { Package } from './Package';
 import { getRandomIdWithPrefix } from '@/lib/random';

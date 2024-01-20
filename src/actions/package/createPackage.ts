@@ -106,8 +106,13 @@ async function getEmptyLogs(routes: any[], createPackageDTO: CreatePackageDTO) {
         .lean(),
     ]);
   });
-  let branches = (await Promise.all(mapping))
-    .map((branch) => transformObjectIdFromLeanedDoc(branch))
+  let results = await Promise.all(mapping);
+
+  let branches = results
+    .map((branch) => {
+      const temp = transformObjectIdFromLeanedDoc(branch);
+      return temp;
+    })
     .filter(([_, branch]) => !!branch)
     .map(([type, branch]) => ({ type, ref: branch._id, name: branch.name })) as BranchInfo[];
 

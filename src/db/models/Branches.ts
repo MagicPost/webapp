@@ -1,7 +1,7 @@
-import mongoose, { Collection } from 'mongoose';
+import mongoose from 'mongoose';
 import { postalCodeRegex } from '@/lib/regex';
 import type { Ref } from '@typegoose/typegoose';
-import { modelOptions, pre, prop } from '@typegoose/typegoose';
+import { modelOptions, prop } from '@typegoose/typegoose';
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 import { Account } from './Account';
 

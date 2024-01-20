@@ -1,7 +1,7 @@
 'use server';
 
 import dbConnect from '@/db/dbConnect';
-import { AccountModel } from '@/db/models';
+import { AccountModel, CollectionPointModel, TransactionPointModel } from '@/db/models';
 import { GetUserDTO } from '@/dtos/user/user.dto';
 import { transformObjectIdFromLeanedDoc } from '@/lib/mongo';
 import { catchAsync } from '../_helpers/catchAsync';
@@ -10,14 +10,7 @@ import { BranchTypes } from '@/constants';
 interface FlattenUser extends Omit<GetUserDTO, 'branch'> {
   branch?: {
     type: BranchTypes;
-    collectionPoint?: {
-      _id: string;
-      name: string;
-    };
-    transactionPoint?: {
-      _id: string;
-      name: string;
-    };
+    ref: string;
   };
 }
 
@@ -28,37 +21,32 @@ export const getUserByEmail = catchAsync(
     await dbConnect();
     let query = AccountModel.findOne({ email });
 
-    if (withBranch)
-      query = query
-        .populate({
-          path: 'branch.collectionPoint',
-          select: '_id name',
-        })
-        .populate({
-          path: 'branch.transactionPoint',
-          select: '_id name',
-        });
-
     let user = await query.lean().exec();
 
     const flattenUser = transformObjectIdFromLeanedDoc(user) as FlattenUser;
 
-    const branchInfo =
-      flattenUser?.branch?.type === BranchTypes.COLLECTION_POINT
-        ? flattenUser?.branch?.collectionPoint
-        : flattenUser?.branch?.transactionPoint;
+    let branchInfo = null;
+    if (withBranch) {
+      const branchModel =
+        flattenUser?.branch?.type === BranchTypes.COLLECTION_POINT
+          ? CollectionPointModel
+          : TransactionPointModel;
+      branchInfo = await branchModel
+        .findOne({ _id: flattenUser?.branch?.ref })
+        .select('_id name')
+        .lean()
+        .exec();
+    }
 
-    const { branch: excludedBranch, ...rest } = flattenUser;
+    branchInfo = transformObjectIdFromLeanedDoc(branchInfo);
 
     return {
-      ...rest,
-      ...(flattenUser?.branch &&
-        branchInfo && {
-          branch: {
-            type: flattenUser.branch.type,
-            ...branchInfo!,
-          },
-        }),
+      ...flattenUser,
+      branch: {
+        _id: flattenUser.branch?.ref,
+        type: flattenUser.branch?.type,
+        ...(branchInfo && { name: branchInfo.name }),
+      },
     } satisfies GetUserDTO;
   }
 );

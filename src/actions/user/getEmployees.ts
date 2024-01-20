@@ -28,9 +28,7 @@ export const getEmployees = catchAsync(
       ...(withBranchFilter && {
         branch: {
           type: filter.branch?.type,
-          [filter.branch?.type === BranchTypes.COLLECTION_POINT
-            ? 'collectionPoint'
-            : 'transactionPoint']: filter.branch?._id,
+          ref: filter.branch?._id,
         },
       }),
     };

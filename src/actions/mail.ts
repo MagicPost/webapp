@@ -76,7 +76,7 @@ export const sendActivationMail = async ({
             </div>
             <br />
             Vui lòng nhấn vào <a href="${
-              process.env.NEXT_PUBLIC_CLIENT_URL
+              process.env.NEXT_PUBLIC_SERVER_URL
             }/activate/${base64Encoded}">liên kết này</a>
             để kích hoạt tài khoản và đổi mật khẩu!
             </div>

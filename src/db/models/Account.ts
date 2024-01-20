@@ -1,19 +1,14 @@
 import mongoose from 'mongoose';
-import type { Ref } from '@typegoose/typegoose';
 import { modelOptions, prop } from '@typegoose/typegoose';
 import { BranchTypes, Gender, Roles } from '@/constants/index';
-import { CollectionPoint, TransactionPoint } from './Branches';
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 
 class BranchDetails {
   @prop({ required: true, enum: BranchTypes })
   type: string;
 
-  @prop({ ref: () => CollectionPoint, required: false })
-  collectionPoint?: Ref<CollectionPoint>;
-
-  @prop({ ref: () => TransactionPoint, required: false })
-  transactionPoint?: Ref<TransactionPoint>;
+  @prop({ required: true })
+  ref?: string;
 }
 
 @modelOptions({
@@ -21,8 +16,6 @@ class BranchDetails {
     collection: 'accounts',
     versionKey: false,
     timestamps: true,
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
   },
   options: {
     allowMixed: 0,

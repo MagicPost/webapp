@@ -29,9 +29,7 @@ export const createEmployeeAccount = catchAsync(async (createUserDTO: CreateUser
   const password = bcrypt.hashSync(DEFAULT_PASSWORD, 12);
   const branch = {
     type: createUserDTO.branch.type,
-    [createUserDTO.branch.type === BranchTypes.COLLECTION_POINT
-      ? 'collectionPoint'
-      : 'transactionPoint']: createUserDTO.branch._id,
+    ref: createUserDTO.branch._id,
   };
   let newAccount = await AccountModel.create({
     ...createUserDTO,

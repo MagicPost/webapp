@@ -2,22 +2,14 @@
 
 import dbConnect from '@/db/dbConnect';
 import { catchAsync } from '../_helpers/catchAsync';
-import { AccountModel } from '@/db/models';
+import { AccountModel, CollectionPointModel, TransactionPointModel } from '@/db/models';
 import { ActionResponse } from '../_helpers/types';
 import { transformObjectIdFromLeanedDoc } from '@/lib/mongo';
 import { BranchTypes } from '@/constants';
-import { GetBasicBranchDTO } from '@/dtos/branches/branch.dto';
 
 interface FlattenBranch {
-  type: BranchTypes;
-  collectionPoint?: {
-    _id: string;
-    name: string;
-  };
-  transactionPoint?: {
-    _id: string;
-    name: string;
-  };
+  _id: string;
+  name: string;
 }
 
 export const getBranchOf = catchAsync(
@@ -47,33 +39,32 @@ export const getBranchOf = catchAsync(
 
     const select = customSelect || '_id name';
 
-    const query = AccountModel.findOne(filter)
-      .populate({
-        path: 'branch.collectionPoint',
-        select,
-      })
-      .populate({
-        path: 'branch.transactionPoint',
-        select,
-      })
-      .select('branch');
+    const userInfo = (await AccountModel.findOne(filter).select('branch').lean().exec()) as {
+      branch?: {
+        type: BranchTypes;
+        ref: string;
+      };
+    };
 
-    let userInfo = await query.lean().exec();
+    const branchModel =
+      userInfo?.branch?.type === BranchTypes.COLLECTION_POINT
+        ? CollectionPointModel
+        : TransactionPointModel;
+    const branch = await branchModel
+      .findOne({ _id: userInfo?.branch?.ref })
+      .select(select)
+      .lean()
+      .exec();
 
-    const flattenBranch = transformObjectIdFromLeanedDoc(userInfo).branch as FlattenBranch;
-
-    const branchInfo =
-      flattenBranch?.type === BranchTypes.COLLECTION_POINT
-        ? flattenBranch?.collectionPoint
-        : flattenBranch?.transactionPoint;
+    const flattenBranch = transformObjectIdFromLeanedDoc(branch) as FlattenBranch;
 
     return {
       ok: true,
       message: '',
       data: {
-        type: flattenBranch.type,
-        ...branchInfo!,
-      } satisfies Omit<GetBasicBranchDTO, 'address' | 'manager'>,
+        type: userInfo?.branch?.type,
+        ...flattenBranch,
+      },
     } satisfies ActionResponse;
   }
 );
