@@ -47,8 +47,15 @@ export const sendActivationMail = async ({
 
     query = query.select('name address province district ward');
 
-    const { name, address, province, district, ward } = (await query.exec()) as BranchInfo;
-    const fullAddress = getFullAddress({ address, province, district, ward });
+    const branchInfo = (await query.exec()) as BranchInfo;
+    console.debug('branch:', branchInfo);
+
+    const fullAddress = getFullAddress({
+      address: branchInfo?.address,
+      province: branchInfo?.province,
+      district: branchInfo?.district,
+      ward: branchInfo?.ward,
+    });
 
     const mailOptions = {
       from:
@@ -68,7 +75,7 @@ export const sendActivationMail = async ({
               <p>- Loại tài khoản: <b>${
                 role === Roles.STAFF ? 'Giao dịch viên' : 'Trưởng điểm'
               }</b></p>
-              <p>- Chi nhánh: ${name}</p>
+              <p>- Chi nhánh: ${branchInfo?.name}</p>
               <p>- Địa chỉ: ${fullAddress}</p>
             </div>
             <br />
