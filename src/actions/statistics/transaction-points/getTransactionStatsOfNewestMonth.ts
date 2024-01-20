@@ -6,6 +6,7 @@ import { ActionResponse } from '../../_helpers/types';
 import { BatchModel, PackageModel } from '@/db/models';
 import { getLastMonth, getThisMonth } from '../../_helpers/time';
 import { getGrowRate } from '@/actions/_helpers/rate';
+import { PackageStates } from '@/constants';
 
 type FieldProps = {
   newest: number;
@@ -118,6 +119,7 @@ async function countResentPackages(branchId: string) {
 function countResentPackagesByMonth(branchId: string, month: { start: Date; end: Date }) {
   return PackageModel.find({
     receivedAt: branchId,
+    state: PackageStates.RESENT,
     updatedAt: {
       $gt: month.start.toISOString(),
       $lt: month.end.toISOString(),
